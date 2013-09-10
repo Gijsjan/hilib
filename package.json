@@ -1,0 +1,28 @@
+{
+	"name": "helpers",
+	"version": "0.0.1",
+	"description": "",
+	"main": "",
+	"directories": {
+		"test": "test"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"grunt": "*",
+		"grunt-shell": "*",
+		"grunt-contrib-watch": "*",
+		"grunt-contrib-coffee": "*",
+		"grunt-contrib-jade": "*",
+		"grunt-contrib-stylus": "*",
+		"grunt-contrib-connect": "*"
+	},
+	"scripts": {
+		"start": "node ./.test/bin/server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Gijsjan/helpers.git"
+	},
+	"author": "Gijsjan Brouwer",
+	"license": "MIT"
+}

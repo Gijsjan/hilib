@@ -1,0 +1,11 @@
+.overlay
+.modalbody
+	header
+		h2 <%= title %>
+		<p class="message"></p>
+	.body
+	<% if (cancelAndSubmit) { %>
+	footer
+		button.cancel <%= cancelValue %>
+		button.submit <%= submitValue %>
+	<% } %>

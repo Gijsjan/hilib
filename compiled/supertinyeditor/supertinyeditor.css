@@ -1,0 +1,28 @@
+.supertinyeditor html,.supertinyeditor body,.supertinyeditor iframe{height:100%}
+.supertinyeditor iframe{border:none;overflow-x:hidden;}
+.supertinyeditor iframe body{margin:0;padding:25px;font:12px Verdana,Arial}
+.supertinyeditor .ste-header{height:31px;border-bottom:1px solid #bbb;background:url("../images/supertinyeditor/header-bg.gif") repeat-x;padding-top:1px;}
+.supertinyeditor .ste-header select{float:left;margin-top:5px}
+.supertinyeditor .ste-body{margin-top:12px}
+.supertinyeditor .ste-font{margin-left:12px}
+.supertinyeditor .ste-size{margin:0 3px}
+.supertinyeditor .ste-style{margin-right:12px}
+.supertinyeditor .ste-divider{float:left;width:1px;height:30px;background:#ccc}
+.supertinyeditor .ste-control{float:left;width:34px;height:30px;cursor:pointer;background-image:url("../images/supertinyeditor/icons2.png");}
+.supertinyeditor .ste-control:hover{background-color:#fff;background-position:30px 0}
+.supertinyeditor .ste-control.bold{background-position:0 -120px}
+.supertinyeditor .ste-control.italic{background-position:0 -150px}
+.supertinyeditor .ste-control.underline{background-position:0 -180px}
+.supertinyeditor .ste-control.strikethrough{background-position:0 -210px}
+.supertinyeditor .ste-control.subscript{background-position:0 -240px}
+.supertinyeditor .ste-control.superscript{background-position:0 -270px}
+.supertinyeditor .ste-control.outdent{background-position:0 -360px}
+.supertinyeditor .ste-control.indent{background-position:0 -390px}
+.supertinyeditor .ste-control.unformat{background-position:0 -720px}
+.supertinyeditor .ste-control.undo{background-position:0 -540px}
+.supertinyeditor .ste-control.redo{background-position:0 -570px}
+.supertinyeditor .ste-footer{height:32px;border-top:1px solid #bbb;background:#f5f5f5}
+.supertinyeditor .toggle{float:left;background:url("../images/supertinyeditor/icons2.png") -34px 2px no-repeat;padding:9px 13px 0 31px;height:23px;border-right:1px solid #ccc;cursor:pointer;color:#666;}
+.supertinyeditor .toggle:hover{background-color:#fff}
+.supertinyeditor .resize{float:right;height:32px;width:32px;background:url("../images/supertinyeditor/resize.gif") 15px 15px no-repeat;cursor:s-resize}
+.supertinyeditor #editor{cursor:text;margin:10px}
