@@ -9,8 +9,8 @@
 # * wrap Boolean Sets white-space to normal on the iframe body if set to true
 
 define (require) ->
-	Fn = require 'helpers2/general'
-	StringFn = require 'helpers2/string'
+	Fn = require 'helpers/general'
+	StringFn = require 'helpers/string'
 
 	Views = 
 		Base: require 'views/base'

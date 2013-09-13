@@ -4,8 +4,8 @@
 
   define(function(require) {
     var Fn, StringFn, SuperTinyEditor, Tpl, Views, _ref;
-    Fn = require('helpers2/general');
-    StringFn = require('helpers2/string');
+    Fn = require('helpers/general');
+    StringFn = require('helpers/string');
     Views = {
       Base: require('views/base')
     };
