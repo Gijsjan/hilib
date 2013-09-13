@@ -1,6 +1,5 @@
-.supertinyeditor html,.supertinyeditor body,.supertinyeditor iframe{height:100%}
-.supertinyeditor iframe{border:none;overflow-x:hidden;}
-.supertinyeditor iframe body{margin:0;padding:25px;font:12px Verdana,Arial}
+.ste-iframe-body{margin:0;padding:0 0 10px 0;font:12px Verdana,Arial,Helvetica,sans-serif;white-space:nowrap}
+.supertinyeditor iframe{border:none}
 .supertinyeditor .ste-header{height:31px;border-bottom:1px solid #bbb;background:url("../images/supertinyeditor/header-bg.gif") repeat-x;padding-top:1px;}
 .supertinyeditor .ste-header select{float:left;margin-top:5px}
 .supertinyeditor .ste-body{margin-top:12px}
