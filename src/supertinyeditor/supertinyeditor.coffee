@@ -9,8 +9,8 @@
 # * wrap Boolean Sets white-space to normal on the iframe body if set to true
 
 define (require) ->
-	Fn = require 'helpers/general'
-	StringFn = require 'helpers/string'
+	Fn = require 'helpers2/general'
+	StringFn = require 'helpers2/string'
 
 	Views = 
 		Base: require 'views/base'
@@ -79,7 +79,7 @@ define (require) ->
 			html = "<!DOCTYPE html>
 					<html>
 					<head><meta charset='UTF-8'><link rel='stylesheet' href='#{@options.cssFile}'></head>
-					<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>#{@options.model.get(@options.htmlAttribute)}</body>
+					<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>#{@model.get(@options.htmlAttribute)}</body>
 					</html>"
 
 			@iframeDocument = iframe.contentDocument
@@ -87,7 +87,6 @@ define (require) ->
 			@iframeDocument.open()
 			@iframeDocument.write html
 			@iframeDocument.close()
-
 
 			@iframeBody = @iframeDocument.querySelector 'body'
 			@iframeBody.style.whiteSpace = 'normal' if @options.wrap
@@ -130,9 +129,17 @@ define (require) ->
 		# ### Methods
 
 		setModel: (model) ->
-			@iframeBody.innerHTML = model.get @options.htmlAttribute
+			@setInnerHTML model.get @options.htmlAttribute
 			@model = model
 			@setFocus()
+
+		setInnerHTML: (html) ->
+			@iframeBody.innerHTML = html
+			
+			# Set iframe height to scrollHeight
+			iframe = @el.querySelector 'iframe'
+			scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
+			iframe.style.height = scrollHeight + 15 + 'px'
 
 		getHTML: -> @iframeBody.innerHTML
 
@@ -140,9 +147,9 @@ define (require) ->
 		# 	@setFocus()
 		# 	@iframeBody.innerHTML = html
 
-		setIframeHeight: (height) -> iframe.style.height = height
+		# setIframeHeight: (height) -> iframe.style.height = height
 
-		setIframeWidth: (width) -> iframe.style.width = width
+		# setIframeWidth: (width) -> iframe.style.width = width
 
 		setFocus: -> @iframeBody.focus()
 

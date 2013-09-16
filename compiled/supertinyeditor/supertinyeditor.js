@@ -4,8 +4,8 @@
 
   define(function(require) {
     var Fn, StringFn, SuperTinyEditor, Tpl, Views, _ref;
-    Fn = require('helpers/general');
-    StringFn = require('helpers/string');
+    Fn = require('helpers2/general');
+    StringFn = require('helpers2/string');
     Views = {
       Base: require('views/base')
     };
@@ -82,7 +82,7 @@
         iframe = this.el.querySelector('iframe');
         iframe.style.width = this.options.width + 'px';
         iframe.style.height = this.options.height + 'px';
-        html = "<!DOCTYPE html>					<html>					<head><meta charset='UTF-8'><link rel='stylesheet' href='" + this.options.cssFile + "'></head>					<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>" + (this.options.model.get(this.options.htmlAttribute)) + "</body>					</html>";
+        html = "<!DOCTYPE html>					<html>					<head><meta charset='UTF-8'><link rel='stylesheet' href='" + this.options.cssFile + "'></head>					<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>" + (this.model.get(this.options.htmlAttribute)) + "</body>					</html>";
         this.iframeDocument = iframe.contentDocument;
         this.iframeDocument.designMode = 'On';
         this.iframeDocument.open();
@@ -127,21 +127,21 @@
       };
 
       SuperTinyEditor.prototype.setModel = function(model) {
-        this.iframeBody.innerHTML = model.get(this.options.htmlAttribute);
+        this.setInnerHTML(model.get(this.options.htmlAttribute));
         this.model = model;
         return this.setFocus();
       };
 
+      SuperTinyEditor.prototype.setInnerHTML = function(html) {
+        var iframe, scrollHeight;
+        this.iframeBody.innerHTML = html;
+        iframe = this.el.querySelector('iframe');
+        scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+        return iframe.style.height = scrollHeight + 15 + 'px';
+      };
+
       SuperTinyEditor.prototype.getHTML = function() {
         return this.iframeBody.innerHTML;
-      };
-
-      SuperTinyEditor.prototype.setIframeHeight = function(height) {
-        return iframe.style.height = height;
-      };
-
-      SuperTinyEditor.prototype.setIframeWidth = function(width) {
-        return iframe.style.width = width;
       };
 
       SuperTinyEditor.prototype.setFocus = function() {
