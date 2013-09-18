@@ -108,8 +108,11 @@ define (require) ->
 						scrollLeft: $(iframe).contents().scrollLeft()
 						scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth
 						clientWidth: iframe.contentWindow.document.documentElement.clientWidth
+						scrollTop: $(iframe).contents().scrollTop()
+						scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight
+						clientHeight: iframe.contentWindow.document.documentElement.clientHeight
 					
-					Fn.timeoutWithReset 200, => @trigger 'scrolled', Fn.getScrollPercentage target, 'horizontal'
+					Fn.timeoutWithReset 200, => @trigger 'scrolled', Fn.getScrollPercentage target
 
 			@iframeDocument.addEventListener 'keyup', (ev) =>
 				Fn.timeoutWithReset 500, => @model.set @options.htmlAttribute, @getHTML()
@@ -135,11 +138,11 @@ define (require) ->
 
 		setInnerHTML: (html) ->
 			@iframeBody.innerHTML = html
-			
+
 			# Set iframe height to scrollHeight
-			iframe = @el.querySelector 'iframe'
-			scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
-			iframe.style.height = scrollHeight + 15 + 'px'
+			# iframe = @el.querySelector 'iframe'
+			# scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
+			# iframe.style.height = scrollHeight + 15 + 'px'
 
 		getHTML: -> @iframeBody.innerHTML
 
@@ -147,28 +150,28 @@ define (require) ->
 		# 	@setFocus()
 		# 	@iframeBody.innerHTML = html
 
-		# setIframeHeight: (height) -> iframe.style.height = height
+		setIframeHeight: (height) ->
+			iframe = @el.querySelector 'iframe'
+			iframe.style.height = height + 'px'
+			# iframe = @el.querySelector 'iframe'
+			# scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
+			# iframe.style.height = scrollHeight + 15 + 'px'
 
 		# setIframeWidth: (width) -> iframe.style.width = width
 
 		setFocus: -> @iframeBody.focus()
 
-		setScrollPercentage: (percentage, orientation='vertical') ->
+		setScrollPercentage: (percentages) ->
 			contentWindow = @el.querySelector('iframe').contentWindow
 			documentElement = contentWindow.document.documentElement
+
 			clientWidth = documentElement.clientWidth
 			scrollWidth = documentElement.scrollWidth
 			clientHeight = documentElement.clientHeight
 			scrollHeight = documentElement.scrollHeight
-			top = 0
-			left = 0
 
-			if orientation is 'vertical'
-				pos = (scrollHeight - clientHeight) * percentage/100
-				top = pos 
-			else
-				pos = (scrollWidth - clientWidth) * percentage/100
-				left = pos
+			top = (scrollHeight - clientHeight) * percentages.top/100
+			left = (scrollWidth - clientWidth) * percentages.left/100
 
 			@autoScroll = true
 			contentWindow.scrollTo left, top

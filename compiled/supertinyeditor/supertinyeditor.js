@@ -99,10 +99,13 @@
             target = {
               scrollLeft: $(iframe).contents().scrollLeft(),
               scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth,
-              clientWidth: iframe.contentWindow.document.documentElement.clientWidth
+              clientWidth: iframe.contentWindow.document.documentElement.clientWidth,
+              scrollTop: $(iframe).contents().scrollTop(),
+              scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight,
+              clientHeight: iframe.contentWindow.document.documentElement.clientHeight
             };
             return Fn.timeoutWithReset(200, function() {
-              return _this.trigger('scrolled', Fn.getScrollPercentage(target, 'horizontal'));
+              return _this.trigger('scrolled', Fn.getScrollPercentage(target));
             });
           }
         });
@@ -133,42 +136,34 @@
       };
 
       SuperTinyEditor.prototype.setInnerHTML = function(html) {
-        var iframe, scrollHeight;
-        this.iframeBody.innerHTML = html;
-        iframe = this.el.querySelector('iframe');
-        scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-        return iframe.style.height = scrollHeight + 15 + 'px';
+        return this.iframeBody.innerHTML = html;
       };
 
       SuperTinyEditor.prototype.getHTML = function() {
         return this.iframeBody.innerHTML;
       };
 
+      SuperTinyEditor.prototype.setIframeHeight = function(height) {
+        var iframe;
+        iframe = this.el.querySelector('iframe');
+        return iframe.style.height = height + 'px';
+      };
+
       SuperTinyEditor.prototype.setFocus = function() {
         return this.iframeBody.focus();
       };
 
-      SuperTinyEditor.prototype.setScrollPercentage = function(percentage, orientation) {
-        var clientHeight, clientWidth, contentWindow, documentElement, left, pos, scrollHeight, scrollWidth, top,
+      SuperTinyEditor.prototype.setScrollPercentage = function(percentages) {
+        var clientHeight, clientWidth, contentWindow, documentElement, left, scrollHeight, scrollWidth, top,
           _this = this;
-        if (orientation == null) {
-          orientation = 'vertical';
-        }
         contentWindow = this.el.querySelector('iframe').contentWindow;
         documentElement = contentWindow.document.documentElement;
         clientWidth = documentElement.clientWidth;
         scrollWidth = documentElement.scrollWidth;
         clientHeight = documentElement.clientHeight;
         scrollHeight = documentElement.scrollHeight;
-        top = 0;
-        left = 0;
-        if (orientation === 'vertical') {
-          pos = (scrollHeight - clientHeight) * percentage / 100;
-          top = pos;
-        } else {
-          pos = (scrollWidth - clientWidth) * percentage / 100;
-          left = pos;
-        }
+        top = (scrollHeight - clientHeight) * percentages.top / 100;
+        left = (scrollWidth - clientWidth) * percentages.left / 100;
         this.autoScroll = true;
         contentWindow.scrollTo(left, top);
         return setTimeout((function() {
