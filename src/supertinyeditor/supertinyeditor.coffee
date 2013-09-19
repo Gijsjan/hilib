@@ -115,7 +115,7 @@ define (require) ->
 					Fn.timeoutWithReset 200, => @trigger 'scrolled', Fn.getScrollPercentage target
 
 			@iframeDocument.addEventListener 'keyup', (ev) =>
-				Fn.timeoutWithReset 500, => @model.set @options.htmlAttribute, @getHTML()
+				Fn.timeoutWithReset 500, => @saveHTMLToModel()
 
 
 		
@@ -126,10 +126,15 @@ define (require) ->
 		controlClicked: (ev) ->
 			action = ev.currentTarget.getAttribute 'data-action'
 			@iframeDocument.execCommand action, false, null
-			@trigger 'change', action, @iframeBody.innerHTML
+			@saveHTMLToModel()
+			# @model.set @options.htmlAttribute, @getHTML()
+			# @trigger 'change', action, @iframeBody.innerHTML
 
 
 		# ### Methods
+
+		saveHTMLToModel: -> @model.set @options.htmlAttribute, @iframeBody.innerHTML
+
 
 		setModel: (model) ->
 			@setInnerHTML model.get @options.htmlAttribute
@@ -143,8 +148,6 @@ define (require) ->
 			# iframe = @el.querySelector 'iframe'
 			# scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
 			# iframe.style.height = scrollHeight + 15 + 'px'
-
-		getHTML: -> @iframeBody.innerHTML
 
 		# setHTML: (html) -> 
 		# 	@setFocus()

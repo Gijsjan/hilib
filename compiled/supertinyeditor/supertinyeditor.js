@@ -111,7 +111,7 @@
         });
         return this.iframeDocument.addEventListener('keyup', function(ev) {
           return Fn.timeoutWithReset(500, function() {
-            return _this.model.set(_this.options.htmlAttribute, _this.getHTML());
+            return _this.saveHTMLToModel();
           });
         });
       };
@@ -126,7 +126,11 @@
         var action;
         action = ev.currentTarget.getAttribute('data-action');
         this.iframeDocument.execCommand(action, false, null);
-        return this.trigger('change', action, this.iframeBody.innerHTML);
+        return this.saveHTMLToModel();
+      };
+
+      SuperTinyEditor.prototype.saveHTMLToModel = function() {
+        return this.model.set(this.options.htmlAttribute, this.iframeBody.innerHTML);
       };
 
       SuperTinyEditor.prototype.setModel = function(model) {
@@ -137,10 +141,6 @@
 
       SuperTinyEditor.prototype.setInnerHTML = function(html) {
         return this.iframeBody.innerHTML = html;
-      };
-
-      SuperTinyEditor.prototype.getHTML = function() {
-        return this.iframeBody.innerHTML;
       };
 
       SuperTinyEditor.prototype.setIframeHeight = function(height) {
