@@ -1,5 +1,5 @@
 define (require) ->
-	Fn = require 'helpers2/general'
+	Fn = require 'hilib/functions/general'
 
 	validator: (args) ->
 		{valid, invalid} = args

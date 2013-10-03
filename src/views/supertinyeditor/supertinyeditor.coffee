@@ -99,7 +99,7 @@ define (require) ->
 			@iframeBody = @iframeDocument.querySelector 'body'
 			@iframeBody.style.whiteSpace = 'normal' if @options.wrap
 
-			@setFocus()
+			# @setFocus()
 
 			# Hack, hack, hack.
 			# The scroll event on the iframe is fired (through the contentDocument or contentWindow), but no scrollLeft,
@@ -175,7 +175,9 @@ define (require) ->
 
 		# setIframeWidth: (width) -> iframe.style.width = width
 
-		setFocus: -> @iframeBody.focus()
+		# Set focus to the end of the body text
+		setFocus: -> Fn.setCursorToEnd @iframeBody
+			# console.log range
 
 		setScrollPercentage: (percentages) ->
 			contentWindow = @el.querySelector('iframe').contentWindow

@@ -215,3 +215,14 @@ define (require) ->
 	checkCheckboxes: (selector, checked=true, baseEl=document) ->
 		checkboxes = baseEl.querySelectorAll selector
 		cb.checked = checked for cb in checkboxes
+
+	setCursorToEnd: (el) ->
+		range = document.createRange()
+		range.selectNodeContents el
+		range.collapse()
+
+		sel = window.getSelection()
+		sel.removeAllRanges()
+		sel.addRange range
+
+		el.focus()
