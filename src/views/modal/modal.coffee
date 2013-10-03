@@ -11,7 +11,7 @@ define (require) ->
 	Backbone = require 'backbone'
 	Tpl = require 'text!viewshtml/modal/modal.html'
 
-	modalManager = require 'managers2/modal'
+	modalManager = require 'hilib/managers/modal'
 	
 	# ## Modal
 	class Modal extends Backbone.View

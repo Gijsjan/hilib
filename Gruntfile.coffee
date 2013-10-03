@@ -13,6 +13,8 @@ module.exports = (grunt) ->
 				command: 'mocha-phantomjs -R dot http://localhost:8000/.test/index.html'
 			groc:
 				command: 'groc "src/*.coffee" --out=docs'
+			emptycompiled:
+				command: 'rm -rf compiled/*'
 
 		jade:
 			compile:
@@ -74,3 +76,11 @@ module.exports = (grunt) ->
 	grunt.registerTask 'i', 'coffee:compile'
 	grunt.registerTask 'w', 'watch'
 	grunt.registerTask 'd', 'shell:groc'
+
+	grunt.registerTask 'c', 'compile'
+	grunt.registerTask 'compile', [
+		'shell:emptycompiled' # rm -rf compiled/
+		'coffee:compile'
+		'jade:compile'
+		'stylus:compile'
+	]

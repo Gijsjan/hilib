@@ -45,14 +45,15 @@
 
 	.ste-control 
 		float left
-		width 34px
+		width 24px
 		height 30px
+		// margin-left 4px
 		cursor pointer
-		background-image url('../images/supertinyeditor/icons2.png')
+		background-image url('../images/supertinyeditor/icons2-small.png')
+		background-repeat no-repeat
 
 		&:hover 
 			background-color #fff
-			background-position 30px 0
 
 		&.bold
 			background-position 0px -120px
@@ -76,6 +77,26 @@
 			background-position 0px -540px
 		&.redo
 			background-position 0px -570px
+
+	.ste-button
+		float left
+		// width 20px
+		height 23px
+		padding 7px 6px 0px 6px
+		cursor pointer
+		color #666
+		font-size 1.2em
+		font-weight bold
+		font-family Bookman
+
+		&:hover 
+			background-color #fff
+
+		&[data-action="save"]:hover
+			color green
+
+		&[data-action="cancel"]:hover
+			color orange
 
 	.ste-footer 
 		height 32px

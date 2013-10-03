@@ -1,0 +1,5 @@
+input(data-view-id!="<%= viewId %>")
+ul.selected
+	| <% selected.each(function(model) { %>
+	li(data-id!="<%= model.id %>") <%= model.id %>
+	| <% }); %>

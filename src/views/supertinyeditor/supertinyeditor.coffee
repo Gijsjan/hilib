@@ -9,8 +9,8 @@
 # * wrap Boolean Sets white-space to normal on the iframe body if set to true
 
 define (require) ->
-	Fn = require 'helpers2/general'
-	StringFn = require 'helpers2/string'
+	Fn = require 'hilib/functions/general'
+	StringFn = require 'hilib/functions/string'
 
 	Views = 
 		Base: require 'views/base'
@@ -62,6 +62,14 @@ define (require) ->
 				# Create a divider
 				else if controlName is '|'
 					div.className = 'ste-divider'
+					@$currentHeader.append div
+				# Create a button
+				else if controlName.substr(0, 2) is 'b_'
+					controlName = controlName.substr(2)
+					div.className = 'ste-button'
+					div.setAttribute 'data-action', controlName
+					div.setAttribute 'title', StringFn.ucfirst controlName
+					div.innerHTML = StringFn.ucfirst controlName
 					@$currentHeader.append div
 				# Create a 'normal' control
 				else
@@ -122,6 +130,7 @@ define (require) ->
 		# ### Events
 		events: ->
 			'click .ste-control': 'controlClicked'
+			'click .ste-button': 'buttonClicked'
 
 		controlClicked: (ev) ->
 			action = ev.currentTarget.getAttribute 'data-action'
@@ -129,6 +138,10 @@ define (require) ->
 			@saveHTMLToModel()
 			# @model.set @options.htmlAttribute, @getHTML()
 			# @trigger 'change', action, @iframeBody.innerHTML
+
+		buttonClicked: (ev) ->
+			action = ev.currentTarget.getAttribute 'data-action'
+			@trigger action
 
 
 		# ### Methods

@@ -1,0 +1,11 @@
+.input
+	input(type="text", data-view-id!="<%= viewId %>")
+	.caret
+<% if (editable) { %>
+button.edit Edit
+<% } %>
+ul.list
+ul.selected
+	| <% selected.each(function(model) { %>
+	li.selected(data-id!="<%= model.id %>") <%= model.get('title') %>
+	| <% }); %>

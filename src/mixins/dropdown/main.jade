@@ -1,0 +1,3 @@
+| <% collection.each(function(model) { %>
+li.list(data-id!="<%= model.id %>", class!="<% if (selected===model) { %>active<% } %>") <%= model.get('title') %>
+| <% }); %>
