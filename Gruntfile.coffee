@@ -16,6 +16,11 @@ module.exports = (grunt) ->
 			emptycompiled:
 				command: 'rm -rf compiled/*'
 
+		touch:
+			js: 'compiled/jstouch'
+			html: 'compiled/htmltouch'
+			css: 'compiled/csstouch'
+
 		jade:
 			compile:
 				files: [
@@ -52,30 +57,32 @@ module.exports = (grunt) ->
 		watch:
 			coffee:
 				files: 'src/**/*.coffee'
-				tasks: 'coffee:compile'
+				tasks: ['coffee:compile', 'touch:js']
 			stylus:
 				files: 'src/**/*.styl'
-				tasks: 'stylus:compile'
+				tasks: ['stylus:compile', 'touch:css']
 			jade:
 				files: 'src/**/*.jade'
-				tasks: 'jade:compile'
+				tasks: ['jade:compile', 'touch:html']
 
 	#############
 	### TASKS ###
 	#############
 
-	grunt.loadNpmTasks 'grunt-shell'
 	grunt.loadNpmTasks 'grunt-contrib-jade'
 	grunt.loadNpmTasks 'grunt-contrib-stylus'
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
+	grunt.loadNpmTasks 'grunt-shell'
+	grunt.loadNpmTasks 'grunt-touch'
 
+	grunt.registerTask 'w', 'watch'
+
+	grunt.registerTask 'i', 'coffee:compile'
 	grunt.registerTask 'init', 'coffee:compile'
 
-	# ALIASES
-	grunt.registerTask 'i', 'coffee:compile'
-	grunt.registerTask 'w', 'watch'
 	grunt.registerTask 'd', 'shell:groc'
+	grunt.registerTask 'docs', 'shell:groc'
 
 	grunt.registerTask 'c', 'compile'
 	grunt.registerTask 'compile', [

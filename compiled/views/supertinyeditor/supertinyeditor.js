@@ -3,13 +3,14 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Fn, StringFn, SuperTinyEditor, Tpl, Views, _ref;
+    var Fn, Longpress, StringFn, SuperTinyEditor, Tpl, Views, _ref;
     Fn = require('hilib/functions/general');
     StringFn = require('hilib/functions/string');
+    Longpress = require('hilib/modules/longpress/main');
     Views = {
       Base: require('views/base')
     };
-    Tpl = require('text!viewshtml/supertinyeditor/supertinyeditor.html');
+    Tpl = require('text!hilib/views/supertinyeditor/supertinyeditor.html');
     return SuperTinyEditor = (function(_super) {
       __extends(SuperTinyEditor, _super);
 
@@ -99,6 +100,7 @@
         if (this.options.wrap) {
           this.iframeBody.style.whiteSpace = 'normal';
         }
+        new Longpress(this.iframeDocument);
         this.iframeDocument.addEventListener('scroll', function() {
           var target;
           if (!_this.autoScroll) {

@@ -12,10 +12,12 @@ define (require) ->
 	Fn = require 'hilib/functions/general'
 	StringFn = require 'hilib/functions/string'
 
+	Longpress = require 'hilib/modules/longpress/main'
+
 	Views = 
 		Base: require 'views/base'
 
-	Tpl = require 'text!viewshtml/supertinyeditor/supertinyeditor.html'
+	Tpl = require 'text!hilib/views/supertinyeditor/supertinyeditor.html'
 
 	# ## SuperTinyEditor
 	class SuperTinyEditor extends Views.Base
@@ -98,6 +100,8 @@ define (require) ->
 
 			@iframeBody = @iframeDocument.querySelector 'body'
 			@iframeBody.style.whiteSpace = 'normal' if @options.wrap
+
+			new Longpress @iframeDocument
 
 			# @setFocus()
 

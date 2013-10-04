@@ -9,7 +9,7 @@
 
 define (require) ->
 	Backbone = require 'backbone'
-	Tpl = require 'text!viewshtml/modal/modal.html'
+	Tpl = require 'text!hilib/views/modal/modal.html'
 
 	modalManager = require 'hilib/managers/modal'
 	

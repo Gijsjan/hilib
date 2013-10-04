@@ -5,7 +5,7 @@
   define(function(require) {
     var Backbone, Modal, Tpl, modalManager, _ref;
     Backbone = require('backbone');
-    Tpl = require('text!viewshtml/modal/modal.html');
+    Tpl = require('text!hilib/views/modal/modal.html');
     modalManager = require('hilib/managers/modal');
     return Modal = (function(_super) {
       __extends(Modal, _super);

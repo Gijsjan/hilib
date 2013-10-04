@@ -6,7 +6,7 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	Tpl = require 'text!viewshtml/form/editablelist/main.html'
+	Tpl = require 'text!hilib/views/form/editablelist/main.html'
 
 	class EditableList extends Views.Base
 

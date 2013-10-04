@@ -10,7 +10,7 @@
     Views = {
       Base: require('views/base')
     };
-    Tpl = require('text!viewshtml/form/editablelist/main.html');
+    Tpl = require('text!hilib/views/form/editablelist/main.html');
     return EditableList = (function(_super) {
       __extends(EditableList, _super);
 

@@ -1,6 +1,7 @@
 define (require) ->
 	Backbone = require 'backbone'
 	Collections =
+		# PUT IN HILIB
 		'View': require 'collections/view'
 
 	class ViewManager
