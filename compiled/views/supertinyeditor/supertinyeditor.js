@@ -100,7 +100,7 @@
         if (this.options.wrap) {
           this.iframeBody.style.whiteSpace = 'normal';
         }
-        new Longpress(this.iframeDocument);
+        new Longpress(this.iframeDocument, this.el.querySelector('.ste-body'));
         this.iframeDocument.addEventListener('scroll', function() {
           var target;
           if (!_this.autoScroll) {

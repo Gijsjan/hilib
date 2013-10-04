@@ -101,7 +101,7 @@ define (require) ->
 			@iframeBody = @iframeDocument.querySelector 'body'
 			@iframeBody.style.whiteSpace = 'normal' if @options.wrap
 
-			new Longpress @iframeDocument
+			new Longpress @iframeDocument, @el.querySelector '.ste-body'
 
 			# @setFocus()
 
