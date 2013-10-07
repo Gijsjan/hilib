@@ -7,7 +7,7 @@
     Fn = require('hilib/functions/general');
     StringFn = require('hilib/functions/string');
     require('hilib/functions/jquery.mixin');
-    Longpress = require('hilib/modules/longpress/main');
+    Longpress = require('hilib/views/longpress/main');
     Views = {
       Base: require('views/base')
     };
@@ -84,7 +84,7 @@
       };
 
       SuperTinyEditor.prototype.renderIframe = function() {
-        var html, iframe,
+        var html, iframe, lp,
           _this = this;
         iframe = this.el.querySelector('iframe');
         iframe.style.width = this.options.width + 'px';
@@ -99,7 +99,9 @@
         if (this.options.wrap) {
           this.iframeBody.style.whiteSpace = 'normal';
         }
-        new Longpress(this.el);
+        lp = new Longpress({
+          parent: this.el.querySelector('.ste-body')
+        });
         this.iframeDocument.addEventListener('scroll', function() {
           var target;
           if (!_this.autoScroll) {

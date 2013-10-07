@@ -14,7 +14,7 @@ define (require) ->
 
 	require 'hilib/functions/jquery.mixin'
 
-	Longpress = require 'hilib/modules/longpress/main'
+	Longpress = require 'hilib/views/longpress/main'
 
 	Views = 
 		Base: require 'views/base'
@@ -103,7 +103,8 @@ define (require) ->
 			@iframeBody.style.whiteSpace = 'normal' if @options.wrap
 
 			# new Longpress @iframeDocument, @el.querySelector '.ste-body'
-			new Longpress @el
+			lp = new Longpress
+				parent: @el.querySelector '.ste-body'
 
 
 			# @setFocus()
