@@ -1,6 +1,7 @@
 (function() {
   define(function(require) {
-    var Longpress, codes, diacritics, shiftcodes;
+    var Fn, Longpress, codes, diacritics, shiftcodes;
+    Fn = require('hilib/functions/general');
     codes = {
       65: 'a',
       66: 'b',
@@ -128,36 +129,71 @@
 
       Longpress.prototype.lastKeyCode = null;
 
-      function Longpress(iframeDocument, el) {
-        this.el = el;
-        this.iframeDocument = iframeDocument;
-        this.iframeBody = iframeDocument.querySelector('body');
+      Longpress.prototype.keyDown = false;
+
+      function Longpress(editorEl) {
+        this.iframe = editorEl.querySelector('iframe');
+        this.iframeBody = this.iframe.contentDocument.querySelector('body');
         this.iframeBody.addEventListener('keydown', this.onKeydown.bind(this));
         this.iframeBody.addEventListener('keyup', this.onKeyup.bind(this));
+        this.iframeBody.addEventListener('click', this.onClick.bind(this));
+        this.editorBody = editorEl.querySelector('.ste-body');
+        this.editorBody.addEventListener('click', this.onClick.bind(this));
       }
 
       Longpress.prototype.onKeydown = function(e) {
         var pressedChar,
           _this = this;
+        if (this.longKeyDown) {
+          e.preventDefault();
+          return false;
+        }
+        pressedChar = e.shiftKey ? shiftcodes[e.keyCode] : codes[e.keyCode];
         if (e.keyCode === this.lastKeyCode) {
           e.preventDefault();
-          pressedChar = e.shiftKey ? shiftcodes[e.keyCode] : codes[e.keyCode];
-          if ((this.timer == null) && (pressedChar != null)) {
-            this.timer = setTimeout((function() {
-              var list;
-              list = _this.createList(pressedChar);
-              return _this.show(list);
-            }), 300);
+          if (pressedChar != null) {
+            this.longKeyDown = true;
+            if (this.timer == null) {
+              this.timer = setTimeout((function() {
+                var list;
+                _this.rangeManager.set(_this.iframe.contentWindow.getSelection().getRangeAt(0));
+                list = _this.createList(pressedChar);
+                return _this.show(list);
+              }), 300);
+            }
           }
         }
         return this.lastKeyCode = e.keyCode;
       };
 
       Longpress.prototype.onKeyup = function(e) {
-        clearTimeout(this.timer);
-        this.timer = null;
-        this.lastKeyCode = null;
+        this.longKeyDown = false;
         return this.hide();
+      };
+
+      Longpress.prototype.rangeManager = (function() {
+        var currentRange,
+          _this = this;
+        currentRange = null;
+        return {
+          get: function() {
+            return currentRange;
+          },
+          set: function(r) {
+            return currentRange = r.cloneRange();
+          },
+          clear: function() {
+            return currentRange = null;
+          }
+        };
+      })();
+
+      Longpress.prototype.onClick = function(e) {
+        if (this.editorBody.querySelector('ul.longpress') != null) {
+          e.preventDefault();
+          e.stopPropagation();
+          return this.resetFocus();
+        }
       };
 
       Longpress.prototype.createList = function(pressedChar) {
@@ -180,30 +216,37 @@
       };
 
       Longpress.prototype.show = function(list) {
-        this.el.appendChild(list);
-        return $(list).addClass('active');
+        return this.editorBody.appendChild(list);
       };
 
       Longpress.prototype.hide = function() {
         var list;
-        list = this.el.querySelector('.longpress');
+        this.lastKeyCode = null;
+        list = this.editorBody.querySelector('.longpress');
         if (list != null) {
-          this.el.removeChild(list);
-          return $(list).removeClass('active');
+          clearTimeout(this.timer);
+          this.timer = null;
+          this.rangeManager.clear();
+          return this.editorBody.removeChild(list);
         }
       };
 
       Longpress.prototype.replaceChar = function(chr) {
-        var range, sel;
-        range = this.iframeDocument.getSelection().getRangeAt(0);
+        var range;
+        range = this.rangeManager.get();
         range.setStart(range.startContainer, range.startOffset - 1);
         range.deleteContents();
         range.insertNode(document.createTextNode(chr));
         range.collapse(false);
-        sel = this.iframeDocument.getSelection();
+        return this.resetFocus();
+      };
+
+      Longpress.prototype.resetFocus = function() {
+        var sel;
+        this.iframe.contentWindow.focus();
+        sel = this.iframe.contentWindow.getSelection();
         sel.removeAllRanges();
-        sel.addRange(range);
-        return this.iframeBody.focus();
+        return sel.addRange(this.rangeManager.get());
       };
 
       return Longpress;

@@ -12,6 +12,8 @@ define (require) ->
 	Fn = require 'hilib/functions/general'
 	StringFn = require 'hilib/functions/string'
 
+	require 'hilib/functions/jquery.mixin'
+
 	Longpress = require 'hilib/modules/longpress/main'
 
 	Views = 
@@ -45,8 +47,7 @@ define (require) ->
 
 			@renderIframe()
 
-			# Go native
-			$(@iframeDocument).find('body').focus() if @options.html is ''
+			@setFocus()
 			
 			@
 
@@ -101,7 +102,9 @@ define (require) ->
 			@iframeBody = @iframeDocument.querySelector 'body'
 			@iframeBody.style.whiteSpace = 'normal' if @options.wrap
 
-			new Longpress @iframeDocument, @el.querySelector '.ste-body'
+			# new Longpress @iframeDocument, @el.querySelector '.ste-body'
+			new Longpress @el
+
 
 			# @setFocus()
 
@@ -180,8 +183,7 @@ define (require) ->
 		# setIframeWidth: (width) -> iframe.style.width = width
 
 		# Set focus to the end of the body text
-		setFocus: -> Fn.setCursorToEnd @iframeBody
-			# console.log range
+		setFocus: -> Fn.setCursorToEnd @iframeBody, @el.querySelector('iframe').contentWindow
 
 		setScrollPercentage: (percentages) ->
 			contentWindow = @el.querySelector('iframe').contentWindow

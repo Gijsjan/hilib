@@ -1,5 +1,7 @@
 define (require) ->
 
+	Fn = require 'hilib/functions/general'
+
 	codes =
 		65: 'a'
 		66: 'b'
@@ -130,31 +132,70 @@ define (require) ->
 
 		lastKeyCode: null
 
-		constructor: (iframeDocument, el) ->
-			@el = el
-			@iframeDocument = iframeDocument
-			@iframeBody = iframeDocument.querySelector 'body'
+		keyDown: false
 
+		constructor: (editorEl) ->
+			@iframe = editorEl.querySelector 'iframe'
+			@iframeBody = @iframe.contentDocument.querySelector 'body'
 			@iframeBody.addEventListener 'keydown', @onKeydown.bind @
 			@iframeBody.addEventListener 'keyup', @onKeyup.bind @
+			@iframeBody.addEventListener 'click', @onClick.bind @
+
+			@editorBody = editorEl.querySelector '.ste-body'
+			@editorBody.addEventListener 'click', @onClick.bind @
 
 		onKeydown: (e) ->
+			# Without @longkeydown check, the onkeydown handler will do some logic (place a char in the editor)
+			# when the user clicks the editor or ul.longpress.
+			if @longKeyDown
+				e.preventDefault()
+				return false
+
+			# Get the pressedChar from the keyCode
+			pressedChar = if e.shiftKey then shiftcodes[e.keyCode] else codes[e.keyCode]
+			
+			# If the pressedChar is found in one of the code maps (shiftcodes or codes) and if
+			# the keyCode is equal to the lastKeyCode (so, an "e" was entered, if you hold the "e"-key, than
+			# onkeydown keeps being fired, on the second pass we init the timer), than we show the list if it not already
+			# is shown. 
 			if e.keyCode is @lastKeyCode
 				e.preventDefault()
-				
-				pressedChar = if e.shiftKey then shiftcodes[e.keyCode] else codes[e.keyCode]
-				if not @timer? and pressedChar?
-					@timer = setTimeout (=>
-						list = @createList pressedChar
-						@show list
-					), 300
+
+				if pressedChar?
+					# onKeyDown is going for it's second run (same char is held for two events in a row)
+					@longKeyDown = true
+					
+					if not @timer?
+						@timer = setTimeout (=>
+							@rangeManager.set @iframe.contentWindow.getSelection().getRangeAt(0)
+							list = @createList pressedChar
+							@show list
+						), 300
 			@lastKeyCode = e.keyCode
 
 		onKeyup: (e) ->
-			clearTimeout @timer
-			@timer = null
-			@lastKeyCode = null
+			@longKeyDown = false
 			@hide()
+
+		rangeManager: do ->
+			currentRange = null
+
+			get: => currentRange
+			set: (r) => currentRange = r.cloneRange()
+			clear: => currentRange = null
+
+		# The click event is superfluous, because a character was already selected by the
+		# mouseenter event, but will be frequently used by users.
+		onClick: (e) ->
+			# If the <ul> is visible.
+			if @editorBody.querySelector('ul.longpress')?
+				e.preventDefault()
+				e.stopPropagation()
+
+				# The click blurs (loses focus of) the iframe. So we have to reset it back to the
+				# iframe and to it's original position so the user can keep typing.
+				@resetFocus()
+
 
 		createList: (pressedChar) ->
 			ul = document.createElement 'ul'
@@ -173,27 +214,41 @@ define (require) ->
 			ul
 
 		show: (list) ->
-			@el.appendChild list
-			$(list).addClass 'active'
+			@editorBody.appendChild list
 
 		hide: ->
-			list = @el.querySelector '.longpress'
+			@lastKeyCode = null
+			list = @editorBody.querySelector '.longpress'
 			if list?
-				@el.removeChild list
-				$(list).removeClass 'active'
+				clearTimeout @timer
+				@timer = null
+				@rangeManager.clear()
+
+				@editorBody.removeChild list
 
 
 		replaceChar: (chr) ->
-			range = @iframeDocument.getSelection().getRangeAt(0)
-			
+			# Get the range from the rangeManager.
+			range = @rangeManager.get()
+			# Set new start of the range one character backwards.
 			range.setStart range.startContainer, range.startOffset - 1
+			# Delete the selected character.
 			range.deleteContents()
+			# Insert the new character in place of the just removed character.
 			range.insertNode document.createTextNode chr
-
+			# Collapse to the end.
 			range.collapse false
 
-			sel = @iframeDocument.getSelection()
-			sel.removeAllRanges()
-			sel.addRange range
+			@resetFocus()
 
-			@iframeBody.focus()
+		# Sets the focus on the iframe and the caret to the original position.
+		resetFocus: ->
+			# Set focus to the contentWindow before getting the selection.
+			@iframe.contentWindow.focus()
+			
+			# Get the selection from the contentWindow.
+			sel = @iframe.contentWindow.getSelection()
+			# Remove all ranges.
+			sel.removeAllRanges()
+			# Add new collapsed range (which will be at the end of the just inserted character)
+			sel.addRange @rangeManager.get()

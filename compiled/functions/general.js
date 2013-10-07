@@ -277,15 +277,19 @@
         }
         return _results;
       },
-      setCursorToEnd: function(el) {
-        var range, sel;
+      setCursorToEnd: function(textEl, windowEl) {
+        var range, sel, win;
+        win = windowEl != null ? windowEl : window;
+        if (windowEl == null) {
+          windowEl = textEl;
+        }
+        windowEl.focus();
         range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse();
-        sel = window.getSelection();
+        range.selectNodeContents(textEl);
+        range.collapse(false);
+        sel = win.getSelection();
         sel.removeAllRanges();
-        sel.addRange(range);
-        return el.focus();
+        return sel.addRange(range);
       }
     };
   });

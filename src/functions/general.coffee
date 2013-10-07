@@ -216,13 +216,21 @@ define (require) ->
 		checkboxes = baseEl.querySelectorAll selector
 		cb.checked = checked for cb in checkboxes
 
-	setCursorToEnd: (el) ->
-		range = document.createRange()
-		range.selectNodeContents el
-		range.collapse()
+	setCursorToEnd: (textEl, windowEl) ->
+		# Set win to windowEl or window. In FF the window object is different
+		# from the window object in Chrome. Define before setting focus!
+		win = windowEl ? window
 
-		sel = window.getSelection()
+		# If windowEl is empty, use textEl to set focus.
+		windowEl ?= textEl
+		windowEl.focus()
+
+		# Create range and collapse to end.
+		range = document.createRange()
+		range.selectNodeContents textEl
+		range.collapse false
+
+		# Get selection and set the new collapsed range.
+		sel = win.getSelection()
 		sel.removeAllRanges()
 		sel.addRange range
-
-		el.focus()

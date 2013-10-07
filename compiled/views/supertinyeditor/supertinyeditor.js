@@ -6,6 +6,7 @@
     var Fn, Longpress, StringFn, SuperTinyEditor, Tpl, Views, _ref;
     Fn = require('hilib/functions/general');
     StringFn = require('hilib/functions/string');
+    require('hilib/functions/jquery.mixin');
     Longpress = require('hilib/modules/longpress/main');
     Views = {
       Base: require('views/base')
@@ -47,9 +48,7 @@
         this.$currentHeader = this.$('.ste-header');
         this.renderControls();
         this.renderIframe();
-        if (this.options.html === '') {
-          $(this.iframeDocument).find('body').focus();
-        }
+        this.setFocus();
         return this;
       };
 
@@ -100,7 +99,7 @@
         if (this.options.wrap) {
           this.iframeBody.style.whiteSpace = 'normal';
         }
-        new Longpress(this.iframeDocument, this.el.querySelector('.ste-body'));
+        new Longpress(this.el);
         this.iframeDocument.addEventListener('scroll', function() {
           var target;
           if (!_this.autoScroll) {
@@ -165,7 +164,7 @@
       };
 
       SuperTinyEditor.prototype.setFocus = function() {
-        return Fn.setCursorToEnd(this.iframeBody);
+        return Fn.setCursorToEnd(this.iframeBody, this.el.querySelector('iframe').contentWindow);
       };
 
       SuperTinyEditor.prototype.setScrollPercentage = function(percentages) {
