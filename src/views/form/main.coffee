@@ -1,3 +1,13 @@
+# Example usage:
+#
+# form = new Views.Form
+# 	tpl: Templates.FormTpl
+# 	model: @model (or Models.User)
+# form.on 'change', => doThis()
+# form.on 'save:success', => doThat()
+# form.on 'save:error', => doSus()
+
+
 define (require) ->
 	Fn = require 'hilib/functions/general'
 	Views = 
@@ -59,7 +69,7 @@ define (require) ->
 			@$(ev.currentTarget).removeClass('invalid').attr 'title', ''
 
 			model = if @model? then @model else @getModel(ev)
-			
+
 			value = if ev.currentTarget.type is 'checkbox' then ev.currentTarget.checked else ev.currentTarget.value
 
 			model.set ev.currentTarget.name, value, validate: true
@@ -128,14 +138,17 @@ define (require) ->
 		# Create the form model. If model isnt new (has an id), fetch data from server.
 		# MultiForm overrides this method and creates a collection.
 		createModels: ->
-			@options.value ?= {}
-			@model = new @Model @options.value unless @model?
+			unless @model?
+				@options.value ?= {}
+				@model = new @Model @options.value
 
-			if @model.isNew()
-				@trigger 'createModels:finished'
+				if @model.isNew()
+					@trigger 'createModels:finished'
+				else
+					@model.fetch
+						success: => @trigger 'createModels:finished'
 			else
-				@model.fetch
-					success: => @trigger 'createModels:finished'
+				@trigger 'createModels:finished'
 		
 		# Add validation mixin. The invalid class added to the input by the 'invalid' callback, is removed in/when @inputChanged.
 		addValidation: ->	

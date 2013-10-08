@@ -137,20 +137,22 @@
       Form.prototype.createModels = function() {
         var _base,
           _this = this;
-        if ((_base = this.options).value == null) {
-          _base.value = {};
-        }
         if (this.model == null) {
+          if ((_base = this.options).value == null) {
+            _base.value = {};
+          }
           this.model = new this.Model(this.options.value);
-        }
-        if (this.model.isNew()) {
-          return this.trigger('createModels:finished');
+          if (this.model.isNew()) {
+            return this.trigger('createModels:finished');
+          } else {
+            return this.model.fetch({
+              success: function() {
+                return _this.trigger('createModels:finished');
+              }
+            });
+          }
         } else {
-          return this.model.fetch({
-            success: function() {
-              return _this.trigger('createModels:finished');
-            }
-          });
+          return this.trigger('createModels:finished');
         }
       };
 

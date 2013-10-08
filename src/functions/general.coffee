@@ -85,7 +85,6 @@ define (require) ->
 			el.appendChild range.extractContents()
 			
 			range.insertNode el
-
 		off: ->
 			$(el).replaceWith -> $(@).contents()
 
@@ -160,7 +159,7 @@ define (require) ->
 		prefix ?= ''
 
 		for own k, v of obj
-			if _.isObject(v) and not _.isArray(v) and not _.isFunction(v)
+			if _.isObject(v) and not _.isArray(v) and not _.isFunction(v) and not v instanceof Backbone.Model and not v instanceof Backbone.Collection
 				@flattenObject v, into, prefix + k + '.'
 			else
 				into[prefix+k] = v

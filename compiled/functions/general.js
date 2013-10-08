@@ -193,7 +193,7 @@
         for (k in obj) {
           if (!__hasProp.call(obj, k)) continue;
           v = obj[k];
-          if (_.isObject(v) && !_.isArray(v) && !_.isFunction(v)) {
+          if (_.isObject(v) && !_.isArray(v) && !_.isFunction(v) && !v instanceof Backbone.Model && !v instanceof Backbone.Collection) {
             this.flattenObject(v, into, prefix + k + '.');
           } else {
             into[prefix + k] = v;
