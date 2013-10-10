@@ -187,6 +187,14 @@
         }), 200);
       };
 
+      SuperTinyEditor.prototype.show = function() {
+        return this.el.style.display = 'block';
+      };
+
+      SuperTinyEditor.prototype.hide = function() {
+        return this.el.style.display = 'none';
+      };
+
       return SuperTinyEditor;
 
     })(Views.Base);

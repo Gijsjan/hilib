@@ -66,20 +66,17 @@ define (require) ->
 
 		# ### Events
 		events:
-			"click button.submit": "onSubmit"
-			"click button.cancel": "onCancel"
-			"click .overlay": "onOverlayClicked"
+			"click button.submit": -> @trigger 'submit'
+			"click button.cancel": -> @cancel()
+			"click .overlay": -> @cancel()
 
-		onSubmit: (ev) -> @trigger "submit"
-
-		onCancel: (ev) ->
+		cancel: ->
 			@trigger "cancel"
-			@fadeOut 0
-
-		onOverlayClicked: (ev) ->
-			modalManager.remove @
+			@close()
 
 		# ### Methods
+
+		close: -> modalManager.remove @
 
 		fadeOut: (delay = 1000) ->
 			# Speed is used for $.fadeOut and to calculate the time at which to @remove the modal.

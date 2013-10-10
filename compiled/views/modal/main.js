@@ -60,21 +60,23 @@
       };
 
       Modal.prototype.events = {
-        "click button.submit": "onSubmit",
-        "click button.cancel": "onCancel",
-        "click .overlay": "onOverlayClicked"
+        "click button.submit": function() {
+          return this.trigger('submit');
+        },
+        "click button.cancel": function() {
+          return this.cancel();
+        },
+        "click .overlay": function() {
+          return this.cancel();
+        }
       };
 
-      Modal.prototype.onSubmit = function(ev) {
-        return this.trigger("submit");
-      };
-
-      Modal.prototype.onCancel = function(ev) {
+      Modal.prototype.cancel = function() {
         this.trigger("cancel");
-        return this.fadeOut(0);
+        return this.close();
       };
 
-      Modal.prototype.onOverlayClicked = function(ev) {
+      Modal.prototype.close = function() {
         return modalManager.remove(this);
       };
 

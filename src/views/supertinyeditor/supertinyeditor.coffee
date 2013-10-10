@@ -202,3 +202,6 @@ define (require) ->
 			contentWindow.scrollTo left, top
 			# Give the receiving end (Views.EntryPreview) some time to respond and then turn off the autoScroll
 			setTimeout (=> @autoScroll = false), 200
+
+		show: -> @el.style.display = 'block'
+		hide: -> @el.style.display = 'none'

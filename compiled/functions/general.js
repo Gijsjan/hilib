@@ -288,8 +288,10 @@
         range.selectNodeContents(textEl);
         range.collapse(false);
         sel = win.getSelection();
-        sel.removeAllRanges();
-        return sel.addRange(range);
+        if (sel != null) {
+          sel.removeAllRanges();
+          return sel.addRange(range);
+        }
       }
     };
   });

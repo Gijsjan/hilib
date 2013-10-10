@@ -231,5 +231,7 @@ define (require) ->
 
 		# Get selection and set the new collapsed range.
 		sel = win.getSelection()
-		sel.removeAllRanges()
-		sel.addRange range
+		
+		if sel?
+			sel.removeAllRanges()
+			sel.addRange range
