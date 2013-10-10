@@ -89,7 +89,7 @@
         speed = delay === 0 ? 0 : 500;
         this.$(".modalbody").delay(delay).fadeOut(speed);
         return setTimeout((function() {
-          return modalManager.remove(_this);
+          return _this.close();
         }), delay + speed - 100);
       };
 

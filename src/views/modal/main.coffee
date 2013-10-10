@@ -87,7 +87,7 @@ define (require) ->
 			@$(".modalbody").delay(delay).fadeOut speed
 			
 			# Use setTimeout to @remove before $.fadeOut is completely finished, otherwise is interferes with the overlay
-			setTimeout (=> modalManager.remove @), delay + speed - 100
+			setTimeout (=> @close()), delay + speed - 100
 
 		message: (type, message) ->
 			return console.error("Unknown message type!")  if ["success", "warning", "error"].indexOf(type) is -1
