@@ -20,7 +20,7 @@ define (require) ->
 			@token = sessionStorage.getItem 'huygens_token' if not @token?
 
 			if not @token?
-				@publish 'unauthorized'
+				# @publish 'unauthorized'
 				return false
 
 			@token

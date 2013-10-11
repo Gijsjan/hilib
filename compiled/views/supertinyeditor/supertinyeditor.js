@@ -195,6 +195,10 @@
         return this.el.style.display = 'none';
       };
 
+      SuperTinyEditor.prototype.visible = function() {
+        return this.el.style.display === 'block';
+      };
+
       return SuperTinyEditor;
 
     })(Views.Base);

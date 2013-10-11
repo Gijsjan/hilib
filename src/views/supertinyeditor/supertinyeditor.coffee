@@ -205,3 +205,4 @@ define (require) ->
 
 		show: -> @el.style.display = 'block'
 		hide: -> @el.style.display = 'none'
+		visible: -> @el.style.display is 'block'
