@@ -211,7 +211,7 @@ define (require) ->
 		el.scrollTop = (scrollHeight - clientHeight) * percentages.top/100
 		el.scrollLeft = (scrollWidth - clientWidth) * percentages.left/100
 
-	checkCheckboxes: (selector, checked=true, baseEl=document) ->
+	checkCheckboxes: (selector='input[type="checkbox"]', checked=true, baseEl=document) ->
 		checkboxes = baseEl.querySelectorAll selector
 		cb.checked = checked for cb in checkboxes
 
@@ -231,7 +231,7 @@ define (require) ->
 
 		# Get selection and set the new collapsed range.
 		sel = win.getSelection()
-		
+
 		if sel?
 			sel.removeAllRanges()
 			sel.addRange range

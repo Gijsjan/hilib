@@ -263,6 +263,9 @@
       },
       checkCheckboxes: function(selector, checked, baseEl) {
         var cb, checkboxes, _i, _len, _results;
+        if (selector == null) {
+          selector = 'input[type="checkbox"]';
+        }
         if (checked == null) {
           checked = true;
         }
