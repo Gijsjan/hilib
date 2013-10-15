@@ -35,26 +35,20 @@
         newEmpty = Array.isArray(object) ? [] : {};
         return $.extend(true, newEmpty, object);
       },
-      /*
-      	Starts a timer which resets when it is called again.
-      	
-      	Example: with a scroll event, when a user stops scrolling, the timer ends.
-      	Without the reset, the timer would fire dozens of times.
-      	Can also be handy to avoid double clicks.
-      
-      	Example usage:
-      	div.addEventListener 'scroll', (ev) ->
-      		Fn.timeoutWithReset 200, -> console.log('finished!')
-      	
-      	return Function
-      */
-
       timeoutWithReset: (function() {
         var timer;
-        timer = 0;
-        return function(ms, cb) {
-          clearTimeout(timer);
-          return timer = setTimeout(cb, ms);
+        timer = null;
+        return function(ms, cb, onResetFn) {
+          if (timer != null) {
+            if (onResetFn != null) {
+              onResetFn();
+            }
+            clearTimeout(timer);
+          }
+          return timer = setTimeout((function() {
+            timer = null;
+            return cb();
+          }), ms);
         };
       })(),
       /*

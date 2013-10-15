@@ -177,6 +177,10 @@ define (require) ->
 		setIframeHeight: (height) ->
 			iframe = @el.querySelector 'iframe'
 			iframe.style.height = height + 'px'
+
+		setIframeWidth: (width) ->
+			iframe = @el.querySelector 'iframe'
+			iframe.style.width = width + 'px'
 			# iframe = @el.querySelector 'iframe'
 			# scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
 			# iframe.style.height = scrollHeight + 15 + 'px'
@@ -203,6 +207,6 @@ define (require) ->
 			# Give the receiving end (Views.EntryPreview) some time to respond and then turn off the autoScroll
 			setTimeout (=> @autoScroll = false), 200
 
-		show: -> @el.style.display = 'block'
-		hide: -> @el.style.display = 'none'
-		visible: -> @el.style.display is 'block'
+		# show: -> @el.style.display = 'block'
+		# hide: -> @el.style.display = 'none'
+		# visible: -> @el.style.display is 'block'

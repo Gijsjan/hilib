@@ -165,6 +165,12 @@
         return iframe.style.height = height + 'px';
       };
 
+      SuperTinyEditor.prototype.setIframeWidth = function(width) {
+        var iframe;
+        iframe = this.el.querySelector('iframe');
+        return iframe.style.width = width + 'px';
+      };
+
       SuperTinyEditor.prototype.setFocus = function() {
         return Fn.setCursorToEnd(this.iframeBody, this.el.querySelector('iframe').contentWindow);
       };
@@ -185,18 +191,6 @@
         return setTimeout((function() {
           return _this.autoScroll = false;
         }), 200);
-      };
-
-      SuperTinyEditor.prototype.show = function() {
-        return this.el.style.display = 'block';
-      };
-
-      SuperTinyEditor.prototype.hide = function() {
-        return this.el.style.display = 'none';
-      };
-
-      SuperTinyEditor.prototype.visible = function() {
-        return this.el.style.display === 'block';
       };
 
       return SuperTinyEditor;

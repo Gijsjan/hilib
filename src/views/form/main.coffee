@@ -101,7 +101,7 @@ define (require) ->
 			
 			if @model?
 				@data.model = @model
-			else if @collection?
+			if @collection?
 				@data.collection = @collection
 			
 			rtpl = _.template @tpl, @data

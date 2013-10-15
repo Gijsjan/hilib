@@ -1,19 +1,35 @@
 define (require) ->
 	$ = require 'jquery'
 	$.support.cors = true
+	
+	defaultOptions =
+		# A use case for the token option is when we have a project which uses tokens to authorize,
+		# but we want to make a request which shouldn't send the Authorization header. For example
+		# when doing a file upload.
+		token: true
 
 	token: null
 
-	get: (args) ->
-		@fire 'get', args
+	get: (args, options={}) ->
+		@fire 'get', args, options
 
-	post: (args) ->
-		@fire 'post', args
+	post: (args, options={}) ->
+		@fire 'post', args, options
 
-	put: (args) ->
-		@fire 'put', args
+	put: (args, options={}) ->
+		@fire 'put', args, options
 
-	fire: (type, args) ->
+	poll: (url, testFn) ->
+		dopoll ->
+			xhr = ajax.get url: url
+			xhr.done (data, textStatus, jqXHR) =>
+				dopoll() unless testFn data
+
+		dopoll()
+
+	fire: (type, args, options) ->
+		options = $.extend {}, defaultOptions, options
+
 		ajaxArgs =
 			type: type
 			dataType: 'json'
@@ -21,7 +37,7 @@ define (require) ->
 			processData: false
 			crossDomain: true
 
-		if @token?
+		if @token? and options.token
 			ajaxArgs.beforeSend = (xhr) => xhr.setRequestHeader 'Authorization', "SimpleAuth #{@token}"
 
 		$.ajax $.extend ajaxArgs, args

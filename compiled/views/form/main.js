@@ -103,7 +103,8 @@
         this.data.viewId = this.cid;
         if (this.model != null) {
           this.data.model = this.model;
-        } else if (this.collection != null) {
+        }
+        if (this.collection != null) {
           this.data.collection = this.collection;
         }
         rtpl = _.template(this.tpl, this.data);

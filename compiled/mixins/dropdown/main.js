@@ -59,7 +59,8 @@
           viewId: this.cid,
           selected: this.selected,
           mutable: this.settings.mutable,
-          editable: this.settings.editable
+          editable: this.settings.editable,
+          placeholder: this.settings.placeholder
         });
         this.$el.html(rtpl);
         this.$optionlist = this.$('ul.list');

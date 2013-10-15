@@ -14,6 +14,17 @@
 # * preDropdownRender
 # * postDropdownRender
 # * postDropdownFilter
+
+# options
+#	value
+#	config
+#		data
+#		settings
+#			mutable
+#			editable
+#			inputClass
+#			getModel
+#			placeholder
 define (require) ->
 
 	Backbone = require 'backbone'
@@ -80,6 +91,7 @@ define (require) ->
 			selected: @selected
 			mutable: @settings.mutable
 			editable: @settings.editable
+			placeholder: @settings.placeholder
 		@$el.html rtpl
 
 		@$optionlist = @$ 'ul.list'
