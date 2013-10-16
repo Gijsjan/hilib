@@ -19,11 +19,17 @@ define (require) ->
 	put: (args, options={}) ->
 		@fire 'put', args, options
 
-	poll: (url, testFn) ->
-		dopoll ->
-			xhr = ajax.get url: url
+	# Keep requesting *url until *testFn returns true. Call *done afterwards.
+	poll: (args) ->
+		{url, testFn, done} = args
+
+		dopoll = =>
+			xhr = @get url: url
 			xhr.done (data, textStatus, jqXHR) =>
-				dopoll() unless testFn data
+				if testFn(data)
+					done data, textStatus, jqXHR
+				else 
+					setTimeout dopoll, 5000
 
 		dopoll()
 

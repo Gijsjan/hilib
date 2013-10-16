@@ -26,19 +26,23 @@
         }
         return this.fire('put', args, options);
       },
-      poll: function(url, testFn) {
-        dopoll(function() {
-          var xhr,
-            _this = this;
-          xhr = ajax.get({
+      poll: function(args) {
+        var done, dopoll, testFn, url,
+          _this = this;
+        url = args.url, testFn = args.testFn, done = args.done;
+        dopoll = function() {
+          var xhr;
+          xhr = _this.get({
             url: url
           });
           return xhr.done(function(data, textStatus, jqXHR) {
-            if (!testFn(data)) {
-              return dopoll();
+            if (testFn(data)) {
+              return done(data, textStatus, jqXHR);
+            } else {
+              return setTimeout(dopoll, 5000);
             }
           });
-        });
+        };
         return dopoll();
       },
       fire: function(type, args, options) {
