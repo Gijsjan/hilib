@@ -1,9 +1,9 @@
 .modal .overlay{position:fixed;left:0;top:0;background-color:#000;right:0;bottom:0;opacity:.7}
-.modal .modalbody{position:absolute;left:50vw;top:50vh;width:50vw;height:auto;margin-left:-25vw;background-color:#fff;border-radius:8px;padding:20px;box-shadow:1px 1px 8px #000;}
+.modal .modalbody{position:fixed;left:50vw;top:50vh;width:50vw;height:auto;margin-left:-25vw;background-color:#fff;border-radius:8px;padding:20px;box-shadow:1px 1px 8px #000;}
 .modal .modalbody header h2{margin-top:0;padding-top:0}
 .modal .modalbody header p.message.success{color:#008000}
 .modal .modalbody header p.message.warning{color:#ffa500}
 .modal .modalbody header p.message.error{color:#f00}
-.modal .modalbody .body{margin-bottom:40px}
+.modal .modalbody .body{margin-bottom:40px;overflow:auto}
 .modal .modalbody footer{position:absolute;bottom:20px;right:20px;text-align:right;}
 .modal .modalbody footer button{margin-left:8px}

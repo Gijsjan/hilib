@@ -9,7 +9,7 @@
     };
     return {
       dropdownInitialize: function() {
-        var models, _base, _base1, _base2, _ref, _ref1,
+        var models, _base, _base1, _base2, _base3, _ref, _ref1,
           _this = this;
         if ((_base = this.options).config == null) {
           _base.config = {};
@@ -21,6 +21,9 @@
         }
         if ((_base2 = this.settings).editable == null) {
           _base2.editable = false;
+        }
+        if ((_base3 = this.settings).defaultAdd == null) {
+          _base3.defaultAdd = true;
         }
         this.selected = null;
         if (this.data instanceof Backbone.Collection) {
@@ -58,9 +61,7 @@
         rtpl = _.template(tpl, {
           viewId: this.cid,
           selected: this.selected,
-          mutable: this.settings.mutable,
-          editable: this.settings.editable,
-          placeholder: this.settings.placeholder
+          settings: this.settings
         });
         this.$el.html(rtpl);
         this.$optionlist = this.$('ul.list');
@@ -133,22 +134,17 @@
         return this.$optionlist.hide();
       },
       filter: function(value) {
-        var models, re, reset;
-        reset = false;
+        var models, re;
         if (value.length > 1) {
           value = Fn.escapeRegExp(value);
           re = new RegExp(value, 'i');
           models = this.collection.filter(function(model) {
             return re.test(model.get('title'));
           });
-          if (models.length) {
+          if (models.length > 0) {
             this.filtered_options.reset(models);
             this.$optionlist.show();
-            reset = true;
           }
-        }
-        if (!reset) {
-          this.resetOptions();
         }
         if (this.postDropdownFilter != null) {
           return this.postDropdownFilter(models);

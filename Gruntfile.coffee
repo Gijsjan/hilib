@@ -17,9 +17,9 @@ module.exports = (grunt) ->
 				command: 'rm -rf compiled/*'
 
 		touch:
-			js: 'compiled/jstouch'
-			html: 'compiled/htmltouch'
-			css: 'compiled/csstouch'
+			js: 'touch/js'
+			html: 'touch/html'
+			css: 'touch/css'
 
 		jade:
 			compile:
@@ -78,8 +78,8 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'w', 'watch'
 
-	grunt.registerTask 'i', 'coffee:compile'
-	grunt.registerTask 'init', 'coffee:compile'
+	grunt.registerTask 'init', ['coffee:compile', 'stylus:compile', 'jade:compile']
+	grunt.registerTask 'i', 'init'
 
 	grunt.registerTask 'd', 'shell:groc'
 	grunt.registerTask 'docs', 'shell:groc'
@@ -87,7 +87,5 @@ module.exports = (grunt) ->
 	grunt.registerTask 'c', 'compile'
 	grunt.registerTask 'compile', [
 		'shell:emptycompiled' # rm -rf compiled/
-		'coffee:compile'
-		'jade:compile'
-		'stylus:compile'
+		'init'
 	]

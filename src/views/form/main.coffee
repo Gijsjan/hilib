@@ -53,11 +53,16 @@ define (require) ->
 			evs = {}
 
 			# * TODO: Change selector to "change [data-cid] textarea" and remove data-view-id and replace with model-id
-			evs['change [data-model-id="'+@model.cid+'"] textarea'] = 'inputChanged'
-			evs['change [data-model-id="'+@model.cid+'"] input'] = 'inputChanged'
-			evs['change [data-model-id="'+@model.cid+'"] select'] = 'inputChanged'
-			evs['keydown [data-model-id="'+@model.cid+'"] textarea'] = 'textareaKeyup'
-			evs['click [data-model-id="'+@model.cid+'"] input[type="submit"]'] = 'submit'
+			# evs['change [data-model-id="'+@model.cid+'"] textarea'] = 'inputChanged'
+			# evs['change [data-model-id="'+@model.cid+'"] input'] = 'inputChanged'
+			# evs['change [data-model-id="'+@model.cid+'"] select'] = 'inputChanged'
+			# evs['keydown [data-model-id="'+@model.cid+'"] textarea'] = 'textareaKeyup'
+			# evs['click [data-model-id="'+@model.cid+'"] input[type="submit"]'] = 'submit'
+			evs['change textarea'] = 'inputChanged'
+			evs['change input'] = 'inputChanged'
+			evs['change select'] = 'inputChanged'
+			evs['keydown textarea'] = 'textareaKeyup'
+			evs['click input[type="submit"]'] = 'submit'
 
 			evs
 
@@ -103,6 +108,8 @@ define (require) ->
 				@data.model = @model
 			if @collection?
 				@data.collection = @collection
+
+			throw 'Unknow template!' unless @tpl?
 			
 			rtpl = _.template @tpl, @data
 			@$el.html rtpl

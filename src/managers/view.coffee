@@ -41,10 +41,9 @@ define (require) ->
 					'view': view
 
 
-		show: (View, query) ->
+		show: (View, query={}) ->
 			@clear() # Clear previous views
 
-			query = query || {}
 			view = new View query
 
 			html = if not view? then '' else view.$el

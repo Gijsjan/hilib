@@ -5,7 +5,7 @@
   define(function(require) {
     var Backbone, Modal, Tpl, modalManager, _ref;
     Backbone = require('backbone');
-    Tpl = require('text!hilib/views/modal/modal.html');
+    Tpl = require('text!hilib/views/modal/main.html');
     modalManager = require('hilib/managers/modal');
     return Modal = (function(_super) {
       __extends(Modal, _super);
@@ -17,7 +17,8 @@
 
       Modal.prototype.className = "modal";
 
-      Modal.prototype.initialize = function() {
+      Modal.prototype.initialize = function(options) {
+        this.options = options;
         Modal.__super__.initialize.apply(this, arguments);
         return this.render();
       };
@@ -53,10 +54,8 @@
         scrollTop = document.querySelector('body').scrollTop;
         viewportHeight = document.documentElement.clientHeight;
         top = (viewportHeight - this.$('.modalbody').height()) / 2;
-        if (scrollTop > 0) {
-          this.$('.modalbody').css('top', top + scrollTop);
-        }
-        return this.$('.modalbody').css('margin-top', this.$('.modalbody').height() / -2);
+        this.$('.modalbody').css('margin-top', this.$('.modalbody').height() / -2);
+        return this.$('.modalbody .body').css('max-height', viewportHeight - 400);
       };
 
       Modal.prototype.events = {

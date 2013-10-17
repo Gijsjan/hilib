@@ -51,8 +51,10 @@
 
       ViewManager.prototype.show = function(View, query) {
         var html, view;
+        if (query == null) {
+          query = {};
+        }
         this.clear();
-        query = query || {};
         view = new View(query);
         html = view == null ? '' : view.$el;
         return this.main.html(html);

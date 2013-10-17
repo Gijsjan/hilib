@@ -174,7 +174,7 @@ define (require) ->
 		prefix ?= ''
 
 		for own k, v of obj
-			if _.isObject(v) and not _.isArray(v) and not _.isFunction(v) and not v instanceof Backbone.Model and not v instanceof Backbone.Collection
+			if _.isObject(v) and not _.isArray(v) and not _.isFunction(v) and not (v instanceof Backbone.Model) and not (v instanceof Backbone.Collection)
 				@flattenObject v, into, prefix + k + '.'
 			else
 				into[prefix+k] = v
@@ -250,3 +250,6 @@ define (require) ->
 		if sel?
 			sel.removeAllRanges()
 			sel.addRange range
+
+	# IE9+
+	arraySum: (arr) -> arr.reduce (prev, current) -> current + prev

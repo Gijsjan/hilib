@@ -53,11 +53,11 @@
       Form.prototype.events = function() {
         var evs;
         evs = {};
-        evs['change [data-model-id="' + this.model.cid + '"] textarea'] = 'inputChanged';
-        evs['change [data-model-id="' + this.model.cid + '"] input'] = 'inputChanged';
-        evs['change [data-model-id="' + this.model.cid + '"] select'] = 'inputChanged';
-        evs['keydown [data-model-id="' + this.model.cid + '"] textarea'] = 'textareaKeyup';
-        evs['click [data-model-id="' + this.model.cid + '"] input[type="submit"]'] = 'submit';
+        evs['change textarea'] = 'inputChanged';
+        evs['change input'] = 'inputChanged';
+        evs['change select'] = 'inputChanged';
+        evs['keydown textarea'] = 'textareaKeyup';
+        evs['click input[type="submit"]'] = 'submit';
         return evs;
       };
 
@@ -106,6 +106,9 @@
         }
         if (this.collection != null) {
           this.data.collection = this.collection;
+        }
+        if (this.tpl == null) {
+          throw 'Unknow template!';
         }
         rtpl = _.template(this.tpl, this.data);
         this.$el.html(rtpl);

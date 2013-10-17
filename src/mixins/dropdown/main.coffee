@@ -15,6 +15,7 @@
 # * postDropdownRender
 # * postDropdownFilter
 
+# * TODO: CHANGE!!
 # options
 #	value
 #	config
@@ -48,6 +49,7 @@ define (require) ->
 		@settings = @options.config.settings ? {}
 		@settings.mutable ?= false
 		@settings.editable ?= false
+		@settings.defaultAdd ?= true
 
 		@selected = null
 
@@ -89,9 +91,7 @@ define (require) ->
 		rtpl = _.template tpl,
 			viewId: @cid
 			selected: @selected
-			mutable: @settings.mutable
-			editable: @settings.editable
-			placeholder: @settings.placeholder
+			settings: @settings
 		@$el.html rtpl
 
 		@$optionlist = @$ 'ul.list'
@@ -166,19 +166,19 @@ define (require) ->
 
 	filter: (value) ->
 		# @resetOptions()
-		reset = false
+		# reset = true
 
 		if value.length > 1
 			value = Fn.escapeRegExp value
 			re = new RegExp value, 'i'
 			models = @collection.filter (model) -> re.test model.get 'title'
 
-			if models.length
+			if models.length > 0
 				@filtered_options.reset models
 				@$optionlist.show()
-				reset = true
-		
-		@resetOptions() unless reset
+				# reset = false
+
+		# @resetOptions() if reset
 
 		# Call post filter hook for views that have implemented it
 		@postDropdownFilter models if @postDropdownFilter?

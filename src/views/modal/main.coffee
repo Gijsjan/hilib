@@ -9,7 +9,7 @@
 
 define (require) ->
 	Backbone = require 'backbone'
-	Tpl = require 'text!hilib/views/modal/modal.html'
+	Tpl = require 'text!hilib/views/modal/main.html'
 
 	modalManager = require 'hilib/managers/modal'
 	
@@ -18,7 +18,7 @@ define (require) ->
 		className: "modal"
 
 		# ### Initialize
-		initialize: ->
+		initialize: (@options) ->
 			super
 			@render()
 
@@ -61,8 +61,9 @@ define (require) ->
 			scrollTop = document.querySelector('body').scrollTop
 			viewportHeight = document.documentElement.clientHeight
 			top = (viewportHeight - @$('.modalbody').height())/2
-			@$('.modalbody').css 'top', top + scrollTop if scrollTop > 0
+			# @$('.modalbody').css 'top', top + scrollTop if scrollTop > 0
 			@$('.modalbody').css 'margin-top', @$('.modalbody').height()/-2
+			@$('.modalbody .body').css 'max-height', viewportHeight - 400
 
 		# ### Events
 		events:
