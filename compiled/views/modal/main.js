@@ -24,7 +24,7 @@
       };
 
       Modal.prototype.render = function() {
-        var data, marginLeft, rtpl, scrollTop, top, viewportHeight;
+        var data, marginLeft, marginTop, rtpl, scrollTop, top, viewportHeight;
         data = _.extend({
           title: "My modal",
           cancelAndSubmit: true,
@@ -54,7 +54,8 @@
         scrollTop = document.querySelector('body').scrollTop;
         viewportHeight = document.documentElement.clientHeight;
         top = (viewportHeight - this.$('.modalbody').height()) / 2;
-        this.$('.modalbody').css('margin-top', this.$('.modalbody').height() / -2);
+        marginTop = Math.max(this.$('.modalbody').height() / -2, (viewportHeight - 400) * -0.5);
+        this.$('.modalbody').css('margin-top', marginTop);
         return this.$('.modalbody .body').css('max-height', viewportHeight - 400);
       };
 

@@ -62,7 +62,11 @@ define (require) ->
 			viewportHeight = document.documentElement.clientHeight
 			top = (viewportHeight - @$('.modalbody').height())/2
 			# @$('.modalbody').css 'top', top + scrollTop if scrollTop > 0
-			@$('.modalbody').css 'margin-top', @$('.modalbody').height()/-2
+
+			# marginTop is calculated based on the .modalbody height, but the height is maxed to the viewportHeight
+			marginTop = Math.max @$('.modalbody').height()/-2, (viewportHeight - 400)*-0.5
+
+			@$('.modalbody').css 'margin-top', marginTop
 			@$('.modalbody .body').css 'max-height', viewportHeight - 400
 
 		# ### Events

@@ -5,7 +5,7 @@
     token = require('hilib/managers/token');
     return {
       syncOverride: function(method, model, options) {
-        var data, jqXHR, name, obj, _i, _len, _ref,
+        var data, defaults, jqXHR, name, obj, settings, _i, _len, _ref,
           _this = this;
         if (options.attributes != null) {
           obj = {};
@@ -18,23 +18,25 @@
         } else {
           data = JSON.stringify(model.toJSON());
         }
+        defaults = {
+          url: this.url(),
+          dataType: 'text',
+          data: data
+        };
+        settings = $.extend(defaults, options);
         if (method === 'create') {
           ajax.token = token.get();
-          jqXHR = ajax.post({
-            url: this.url(),
-            dataType: 'text',
-            data: data
-          });
+          jqXHR = ajax.post(settings);
           jqXHR.done(function(data, textStatus, jqXHR) {
-            var url, xhr;
+            var xhr;
             if (jqXHR.status === 201) {
-              url = jqXHR.getResponseHeader('Location');
               xhr = ajax.get({
-                url: url
+                url: jqXHR.getResponseHeader('Location')
               });
               return xhr.done(function(data, textStatus, jqXHR) {
+                console.log('done after url loc');
                 _this.trigger('sync');
-                return options.success(data);
+                return settings.success(data);
               });
             }
           });
@@ -43,10 +45,7 @@
           });
         } else if (method === 'update') {
           ajax.token = token.get();
-          jqXHR = ajax.put({
-            url: this.url(),
-            data: data
-          });
+          jqXHR = ajax.put(settings);
           jqXHR.done(function(response) {
             return _this.trigger('sync');
           });

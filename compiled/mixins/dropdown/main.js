@@ -117,6 +117,8 @@
           return this.filtered_options.next();
         } else if (ev.keyCode === 13) {
           return this.selectItem(ev);
+        } else if (ev.keyCode === 27) {
+          return this.$optionlist.hide();
         } else {
           return this.filter(ev.currentTarget.value);
         }
@@ -144,7 +146,11 @@
           if (models.length > 0) {
             this.filtered_options.reset(models);
             this.$optionlist.show();
+          } else {
+            this.resetOptions();
           }
+        } else {
+          this.resetOptions();
         }
         if (this.postDropdownFilter != null) {
           return this.postDropdownFilter(models);

@@ -1,13 +1,10 @@
 .input
 	input(data-view-id!="<%= viewId %>", value!="<%= selected.get('title') %>")
 	.caret
-<% if (settings.mutable) { %>
-button.add Add
-<% } %>
 <% if (settings.editable) { %>
 button.edit Edit
 <% } %>
-<% if (settings.addible) { %>
+<% if (settings.mutable) { %>
 button.add Add
 <% } %>
 ul.list

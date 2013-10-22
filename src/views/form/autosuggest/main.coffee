@@ -38,6 +38,11 @@ define (require) ->
 
 			@dropdownRender Tpl
 
+		# ### Render
+		postDropdownRender: ->
+			@$('button.add').addClass 'visible' unless @settings.defaultAdd
+			@$('button.edit').addClass 'visible' if @selected.id isnt ''
+
 		# ### Events
 
 		events: -> _.extend @dropdownEvents(),
@@ -50,7 +55,7 @@ define (require) ->
 				@collection.add
 					id: @$('input').val()
 					title: @$('input').val()
-				@$('button.add').removeClass 'visible'
+				# @$('button.add').removeClass 'visible'
 
 		# User has selected an item/option and @selected is set to the selected model. This function only sets the input value and calls the change event.
 		selectItem: (ev) ->
@@ -71,7 +76,8 @@ define (require) ->
 			
 			if @selected?
 				@$('input').val @selected.get('title')
-				@$('button.add').removeClass 'visible'
+				@$('button.edit').addClass 'visible'
+				@$('button.add').removeClass 'visible' if @settings.defaultAdd
 				@triggerChange()
 
 		# ### Public Methods

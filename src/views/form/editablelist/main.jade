@@ -1,4 +1,5 @@
 input(data-view-id!="<%= viewId %>")
+button Add to list
 ul.selected
 	| <% selected.each(function(model) { %>
 	li(data-id!="<%= model.id %>") <%= model.id %>

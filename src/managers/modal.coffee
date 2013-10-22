@@ -31,8 +31,13 @@ define (require) ->
 			# Restore the opacity of the highest modal
 			@modals[@modals.length - 1].$('.overlay').css 'opacity', '0.7' if @modals.length > 0
 
-			# Call Backbone.View's remove function
+			# Trigger 'removed' before removing bound event callbacks and removing the modal alltogether.
+			modal.trigger 'removed'
+
+			modal.off()
+			# Call Backbone.View's remove function.
 			modal.remove()
+
 
 	new ModalManager()
 

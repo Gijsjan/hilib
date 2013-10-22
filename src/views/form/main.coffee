@@ -10,6 +10,7 @@
 
 define (require) ->
 	Fn = require 'hilib/functions/general'
+	dom = require 'hilib/functions/dom'
 	Views = 
 		Base: require 'views/base'
 
@@ -18,7 +19,8 @@ define (require) ->
 	# ## Form
 	class Form extends Views.Base
 
-		className: -> 'form'
+		# Overwritten by subclass
+		className: 'form'
 
 		# ### Initialize
 
@@ -53,6 +55,9 @@ define (require) ->
 			evs = {}
 
 			# * TODO: Change selector to "change [data-cid] textarea" and remove data-view-id and replace with model-id
+			# * TODO: Fix these selectors! I changed the selector, but this should work for all forms, now elaborate is broken and marginal scholarship works.
+
+
 			# evs['change [data-model-id="'+@model.cid+'"] textarea'] = 'inputChanged'
 			# evs['change [data-model-id="'+@model.cid+'"] input'] = 'inputChanged'
 			# evs['change [data-model-id="'+@model.cid+'"] select'] = 'inputChanged'
@@ -77,7 +82,7 @@ define (require) ->
 
 			value = if ev.currentTarget.type is 'checkbox' then ev.currentTarget.checked else ev.currentTarget.value
 
-			model.set ev.currentTarget.name, value, validate: true
+			model.set ev.currentTarget.name, value, validate: true if ev.currentTarget.name isnt ''
 
 		textareaKeyup: (ev) ->
 			ev.currentTarget.style.height = '32px'
@@ -113,6 +118,8 @@ define (require) ->
 			
 			rtpl = _.template @tpl, @data
 			@$el.html rtpl
+
+			@el.setAttribute 'data-view-cid', @cid
 
 			@subforms ?= {}
 			@addSubform attr, View for own attr, View of @subforms
@@ -194,6 +201,21 @@ define (require) ->
 
 			# A className cannot contain dots, so replace dots with underscores
 			htmlSafeAttr = attr.split('.').join('_')
-			@$("[data-cid='#{model.cid}'] .#{htmlSafeAttr}-placeholder").html view.el
+			
+			placeholders = @el.querySelectorAll "[data-cid='#{model.cid}'] .#{htmlSafeAttr}-placeholder"
+ 	
+			# If the querySelectorAll finds placeholders with the same className, then we have to find the one that is
+			# nested directly under the el (<ul>) with the current model.cid. We need to do this because forms can be nested
+			# and the selector '[data-cid] .placeholder' will also yield nested placeholders.
+			if placeholders.length > 1
+				_.each placeholders, (placeholder) =>
+					# Find closest element with the attribute data-cid.
+					el = dom.closest placeholder, '[data-cid]'
+					# If the data-cid matches the model.cid and the placeholder is still empty, append the view.
+					if el.getAttribute('data-cid') is model.cid and placeholder.innerHTML is ''
+						placeholder.appendChild view.el
+			else
+				# If just one placeholder is found, append the view to it.
+				placeholders[0].appendChild view.el
 
 			@listenTo view, 'change', (data) => model.set attr, data

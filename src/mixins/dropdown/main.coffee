@@ -72,7 +72,7 @@ define (require) ->
 
 		# Add listeners
 		if @settings.mutable
-			@listenTo @collection, 'add', (model, collection, options) => 
+			@listenTo @collection, 'add', (model, collection, options) =>
 				@selected = model
 				@triggerChange()
 				@filtered_options.add model
@@ -146,6 +146,8 @@ define (require) ->
 			@filtered_options.next()
 		else if ev.keyCode is 13 # Enter
 			@selectItem(ev)
+		else if ev.keyCode is 27 # Escape
+			@$optionlist.hide()
 		else
 			@filter ev.currentTarget.value
 
@@ -165,9 +167,6 @@ define (require) ->
 	hideOptionlist: -> @$optionlist.hide()
 
 	filter: (value) ->
-		# @resetOptions()
-		# reset = true
-
 		if value.length > 1
 			value = Fn.escapeRegExp value
 			re = new RegExp value, 'i'
@@ -176,9 +175,10 @@ define (require) ->
 			if models.length > 0
 				@filtered_options.reset models
 				@$optionlist.show()
-				# reset = false
-
-		# @resetOptions() if reset
+			else
+				 @resetOptions()
+		else
+			@resetOptions()
 
 		# Call post filter hook for views that have implemented it
 		@postDropdownFilter models if @postDropdownFilter?

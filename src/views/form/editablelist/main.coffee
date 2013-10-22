@@ -16,6 +16,9 @@ define (require) ->
 		initialize: ->
 			super
 
+			@options.config ?= {}
+			@settings = @options.config.settings ? {}
+
 			# Turn array of strings into array of objects
 			value = _.map @options.value, (val) -> id: val
 
@@ -38,6 +41,7 @@ define (require) ->
 
 			@triggerChange()
 
+			@$('input').addClass @settings.inputClass if @settings.inputClass?
 			@$('input').focus()
 
 			@
@@ -46,8 +50,9 @@ define (require) ->
 		events: ->
 			evs =
 				'click li': 'removeLi'
+				'click button': 'addSelected'
 
-			evs['keyup input[data-view-id="'+@cid+'"]']	= 'onKeyup'
+			evs['keyup input']	= 'onKeyup'
 
 			evs
 
@@ -55,9 +60,23 @@ define (require) ->
 			@selected.removeById ev.currentTarget.getAttribute('data-id')
 
 		onKeyup: (ev) ->
-			if ev.keyCode is 13 and ev.currentTarget.value.length > 0
-				@selected.add id: ev.currentTarget.value
+			valueLength = ev.currentTarget.value.length
+
+			if ev.keyCode is 13 and valueLength > 0
+				@addSelected()
+			else if valueLength > 1
+				@showButton()
+			else
+				@hideButton()
 
 		# ### Methods
+
+		addSelected: ->
+			@selected.add id: @el.querySelector('input').value
+			@el.querySelector('button').style.display = 'none'
+
+		showButton: (ev) ->	@el.querySelector('button').style.display = 'inline-block'
+		
+		hideButton: (ev) ->	@el.querySelector('button').style.display = 'none'
 		
 		triggerChange: -> @trigger 'change', @selected.pluck 'id'

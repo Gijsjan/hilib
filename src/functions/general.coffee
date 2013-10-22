@@ -252,4 +252,12 @@ define (require) ->
 			sel.addRange range
 
 	# IE9+
-	arraySum: (arr) -> arr.reduce (prev, current) -> current + prev
+	arraySum: (arr) -> 
+		return 0 if arr.length is 0
+		arr.reduce (prev, current) -> current + prev
+
+	getAspectRatio: (originalWidth, originalHeight, boxWidth, boxHeight) ->
+		widthRatio = boxWidth / originalWidth
+		heightRatio = boxHeight / originalHeight
+
+		Math.min widthRatio, heightRatio

@@ -22,8 +22,12 @@
       EditableList.prototype.className = 'editablelist';
 
       EditableList.prototype.initialize = function() {
-        var value;
+        var value, _base, _ref1;
         EditableList.__super__.initialize.apply(this, arguments);
+        if ((_base = this.options).config == null) {
+          _base.config = {};
+        }
+        this.settings = (_ref1 = this.options.config.settings) != null ? _ref1 : {};
         value = _.map(this.options.value, function(val) {
           return {
             id: val
@@ -43,6 +47,9 @@
         });
         this.$el.html(rtpl);
         this.triggerChange();
+        if (this.settings.inputClass != null) {
+          this.$('input').addClass(this.settings.inputClass);
+        }
         this.$('input').focus();
         return this;
       };
@@ -50,9 +57,10 @@
       EditableList.prototype.events = function() {
         var evs;
         evs = {
-          'click li': 'removeLi'
+          'click li': 'removeLi',
+          'click button': 'addSelected'
         };
-        evs['keyup input[data-view-id="' + this.cid + '"]'] = 'onKeyup';
+        evs['keyup input'] = 'onKeyup';
         return evs;
       };
 
@@ -61,11 +69,30 @@
       };
 
       EditableList.prototype.onKeyup = function(ev) {
-        if (ev.keyCode === 13 && ev.currentTarget.value.length > 0) {
-          return this.selected.add({
-            id: ev.currentTarget.value
-          });
+        var valueLength;
+        valueLength = ev.currentTarget.value.length;
+        if (ev.keyCode === 13 && valueLength > 0) {
+          return this.addSelected();
+        } else if (valueLength > 1) {
+          return this.showButton();
+        } else {
+          return this.hideButton();
         }
+      };
+
+      EditableList.prototype.addSelected = function() {
+        this.selected.add({
+          id: this.el.querySelector('input').value
+        });
+        return this.el.querySelector('button').style.display = 'none';
+      };
+
+      EditableList.prototype.showButton = function(ev) {
+        return this.el.querySelector('button').style.display = 'inline-block';
+      };
+
+      EditableList.prototype.hideButton = function(ev) {
+        return this.el.querySelector('button').style.display = 'none';
       };
 
       EditableList.prototype.triggerChange = function() {

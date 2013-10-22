@@ -37,6 +37,15 @@
         return this.dropdownRender(Tpl);
       };
 
+      AutoSuggest.prototype.postDropdownRender = function() {
+        if (!this.settings.defaultAdd) {
+          this.$('button.add').addClass('visible');
+        }
+        if (this.selected.id !== '') {
+          return this.$('button.edit').addClass('visible');
+        }
+      };
+
       AutoSuggest.prototype.events = function() {
         return _.extend(this.dropdownEvents(), {
           'click button.add': 'addOption'
@@ -45,11 +54,10 @@
 
       AutoSuggest.prototype.addOption = function(ev) {
         if (this.settings.defaultAdd) {
-          this.collection.add({
+          return this.collection.add({
             id: this.$('input').val(),
             title: this.$('input').val()
           });
-          return this.$('button.add').removeClass('visible');
         }
       };
 
@@ -71,7 +79,10 @@
         }
         if (this.selected != null) {
           this.$('input').val(this.selected.get('title'));
-          this.$('button.add').removeClass('visible');
+          this.$('button.edit').addClass('visible');
+          if (this.settings.defaultAdd) {
+            this.$('button.add').removeClass('visible');
+          }
           return this.triggerChange();
         }
       };

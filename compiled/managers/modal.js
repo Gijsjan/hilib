@@ -26,6 +26,8 @@
         if (this.modals.length > 0) {
           this.modals[this.modals.length - 1].$('.overlay').css('opacity', '0.7');
         }
+        modal.trigger('removed');
+        modal.off();
         return modal.remove();
       };
 

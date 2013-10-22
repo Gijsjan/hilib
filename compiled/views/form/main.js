@@ -4,8 +4,9 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Fn, Form, Views, validation, _ref;
+    var Fn, Form, Views, dom, validation, _ref;
     Fn = require('hilib/functions/general');
+    dom = require('hilib/functions/dom');
     Views = {
       Base: require('views/base')
     };
@@ -20,9 +21,7 @@
         return _ref;
       }
 
-      Form.prototype.className = function() {
-        return 'form';
-      };
+      Form.prototype.className = 'form';
 
       Form.prototype.initialize = function() {
         Form.__super__.initialize.apply(this, arguments);
@@ -67,9 +66,11 @@
         this.$(ev.currentTarget).removeClass('invalid').attr('title', '');
         model = this.model != null ? this.model : this.getModel(ev);
         value = ev.currentTarget.type === 'checkbox' ? ev.currentTarget.checked : ev.currentTarget.value;
-        return model.set(ev.currentTarget.name, value, {
-          validate: true
-        });
+        if (ev.currentTarget.name !== '') {
+          return model.set(ev.currentTarget.name, value, {
+            validate: true
+          });
+        }
       };
 
       Form.prototype.textareaKeyup = function(ev) {
@@ -112,6 +113,7 @@
         }
         rtpl = _.template(this.tpl, this.data);
         this.$el.html(rtpl);
+        this.el.setAttribute('data-view-cid', this.cid);
         if (this.subforms == null) {
           this.subforms = {};
         }
@@ -192,7 +194,7 @@
       };
 
       Form.prototype.renderSubform = function(attr, View, model) {
-        var htmlSafeAttr, value, view,
+        var htmlSafeAttr, placeholders, value, view,
           _this = this;
         value = attr.indexOf('.') > -1 ? Fn.flattenObject(model.attributes)[attr] : model.get(attr);
         if (value == null) {
@@ -203,7 +205,18 @@
           config: this.subformConfig[attr]
         });
         htmlSafeAttr = attr.split('.').join('_');
-        this.$("[data-cid='" + model.cid + "'] ." + htmlSafeAttr + "-placeholder").html(view.el);
+        placeholders = this.el.querySelectorAll("[data-cid='" + model.cid + "'] ." + htmlSafeAttr + "-placeholder");
+        if (placeholders.length > 1) {
+          _.each(placeholders, function(placeholder) {
+            var el;
+            el = dom.closest(placeholder, '[data-cid]');
+            if (el.getAttribute('data-cid') === model.cid && placeholder.innerHTML === '') {
+              return placeholder.appendChild(view.el);
+            }
+          });
+        } else {
+          placeholders[0].appendChild(view.el);
+        }
         return this.listenTo(view, 'change', function(data) {
           return model.set(attr, data);
         });

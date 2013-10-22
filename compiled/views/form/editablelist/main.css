@@ -4,3 +4,4 @@
 .editablelist ul.selected{display:block;list-style:square;padding-left:16px;}
 .editablelist ul.selected li{cursor:pointer;line-height:16px;}
 .editablelist ul.selected li:hover:after{content:'x';font-weight:bold;color:#f00;margin-left:8px;vertical-align:top;font-size:.8em}
+.editablelist button{margin-left:8px;display:none}

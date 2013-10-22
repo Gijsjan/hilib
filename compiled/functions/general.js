@@ -291,9 +291,18 @@
         }
       },
       arraySum: function(arr) {
+        if (arr.length === 0) {
+          return 0;
+        }
         return arr.reduce(function(prev, current) {
           return current + prev;
         });
+      },
+      getAspectRatio: function(originalWidth, originalHeight, boxWidth, boxHeight) {
+        var heightRatio, widthRatio;
+        widthRatio = boxWidth / originalWidth;
+        heightRatio = boxHeight / originalHeight;
+        return Math.min(widthRatio, heightRatio);
       }
     };
   });
