@@ -1,7 +1,7 @@
 .input
-	input(type="text", data-view-id!="<%= viewId %>", placeholder!="<%= placeholder %>")
+	input(type="text", data-view-id!="<%= viewId %>", placeholder!="<%= settings.placeholder %>")
 	.caret
-<% if (editable) { %>
+<% if (settings.editable) { %>
 button.edit Edit
 <% } %>
 ul.list

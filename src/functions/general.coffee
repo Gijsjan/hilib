@@ -226,6 +226,7 @@ define (require) ->
 		el.scrollTop = (scrollHeight - clientHeight) * percentages.top/100
 		el.scrollLeft = (scrollWidth - clientWidth) * percentages.left/100
 
+	# * TODO checked=true as first argument
 	checkCheckboxes: (selector='input[type="checkbox"]', checked=true, baseEl=document) ->
 		checkboxes = baseEl.querySelectorAll selector
 		cb.checked = checked for cb in checkboxes
