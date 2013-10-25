@@ -15,6 +15,8 @@ module.exports = (grunt) ->
 				command: 'groc "src/*.coffee" --out=docs'
 			emptycompiled:
 				command: 'rm -rf compiled/*'
+			bowerinstall:
+				command: 'bower install'
 
 		touch:
 			js: 'touch/js'

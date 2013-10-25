@@ -1,7 +1,5 @@
 {
   "name": "hilib",
   "version": "0.0.0",
-  "dependencies": {
-    "long-press": "https://github.com/Gijsjan/long-press.git"
-  }
+  "dependencies": {}
 }

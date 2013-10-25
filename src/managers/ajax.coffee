@@ -1,7 +1,7 @@
 define (require) ->
 	$ = require 'jquery'
 	$.support.cors = true
-	
+
 	defaultOptions =
 		# A use case for the token option is when we have a project which uses tokens to authorize,
 		# but we want to make a request which shouldn't send the Authorization header. For example
