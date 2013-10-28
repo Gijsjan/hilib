@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Fn, Longpress, StringFn, SuperTinyEditor, Tpl, Views, _ref;
+    var Fn, Longpress, StringFn, SuperTinyEditor, Templates, Views, _ref;
     Fn = require('hilib/functions/general');
     StringFn = require('hilib/functions/string');
     require('hilib/functions/jquery.mixin');
@@ -11,7 +11,10 @@
     Views = {
       Base: require('views/base')
     };
-    Tpl = require('text!hilib/views/supertinyeditor/supertinyeditor.html');
+    Templates = {
+      Main: require('text!hilib/views/supertinyeditor/supertinyeditor.html'),
+      Diacritics: require('text!hilib/views/supertinyeditor/diacritics.html')
+    };
     return SuperTinyEditor = (function(_super) {
       __extends(SuperTinyEditor, _super);
 
@@ -43,7 +46,7 @@
 
       SuperTinyEditor.prototype.render = function() {
         var rtpl;
-        rtpl = _.template(Tpl);
+        rtpl = _.template(Templates.Main);
         this.$el.html(rtpl());
         this.$currentHeader = this.$('.ste-header');
         this.renderControls();
@@ -53,7 +56,7 @@
       };
 
       SuperTinyEditor.prototype.renderControls = function() {
-        var controlName, div, _i, _len, _ref1, _results;
+        var controlName, diacritics, diacriticsUL, div, _i, _len, _ref1, _results;
         _ref1 = this.options.controls;
         _results = [];
         for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
@@ -65,6 +68,18 @@
             _results.push(this.$currentHeader = $(div));
           } else if (controlName === '|') {
             div.className = 'ste-divider';
+            _results.push(this.$currentHeader.append(div));
+          } else if (controlName === 'diacritics') {
+            div.className = 'ste-control-diacritics ' + controlName;
+            div.setAttribute('title', StringFn.ucfirst(controlName));
+            div.setAttribute('data-action', controlName);
+            diacriticsUL = document.createElement('div');
+            diacriticsUL.className = 'diacritics-placeholder';
+            diacritics = 'ĀĂÀÁÂÃÄÅĄⱭ∀ÆāăàáâãäåąɑæαªƁßβɓÇĆĈĊČƆçςćĉċč¢ɔÐĎĐḎƊðďđɖḏɖɗÈÉÊËĒĖĘẸĚƏÆƎƐ€èéêëēėęẹěəæεɛ€ƑƩƒʃƭĜĞĠĢƢĝğġģɠƣĤĦĥħɦẖÌÍÎÏĪĮỊİIƗĲìíîïīįịiiɨĳιĴĲĵɟĳĶƘķƙĹĻĽŁΛĺļľłλÑŃŅŇŊƝ₦ñńņňŋɲÒÓÔÕÖŌØŐŒƠƟòóôõöōøőœơɵ°Ƥ¶ƥ¶ŔŘɌⱤŕřɍɽßſŚŜŞṢŠÞ§ßſśŝşṣšþ§ŢŤṮƬƮţťṯƭʈÙÚÛÜŪŬŮŰŲɄƯƱùúûüūŭůűųưμυʉʊƲʋŴẄΩŵẅωÝŶŸƔƳýŷÿɣyƴŹŻŽƵƷẔźżžƶẕʒƹ£¥€₩₨₳Ƀ¤¡‼‽¿‽‰…••±‐–—±†‡′″‴‘’‚‛“”„‟≤‹≥›≈≠≡';
+            diacriticsUL.innerHTML = _.template(Templates.Diacritics, {
+              diacritics: diacritics
+            });
+            div.appendChild(diacriticsUL);
             _results.push(this.$currentHeader.append(div));
           } else if (controlName.substr(0, 2) === 'b_') {
             controlName = controlName.substr(2);
@@ -128,6 +143,7 @@
       SuperTinyEditor.prototype.events = function() {
         return {
           'click .ste-control': 'controlClicked',
+          'click .ste-control-diacritics ul.diacritics li': 'diacriticClicked',
           'click .ste-button': 'buttonClicked'
         };
       };
@@ -143,6 +159,20 @@
         var action;
         action = ev.currentTarget.getAttribute('data-action');
         return this.trigger(action);
+      };
+
+      SuperTinyEditor.prototype.diacriticClicked = function(ev) {
+        var range, sel, textNode;
+        sel = this.el.querySelector('iframe').contentWindow.getSelection();
+        range = sel.getRangeAt(0);
+        range.deleteContents();
+        textNode = ev.currentTarget.childNodes[0].cloneNode();
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.setEndAfter(textNode);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return this.saveHTMLToModel();
       };
 
       SuperTinyEditor.prototype.saveHTMLToModel = function() {

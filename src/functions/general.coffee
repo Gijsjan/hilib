@@ -262,3 +262,13 @@ define (require) ->
 		heightRatio = boxHeight / originalHeight
 
 		Math.min widthRatio, heightRatio
+
+	# hasScrollBar: (el) ->
+	# 	console.log el
+	# 	el.scrollHeight > el.clientHeight or el.scrollWidth > el.clientWidth
+
+	# hasXScrollBar: (el) ->
+	# 	el.scrollWidth > el.clientWidth
+
+	# hasYScrollBar: (el) ->
+	# 	el.scrollHeight > el.clientHeight

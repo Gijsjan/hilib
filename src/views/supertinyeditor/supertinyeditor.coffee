@@ -19,7 +19,9 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	Tpl = require 'text!hilib/views/supertinyeditor/supertinyeditor.html'
+	Templates =
+		Main: require 'text!hilib/views/supertinyeditor/supertinyeditor.html'
+		Diacritics: require 'text!hilib/views/supertinyeditor/diacritics.html'
 
 	# ## SuperTinyEditor
 	class SuperTinyEditor extends Views.Base
@@ -38,7 +40,7 @@ define (require) ->
 
 		# ### Render
 		render: ->
-			rtpl = _.template Tpl
+			rtpl = _.template Templates.Main
 			@$el.html rtpl()
 
 			@$currentHeader = @$('.ste-header')
@@ -65,6 +67,20 @@ define (require) ->
 				# Create a divider
 				else if controlName is '|'
 					div.className = 'ste-divider'
+					@$currentHeader.append div
+				# Create a diacritics menu
+				else if controlName is 'diacritics'
+					div.className = 'ste-control-diacritics '+controlName
+					div.setAttribute 'title', StringFn.ucfirst controlName
+					div.setAttribute 'data-action', controlName
+
+					diacriticsUL = document.createElement 'div'
+					diacriticsUL.className = 'diacritics-placeholder'
+					diacritics = 'ĀĂÀÁÂÃÄÅĄⱭ∀ÆāăàáâãäåąɑæαªƁßβɓÇĆĈĊČƆçςćĉċč¢ɔÐĎĐḎƊðďđɖḏɖɗÈÉÊËĒĖĘẸĚƏÆƎƐ€èéêëēėęẹěəæεɛ€ƑƩƒʃƭĜĞĠĢƢĝğġģɠƣĤĦĥħɦẖÌÍÎÏĪĮỊİIƗĲìíîïīįịiiɨĳιĴĲĵɟĳĶƘķƙĹĻĽŁΛĺļľłλÑŃŅŇŊƝ₦ñńņňŋɲÒÓÔÕÖŌØŐŒƠƟòóôõöōøőœơɵ°Ƥ¶ƥ¶ŔŘɌⱤŕřɍɽßſŚŜŞṢŠÞ§ßſśŝşṣšþ§ŢŤṮƬƮţťṯƭʈÙÚÛÜŪŬŮŰŲɄƯƱùúûüūŭůűųưμυʉʊƲʋŴẄΩŵẅωÝŶŸƔƳýŷÿɣyƴŹŻŽƵƷẔźżžƶẕʒƹ£¥€₩₨₳Ƀ¤¡‼‽¿‽‰…••±‐–—±†‡′″‴‘’‚‛“”„‟≤‹≥›≈≠≡'
+					diacriticsUL.innerHTML =	_.template Templates.Diacritics, diacritics: diacritics
+					
+					div.appendChild diacriticsUL
+
 					@$currentHeader.append div
 				# Create a button
 				else if controlName.substr(0, 2) is 'b_'
@@ -138,6 +154,7 @@ define (require) ->
 		# ### Events
 		events: ->
 			'click .ste-control': 'controlClicked'
+			'click .ste-control-diacritics ul.diacritics li': 'diacriticClicked'
 			'click .ste-button': 'buttonClicked'
 
 		controlClicked: (ev) ->
@@ -151,6 +168,23 @@ define (require) ->
 			action = ev.currentTarget.getAttribute 'data-action'
 			@trigger action
 
+		diacriticClicked: (ev) ->
+			# Get the selection from the contentWindow
+			sel = @el.querySelector('iframe').contentWindow.getSelection()
+
+			# Delete the range and insert the clicked char
+			range = sel.getRangeAt 0
+			range.deleteContents()
+			textNode = ev.currentTarget.childNodes[0].cloneNode()
+			range.insertNode textNode
+
+			# Move cursor after textNode
+			range.setStartAfter textNode
+			range.setEndAfter textNode 
+			sel.removeAllRanges()
+			sel.addRange range
+
+			@saveHTMLToModel()
 
 		# ### Methods
 
