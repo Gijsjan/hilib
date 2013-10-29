@@ -23,19 +23,30 @@
 	ul.selected
 		display block
 		list-style square
-		padding-left 16px
+		padding 4px 0 0 16px
 
 		li
 			cursor pointer
 			line-height 16px
 
-			&:hover:after
-				content 'x'
-				font-weight	bold
-				color red
-				margin-left 8px
-				vertical-align top
-				font-size 0.8em
+			&:hover
+				span
+					background #FFCFCF
+					// display inline-lbock
+					border-radius 6px
+					padding 0 4px
+
+				&:after
+					content 'x'
+					font-weight	bold
+					color red
+					margin-left 6px
+					vertical-align top
+					font-size 0.8em
+
+	input
+		padding-left 4px
+		border 1px solid #CCC
 
 	button
 		margin-left 8px

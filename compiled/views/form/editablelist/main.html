@@ -1,1 +1,1 @@
-<input data-view-id="<%= viewId %>" placeholder="<%= settings.placeholder %>"/><button>Add to list</button><ul class="selected"><% selected.each(function(model) { %><li data-id="<%= model.id %>"><%= model.id %></li><% }); %></ul>
+<input data-view-id="<%= viewId %>" placeholder="<%= settings.placeholder %>"/><button>Add to list</button><ul class="selected"><% selected.each(function(model) { %><li data-id="<%= model.id %>"><span><%= model.id %></span></li><% }); %></ul>

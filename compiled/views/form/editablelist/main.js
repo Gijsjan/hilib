@@ -8,8 +8,7 @@
       Base: require('collections/base')
     };
     Views = {
-      Base: require('views/base'),
-      Modal: require('hilib/views/modal/main')
+      Base: require('views/base')
     };
     Tpl = require('text!hilib/views/form/editablelist/main.html');
     return EditableList = (function(_super) {
@@ -23,7 +22,7 @@
       EditableList.prototype.className = 'editablelist';
 
       EditableList.prototype.initialize = function() {
-        var value, _base, _base1, _ref1;
+        var value, _base, _base1, _base2, _ref1;
         EditableList.__super__.initialize.apply(this, arguments);
         if ((_base = this.options).config == null) {
           _base.config = {};
@@ -31,6 +30,9 @@
         this.settings = (_ref1 = this.options.config.settings) != null ? _ref1 : {};
         if ((_base1 = this.settings).placeholder == null) {
           _base1.placeholder = '';
+        }
+        if ((_base2 = this.settings).confirmRemove == null) {
+          _base2.confirmRemove = false;
         }
         value = _.map(this.options.value, function(val) {
           return {
@@ -70,16 +72,16 @@
       };
 
       EditableList.prototype.removeLi = function(ev) {
-        var modal,
+        var layerName,
           _this = this;
-        modal = new Views.Modal({
-          $html: $('<div />').html('You are about to delete a text layer'),
-          submitValue: 'Remove text layer'
-        });
-        modal.on('cancel', function() {});
-        return modal.on('submit', function() {
-          return _this.selected.removeById(ev.currentTarget.getAttribute('data-id'));
-        });
+        layerName = ev.currentTarget.getAttribute('data-id');
+        if (this.settings.confirmRemove) {
+          return this.trigger('confirmRemove', layerName, function() {
+            return _this.selected.removeById(layerName);
+          });
+        } else {
+          return this.selected.removeById(layerName);
+        }
       };
 
       EditableList.prototype.onKeyup = function(ev) {
