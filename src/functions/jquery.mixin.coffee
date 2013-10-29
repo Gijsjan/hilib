@@ -40,25 +40,29 @@ define (require) ->
 		Render remove button in element
 		###
 		jQuery.fn.appendCloseButton = (args={}) ->
-			{corner, html} = args
+			{corner, html, close} = args
 
 			html ?= '<img src="/images/icon.close.png">'
 			corner ?= 'topright'
 
 			$closeButton = $('<div class="closebutton">').html html
 
+			$closeButton.css 'position', 'absolute'
+			$closeButton.css 'opacity', '0.2'
+			$closeButton.css 'cursor', 'pointer'
+			
 			switch corner
 				when 'topright'
-					$closeButton.css 'position', 'absolute'
 					$closeButton.css 'right', '8px'
 					$closeButton.css 'top', '8px'
-					$closeButton.css 'opacity', '0.2'
-					$closeButton.css 'cursor', 'pointer'
+				when 'bottomright'
+					$closeButton.css 'right', '8px'
+					$closeButton.css 'bottom', '8px'
 
 			@prepend $closeButton
 
 			$closeButton.hover ((ev) -> $closeButton.css 'opacity', 100), ((ev) -> $closeButton.css 'opacity', 0.2)
-			$closeButton.click => @trigger 'close'
+			$closeButton.click => close()
 
 
 
