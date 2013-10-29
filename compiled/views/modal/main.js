@@ -26,7 +26,7 @@
       Modal.prototype.render = function() {
         var data, marginLeft, marginTop, rtpl, scrollTop, top, viewportHeight;
         data = _.extend({
-          title: "My modal",
+          title: '',
           cancelAndSubmit: true,
           cancelValue: 'Cancel',
           submitValue: 'Submit'
@@ -45,6 +45,9 @@
           }
           if (this.options.width.slice(-2) === 'vw') {
             marginLeft += 'vw';
+          }
+          if (this.options.width === 'auto') {
+            marginLeft = this.$('.modalbody').width() / -2;
           }
           this.$('.modalbody').css('margin-left', marginLeft);
         }

@@ -263,12 +263,11 @@ define (require) ->
 
 		Math.min widthRatio, heightRatio
 
-	# hasScrollBar: (el) ->
-	# 	console.log el
-	# 	el.scrollHeight > el.clientHeight or el.scrollWidth > el.clientWidth
+	hasScrollBar: (el) ->
+		el.scrollHeight > el.clientHeight or el.scrollWidth > el.clientWidth
 
-	# hasXScrollBar: (el) ->
-	# 	el.scrollWidth > el.clientWidth
+	hasXScrollBar: (el) ->
+		el.scrollWidth > el.clientWidth
 
-	# hasYScrollBar: (el) ->
-	# 	el.scrollHeight > el.clientHeight
+	hasYScrollBar: (el) ->
+		el.scrollHeight > el.clientHeight

@@ -12,6 +12,7 @@ myblue = #88B1C8
 		input
 			width 180px
 			border 1px solid #CCC
+			padding-left 4px
 
 		div.caret
 			cursor pointer
@@ -45,13 +46,20 @@ myblue = #88B1C8
 			cursor pointer
 			line-height 16px
 
-			&:hover:after
-				content 'x'
-				font-weight	bold
-				color red
-				margin-left 8px
-				vertical-align top
-				font-size 0.8em
+			&:hover
+				span
+					background #FFCFCF
+					// display inline-lbock
+					border-radius 6px
+					padding 0 4px
+
+				&:after
+					content 'x'
+					font-weight	bold
+					color red
+					margin-left 6px
+					vertical-align top
+					font-size 0.8em
 
 	ul.list
 		white-space nowrap

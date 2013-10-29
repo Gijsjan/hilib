@@ -6,4 +6,5 @@
 .modal .modalbody header p.message.error{color:#f00}
 .modal .modalbody .body{margin-bottom:40px;overflow:auto}
 .modal .modalbody footer{position:absolute;bottom:20px;right:20px;text-align:right;}
-.modal .modalbody footer button{margin-left:8px}
+.modal .modalbody footer button{margin-left:8px;}
+.modal .modalbody footer button.submit{max-width:200px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}

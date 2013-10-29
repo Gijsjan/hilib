@@ -1,6 +1,6 @@
 .ste-control-diacritics{position:relative;}
 .ste-control-diacritics:hover > .diacritics-placeholder{display:block}
-.diacritics-placeholder{display:none;position:absolute;padding-top:31px;left:-60px;}
-.diacritics-placeholder ul.diacritics{list-style:none;width:150px;height:300px;overflow:auto;padding:6px;text-align:center;white-space:normal;background-color:rgba(0,0,0,0.5);}
-.diacritics-placeholder ul.diacritics li{display:inline-block;padding:2px 6px;background-color:#000;color:#fff;border-radius:4px;font-weight:bold;font-size:1.2em;margin:3px;border:1px solid #000;}
-.diacritics-placeholder ul.diacritics li:hover{border:1px solid #fff;box-shadow:0 0 12px #fff;cursor:pointer}
+.diacritics-placeholder{display:none;position:absolute;padding:31px;left:-98px;}
+.diacritics-placeholder ul.diacritics{list-style:none;width:160px;height:300px;overflow:auto;padding:6px;text-align:center;white-space:normal;background-color:rgba(0,0,0,0.5);}
+.diacritics-placeholder ul.diacritics li{display:inline-block;background-color:#000;color:#eee;border-radius:4px;font-weight:bold;font-size:1.2em;margin:3px;border:1px solid #000;width:20px;line-height:20px;}
+.diacritics-placeholder ul.diacritics li:hover{border:1px solid #fff;box-shadow:0 0 12px #fff;cursor:pointer;color:#fff}

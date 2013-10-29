@@ -44,12 +44,12 @@
       */
 
       return jQuery.fn.appendCloseButton = function(args) {
-        var $closeButton, corner, html,
+        var $closeButton, close, corner, html,
           _this = this;
         if (args == null) {
           args = {};
         }
-        corner = args.corner, html = args.html;
+        corner = args.corner, html = args.html, close = args.close;
         if (html == null) {
           html = '<img src="/images/icon.close.png">';
         }
@@ -57,13 +57,17 @@
           corner = 'topright';
         }
         $closeButton = $('<div class="closebutton">').html(html);
+        $closeButton.css('position', 'absolute');
+        $closeButton.css('opacity', '0.2');
+        $closeButton.css('cursor', 'pointer');
         switch (corner) {
           case 'topright':
-            $closeButton.css('position', 'absolute');
             $closeButton.css('right', '8px');
             $closeButton.css('top', '8px');
-            $closeButton.css('opacity', '0.2');
-            $closeButton.css('cursor', 'pointer');
+            break;
+          case 'bottomright':
+            $closeButton.css('right', '8px');
+            $closeButton.css('bottom', '8px');
         }
         this.prepend($closeButton);
         $closeButton.hover((function(ev) {
@@ -72,7 +76,7 @@
           return $closeButton.css('opacity', 0.2);
         }));
         return $closeButton.click(function() {
-          return _this.trigger('close');
+          return close();
         });
       };
     })(jQuery);

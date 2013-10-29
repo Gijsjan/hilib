@@ -1,7 +1,9 @@
 .overlay
 .modalbody
 	header
+		| <% if (title !== '') { %>
 		h2 <%= title %>
+		| <% } %>
 		<p class="message"></p>
 	.body
 	<% if (cancelAndSubmit) { %>

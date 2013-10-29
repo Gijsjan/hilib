@@ -19,6 +19,9 @@ define (require) ->
 			@options.config ?= {}
 			@settings = @options.config.settings ? {}
 
+			@settings.placeholder ?= ''
+			@settings.confirmRemove ?= false
+
 			# Turn array of strings into array of objects
 			value = _.map @options.value, (val) -> id: val
 
@@ -36,6 +39,7 @@ define (require) ->
 			rtpl = _.template Tpl, 
 				viewId: @cid
 				selected: @selected
+				settings: @settings
 
 			@$el.html rtpl
 
@@ -57,7 +61,12 @@ define (require) ->
 			evs
 
 		removeLi: (ev) ->
-			@selected.removeById ev.currentTarget.getAttribute('data-id')
+			layerName = ev.currentTarget.getAttribute('data-id')
+
+			if @settings.confirmRemove
+				@trigger 'confirmRemove', layerName, => @selected.removeById layerName
+			else
+				@selected.removeById layerName
 
 		onKeyup: (ev) ->
 			valueLength = ev.currentTarget.value.length

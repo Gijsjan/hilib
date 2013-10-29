@@ -22,12 +22,18 @@
       EditableList.prototype.className = 'editablelist';
 
       EditableList.prototype.initialize = function() {
-        var value, _base, _ref1;
+        var value, _base, _base1, _base2, _ref1;
         EditableList.__super__.initialize.apply(this, arguments);
         if ((_base = this.options).config == null) {
           _base.config = {};
         }
         this.settings = (_ref1 = this.options.config.settings) != null ? _ref1 : {};
+        if ((_base1 = this.settings).placeholder == null) {
+          _base1.placeholder = '';
+        }
+        if ((_base2 = this.settings).confirmRemove == null) {
+          _base2.confirmRemove = false;
+        }
         value = _.map(this.options.value, function(val) {
           return {
             id: val
@@ -43,7 +49,8 @@
         var rtpl;
         rtpl = _.template(Tpl, {
           viewId: this.cid,
-          selected: this.selected
+          selected: this.selected,
+          settings: this.settings
         });
         this.$el.html(rtpl);
         this.triggerChange();
@@ -65,7 +72,16 @@
       };
 
       EditableList.prototype.removeLi = function(ev) {
-        return this.selected.removeById(ev.currentTarget.getAttribute('data-id'));
+        var layerName,
+          _this = this;
+        layerName = ev.currentTarget.getAttribute('data-id');
+        if (this.settings.confirmRemove) {
+          return this.trigger('confirmRemove', layerName, function() {
+            return _this.selected.removeById(layerName);
+          });
+        } else {
+          return this.selected.removeById(layerName);
+        }
       };
 
       EditableList.prototype.onKeyup = function(ev) {

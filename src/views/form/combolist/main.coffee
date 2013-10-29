@@ -43,15 +43,15 @@ define (require) ->
 			# selectedData = if _.isString @options.value[0] then @strArray2optionArray @options.value else []
 			# @selected = new Collections.Base selectedData
 
-			@listenTo @selected, 'add', =>
+			@listenTo @selected, 'add', (model) =>
 				# @resetOptions()
 				@dropdownRender Tpl
-				@triggerChange()
+				@triggerChange added: model.id
 
-			@listenTo @selected, 'remove', =>
+			@listenTo @selected, 'remove', (model) =>
 				# @resetOptions()
 				@dropdownRender Tpl
-				@triggerChange()
+				@triggerChange removed: model.id
 
 			@dropdownRender Tpl
 
@@ -59,10 +59,11 @@ define (require) ->
 
 		events: -> _.extend @dropdownEvents(), 'click li.selected': 'removeSelected'
 
-		addSelected: (model) -> 
-			console.log model
-			@selected.add model
-		removeSelected: (ev) -> @selected.removeById ev.currentTarget.getAttribute('data-id')
+		addSelected: (model) -> @selected.add model
+		removeSelected: (ev) -> 
+			id = ev.currentTarget.getAttribute('data-id')
+			model = @selected.get id
+			@selected.remove model
 
 		selectItem: (ev) ->
 			# Check if ev is coming from keyup and double check if keyCode is 13
@@ -80,7 +81,14 @@ define (require) ->
 
 		# ### Public Methods
 
-		triggerChange: -> @trigger 'change', @selected.pluck 'id'
+		triggerChange: (options) -> 
+			options.added ?= null
+			options.removed ?= null
+
+			@trigger 'change', 
+				values: @selected.pluck 'id'
+				added: options.added
+				removed: options.removed
 
 		# Turns an array of string ['la', 'li'] into an array of options [{id: 'la', title: 'la'}, {id: 'li', title: 'li'}] (model data for Backbone.Collectionn)
 		strArray2optionArray: (strArray) -> _.map strArray, (item) -> id: item, title: item

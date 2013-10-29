@@ -25,7 +25,7 @@ define (require) ->
 		# ### Render
 		render: ->
 			data = _.extend
-				title: "My modal"
+				title: ''
 				cancelAndSubmit: true
 				cancelValue: 'Cancel'
 				submitValue: 'Submit'
@@ -45,6 +45,7 @@ define (require) ->
 				marginLeft = (-1 * parseInt(@options.width, 10)/2)
 				marginLeft += '%' if @options.width.slice(-1) is '%'
 				marginLeft += 'vw' if @options.width.slice(-2) is 'vw'
+				marginLeft = @$('.modalbody').width()/-2 if @options.width is 'auto'
 				@$('.modalbody').css 'margin-left', marginLeft
 
 			if @options.height?

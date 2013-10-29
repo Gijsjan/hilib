@@ -303,6 +303,15 @@
         widthRatio = boxWidth / originalWidth;
         heightRatio = boxHeight / originalHeight;
         return Math.min(widthRatio, heightRatio);
+      },
+      hasScrollBar: function(el) {
+        return el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth;
+      },
+      hasXScrollBar: function(el) {
+        return el.scrollWidth > el.clientWidth;
+      },
+      hasYScrollBar: function(el) {
+        return el.scrollHeight > el.clientHeight;
       }
     };
   });
