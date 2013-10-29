@@ -62,7 +62,10 @@
       };
 
       ComboList.prototype.removeSelected = function(ev) {
-        return this.selected.removeById(ev.currentTarget.getAttribute('data-id'));
+        var id, model;
+        id = ev.currentTarget.getAttribute('data-id');
+        model = this.selected.get(id);
+        return this.selected.remove(model);
       };
 
       ComboList.prototype.selectItem = function(ev) {
@@ -81,10 +84,10 @@
 
       ComboList.prototype.triggerChange = function(options) {
         if (options.added == null) {
-          options.added = '';
+          options.added = null;
         }
         if (options.removed == null) {
-          options.removed = '';
+          options.removed = null;
         }
         return this.trigger('change', {
           values: this.selected.pluck('id'),

@@ -60,7 +60,10 @@ define (require) ->
 		events: -> _.extend @dropdownEvents(), 'click li.selected': 'removeSelected'
 
 		addSelected: (model) -> @selected.add model
-		removeSelected: (ev) -> @selected.removeById ev.currentTarget.getAttribute('data-id')
+		removeSelected: (ev) -> 
+			id = ev.currentTarget.getAttribute('data-id')
+			model = @selected.get id
+			@selected.remove model
 
 		selectItem: (ev) ->
 			# Check if ev is coming from keyup and double check if keyCode is 13
@@ -79,8 +82,8 @@ define (require) ->
 		# ### Public Methods
 
 		triggerChange: (options) -> 
-			options.added ?= ''
-			options.removed ?= ''
+			options.added ?= null
+			options.removed ?= null
 
 			@trigger 'change', 
 				values: @selected.pluck 'id'
