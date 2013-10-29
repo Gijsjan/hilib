@@ -8,7 +8,8 @@
       Base: require('collections/base')
     };
     Views = {
-      Base: require('views/base')
+      Base: require('views/base'),
+      Modal: require('hilib/views/modal/main')
     };
     Tpl = require('text!hilib/views/form/editablelist/main.html');
     return EditableList = (function(_super) {
@@ -22,12 +23,15 @@
       EditableList.prototype.className = 'editablelist';
 
       EditableList.prototype.initialize = function() {
-        var value, _base, _ref1;
+        var value, _base, _base1, _ref1;
         EditableList.__super__.initialize.apply(this, arguments);
         if ((_base = this.options).config == null) {
           _base.config = {};
         }
         this.settings = (_ref1 = this.options.config.settings) != null ? _ref1 : {};
+        if ((_base1 = this.settings).placeholder == null) {
+          _base1.placeholder = '';
+        }
         value = _.map(this.options.value, function(val) {
           return {
             id: val
@@ -43,7 +47,8 @@
         var rtpl;
         rtpl = _.template(Tpl, {
           viewId: this.cid,
-          selected: this.selected
+          selected: this.selected,
+          settings: this.settings
         });
         this.$el.html(rtpl);
         this.triggerChange();
@@ -65,7 +70,16 @@
       };
 
       EditableList.prototype.removeLi = function(ev) {
-        return this.selected.removeById(ev.currentTarget.getAttribute('data-id'));
+        var modal,
+          _this = this;
+        modal = new Views.Modal({
+          $html: $('<div />').html('You are about to delete a text layer'),
+          submitValue: 'Remove text layer'
+        });
+        modal.on('cancel', function() {});
+        return modal.on('submit', function() {
+          return _this.selected.removeById(ev.currentTarget.getAttribute('data-id'));
+        });
       };
 
       EditableList.prototype.onKeyup = function(ev) {

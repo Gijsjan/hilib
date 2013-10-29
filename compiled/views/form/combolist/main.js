@@ -36,13 +36,17 @@
         } else {
           console.error('No valid value passed to combolist');
         }
-        this.listenTo(this.selected, 'add', function() {
+        this.listenTo(this.selected, 'add', function(model) {
           _this.dropdownRender(Tpl);
-          return _this.triggerChange();
+          return _this.triggerChange({
+            added: model.id
+          });
         });
-        this.listenTo(this.selected, 'remove', function() {
+        this.listenTo(this.selected, 'remove', function(model) {
           _this.dropdownRender(Tpl);
-          return _this.triggerChange();
+          return _this.triggerChange({
+            removed: model.id
+          });
         });
         return this.dropdownRender(Tpl);
       };
@@ -54,7 +58,6 @@
       };
 
       ComboList.prototype.addSelected = function(model) {
-        console.log(model);
         return this.selected.add(model);
       };
 
@@ -76,8 +79,18 @@
         }
       };
 
-      ComboList.prototype.triggerChange = function() {
-        return this.trigger('change', this.selected.pluck('id'));
+      ComboList.prototype.triggerChange = function(options) {
+        if (options.added == null) {
+          options.added = '';
+        }
+        if (options.removed == null) {
+          options.removed = '';
+        }
+        return this.trigger('change', {
+          values: this.selected.pluck('id'),
+          added: options.added,
+          removed: options.removed
+        });
       };
 
       ComboList.prototype.strArray2optionArray = function(strArray) {

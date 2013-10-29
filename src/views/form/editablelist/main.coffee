@@ -5,6 +5,7 @@ define (require) ->
 
 	Views = 
 		Base: require 'views/base'
+		Modal: require 'hilib/views/modal/main'
 
 	Tpl = require 'text!hilib/views/form/editablelist/main.html'
 
@@ -18,6 +19,8 @@ define (require) ->
 
 			@options.config ?= {}
 			@settings = @options.config.settings ? {}
+
+			@settings.placeholder ?= ''
 
 			# Turn array of strings into array of objects
 			value = _.map @options.value, (val) -> id: val
@@ -36,6 +39,7 @@ define (require) ->
 			rtpl = _.template Tpl, 
 				viewId: @cid
 				selected: @selected
+				settings: @settings
 
 			@$el.html rtpl
 
@@ -57,7 +61,13 @@ define (require) ->
 			evs
 
 		removeLi: (ev) ->
-			@selected.removeById ev.currentTarget.getAttribute('data-id')
+			modal = new Views.Modal
+				# title: "My title!"
+				$html: $('<div />').html('You are about to delete a text layer')
+				submitValue: 'Remove text layer'
+			modal.on 'cancel', =>
+			modal.on 'submit', => 
+				@selected.removeById ev.currentTarget.getAttribute('data-id')
 
 		onKeyup: (ev) ->
 			valueLength = ev.currentTarget.value.length
