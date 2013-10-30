@@ -108,15 +108,12 @@ define (require) ->
 
 			@data ?= {}
 			@data.viewId = @cid
-			
-			if @model?
-				@data.model = @model
-			if @collection?
-				@data.collection = @collection
+			@data.model = @model if @model?
+			@data.collection = @collection if @collection?
 
 			throw 'Unknow template!' unless @tpl?
-			
-			rtpl = _.template @tpl, @data
+
+			rtpl = if _.isString(@tpl) then _.template @tpl, @data else @tpl @data
 			@$el.html rtpl
 
 			@el.setAttribute 'data-view-cid', @cid
