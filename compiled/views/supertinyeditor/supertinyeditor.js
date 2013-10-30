@@ -118,23 +118,13 @@
           parent: this.el.querySelector('.ste-body')
         });
         this.iframeDocument.addEventListener('scroll', function() {
-          var target;
           if (!_this.autoScroll) {
-            target = {
-              scrollLeft: $(iframe).contents().scrollLeft(),
-              scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth,
-              clientWidth: iframe.contentWindow.document.documentElement.clientWidth,
-              scrollTop: $(iframe).contents().scrollTop(),
-              scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight,
-              clientHeight: iframe.contentWindow.document.documentElement.clientHeight
-            };
-            return Fn.timeoutWithReset(200, function() {
-              return _this.trigger('scrolled', Fn.getScrollPercentage(target));
-            });
+            return _this.triggerScroll();
           }
         });
         return this.iframeDocument.addEventListener('keyup', function(ev) {
           return Fn.timeoutWithReset(500, function() {
+            _this.triggerScroll();
             return _this.saveHTMLToModel();
           });
         });
@@ -177,6 +167,20 @@
 
       SuperTinyEditor.prototype.saveHTMLToModel = function() {
         return this.model.set(this.options.htmlAttribute, this.iframeBody.innerHTML);
+      };
+
+      SuperTinyEditor.prototype.triggerScroll = function() {
+        var iframe, target;
+        iframe = this.el.querySelector('iframe');
+        target = {
+          scrollLeft: $(iframe).contents().scrollLeft(),
+          scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth,
+          clientWidth: iframe.contentWindow.document.documentElement.clientWidth,
+          scrollTop: $(iframe).contents().scrollTop(),
+          scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight,
+          clientHeight: iframe.contentWindow.document.documentElement.clientHeight
+        };
+        return this.trigger('scrolled', Fn.getScrollPercentage(target));
       };
 
       SuperTinyEditor.prototype.setModel = function(model) {

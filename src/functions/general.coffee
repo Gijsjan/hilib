@@ -218,13 +218,11 @@ define (require) ->
 		left: Math.floor (scrolledLeft/totalLeft) * 100
 
 	setScrollPercentage: (el, percentages) ->
-		clientWidth = el.clientWidth
-		scrollWidth = el.scrollWidth
-		clientHeight = el.clientHeight
-		scrollHeight = el.scrollHeight
+		percentages.top = 0 if percentages.top < 5
+		percentages.top = 100 if percentages.top > 95
 
-		el.scrollTop = (scrollHeight - clientHeight) * percentages.top/100
-		el.scrollLeft = (scrollWidth - clientWidth) * percentages.left/100
+		el.scrollTop = (el.scrollHeight - el.clientHeight) * percentages.top/100
+		el.scrollLeft = (el.scrollWidth - el.clientWidth) * percentages.left/100
 
 	# * TODO checked=true as first argument
 	checkCheckboxes: (selector='input[type="checkbox"]', checked=true, baseEl=document) ->

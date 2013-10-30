@@ -134,21 +134,12 @@ define (require) ->
 			# Scroll is also triggered when using the contentWindow.scrollTo function in @setScrollPercentage, 
 			# but should not update the other scroll(s).@autoScroll is used to prevent both scrollers of updating eachother
 			# and thus forming a loop.
-			@iframeDocument.addEventListener 'scroll', =>
-				unless @autoScroll
-					target =
-						scrollLeft: $(iframe).contents().scrollLeft()
-						scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth
-						clientWidth: iframe.contentWindow.document.documentElement.clientWidth
-						scrollTop: $(iframe).contents().scrollTop()
-						scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight
-						clientHeight: iframe.contentWindow.document.documentElement.clientHeight
-					
-					Fn.timeoutWithReset 200, => @trigger 'scrolled', Fn.getScrollPercentage target
+			@iframeDocument.addEventListener 'scroll', => @triggerScroll() unless @autoScroll
 
 			@iframeDocument.addEventListener 'keyup', (ev) =>
-				Fn.timeoutWithReset 500, => @saveHTMLToModel()
-
+				Fn.timeoutWithReset 500, => 
+					@triggerScroll()
+					@saveHTMLToModel()
 
 		
 		# ### Events
@@ -161,8 +152,6 @@ define (require) ->
 			action = ev.currentTarget.getAttribute 'data-action'
 			@iframeDocument.execCommand action, false, null
 			@saveHTMLToModel()
-			# @model.set @options.htmlAttribute, @getHTML()
-			# @trigger 'change', action, @iframeBody.innerHTML
 
 		buttonClicked: (ev) ->
 			action = ev.currentTarget.getAttribute 'data-action'
@@ -190,6 +179,18 @@ define (require) ->
 
 		saveHTMLToModel: -> @model.set @options.htmlAttribute, @iframeBody.innerHTML
 
+		triggerScroll: ->
+			iframe = @el.querySelector 'iframe'
+
+			target =
+				scrollLeft: $(iframe).contents().scrollLeft()
+				scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth
+				clientWidth: iframe.contentWindow.document.documentElement.clientWidth
+				scrollTop: $(iframe).contents().scrollTop()
+				scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight
+				clientHeight: iframe.contentWindow.document.documentElement.clientHeight
+
+			@trigger 'scrolled', Fn.getScrollPercentage target
 
 		setModel: (model) ->
 			@setInnerHTML model.get @options.htmlAttribute
