@@ -1,5 +1,13 @@
 {
   "name": "hilib",
   "version": "0.0.1",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+  	"jquery": "1.x",
+    "underscore-amd": "*",
+    "backbone-amd": "1.0.0",
+  	"requirejs": "*",
+    "mocha": "*",
+    "chai": "*"
+  }
 }

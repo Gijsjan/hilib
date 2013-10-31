@@ -10,26 +10,26 @@
 
       currentViews = new Collections.View();
 
-      ViewManager.prototype.debugCurrentViews = currentViews;
+      ViewManager.prototype.el = 'div#main';
 
       selfDestruct = function(view) {
         if (!currentViews.has(view)) {
-          console.error('Unknown view!');
-          return false;
-        }
-        if (view.destroy) {
-          return view.destroy();
+          return console.error('Unknown view!');
         } else {
-          return view.remove();
+          if (view.destroy != null) {
+            return view.destroy();
+          } else {
+            return view.remove();
+          }
         }
       };
 
       function ViewManager() {
-        this.main = $('div#main');
+        this.main = $(this.el);
       }
 
       ViewManager.prototype.clear = function(view) {
-        if (view) {
+        if (view != null) {
           selfDestruct(view);
           return currentViews.remove(view.cid);
         } else {
@@ -40,11 +40,21 @@
         }
       };
 
-      ViewManager.prototype.register = function(view) {
-        if (view) {
+      ViewManager.prototype.register = function(view, options) {
+        if (options == null) {
+          options = {};
+        }
+        if (options.managed == null) {
+          options.managed = true;
+        }
+        if (options.cached == null) {
+          options.cached = false;
+        }
+        if ((view != null) && options.managed) {
           return currentViews.add({
-            'id': view.cid,
-            'view': view
+            id: view.cid,
+            options: options,
+            view: view
           });
         }
       };
@@ -56,7 +66,8 @@
         }
         this.clear();
         view = new View(query);
-        html = view == null ? '' : view.$el;
+        html = view == null ? '' : view.el;
+        console.log(html);
         return this.main.html(html);
       };
 

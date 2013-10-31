@@ -1,3 +1,5 @@
+connect_middleware = require './middleware.connect.coffee'
+
 module.exports = (grunt) ->
 
 	##############
@@ -10,13 +12,20 @@ module.exports = (grunt) ->
 				stdout: true
 				stderr: true
 			mocha: 
-				command: 'mocha-phantomjs -R dot http://localhost:8000/.test/index.html'
+				command: 'mocha-phantomjs -R dot http://localhost:1234/.test/index.html'
 			groc:
 				command: 'groc "src/*.coffee" --out=docs'
 			emptycompiled:
 				command: 'rm -rf compiled/*'
 			bowerinstall:
 				command: 'bower install'
+
+		connect:
+			test:
+				options:
+					port: 1234
+					base: ''
+					middleware: connect_middleware
 
 		touch:
 			js: 'touch/js'
@@ -55,8 +64,17 @@ module.exports = (grunt) ->
 					rename: (dest, src) -> 
 						dest + '/' + src.replace(/.coffee/, '.js') # Use rename to preserve multiple dots in filenames (nav.user.coffee => nav.user.js)
 				]
+			test:
+				options:
+					bare: true
+					join: true
+				files: 
+					'.test/tests.js': ['.test/head.coffee', 'test/**/*.coffee']
 
 		watch:
+			coffeetest:
+				files: 'test/**/*.coffee'
+				tasks: ['coffee:test', 'shell:mocha']
 			coffee:
 				files: 'src/**/*.coffee'
 				tasks: ['coffee:compile', 'touch:js']
@@ -75,8 +93,14 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks 'grunt-contrib-stylus'
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-watch'
+	grunt.loadNpmTasks 'grunt-contrib-connect'
 	grunt.loadNpmTasks 'grunt-shell'
 	grunt.loadNpmTasks 'grunt-touch'
+
+	grunt.registerTask 'sw', [
+		'connect:test'
+		'watch'
+	]
 
 	grunt.registerTask 'w', 'watch'
 

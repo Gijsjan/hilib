@@ -3,7 +3,7 @@
     var Backbone, Pubsub, Token, _;
     Backbone = require('backbone');
     _ = require('underscore');
-    Pubsub = require('hilib/managers/pubsub');
+    Pubsub = require('managers/pubsub');
     Token = (function() {
       Token.prototype.token = null;
 

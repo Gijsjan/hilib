@@ -1,5 +1,8 @@
+# * TODO Go native
+
 define (require) ->
 	Backbone = require 'backbone'
+
 	Collections =
 		# PUT IN HILIB
 		'View': require 'collections/view'
@@ -8,23 +11,24 @@ define (require) ->
 
 		currentViews = new Collections.View()
 
-		debugCurrentViews: currentViews
+		# debugCurrentViews: currentViews
+
+		el: 'div#main'
 
 		selfDestruct = (view) ->
 			if not currentViews.has(view)
 				console.error 'Unknown view!'
-				return false;
-
-			if view.destroy then view.destroy() else view.remove()
+			else
+				if view.destroy? then view.destroy() else view.remove()
 
 		constructor: ->
 			# TODO: Make div#main optional
-			@main = $ 'div#main'
+			@main = $ @el
 
 
 		clear: (view) ->
-			# Remove one view
-			if view
+			# Remove one view 
+			if view?
 				selfDestruct view 
 				currentViews.remove view.cid
 			# Remove all views
@@ -34,11 +38,15 @@ define (require) ->
 				currentViews.reset()
 
 
-		register: (view) ->
-			if view
+		register: (view, options={}) ->
+			options.managed ?= true
+			options.cached ?= false
+
+			if view? and options.managed
 				currentViews.add
-					'id': view.cid
-					'view': view
+					id: view.cid
+					options: options
+					view: view
 
 
 		show: (View, query={}) ->
@@ -46,8 +54,8 @@ define (require) ->
 
 			view = new View query
 
-			html = if not view? then '' else view.$el
-
+			html = if not view? then '' else view.el
+			console.log html
 			@main.html html
 
 	new ViewManager();
