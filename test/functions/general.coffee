@@ -1,5 +1,5 @@
 	describe "Fn", ->
-		Fn = require 'functions/general'
+		Fn = require 'hilib/functions/general'
 
 		describe "generateID()", ->
 			it "Without parameters the ID should have 8 chars", ->

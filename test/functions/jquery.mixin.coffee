@@ -1,5 +1,5 @@
 	describe "jQuery mixins", ->
-		require 'functions/jquery.mixin'
+		require 'hilib/functions/jquery.mixin'
 		
 		describe "(el:contains(query))", ->
 			$div = null

@@ -2,7 +2,7 @@ define (require) ->
 	Backbone = require 'backbone'
 	_ = require 'underscore'
 
-	Pubsub = require 'managers/pubsub'
+	Pubsub = require 'hilib/managers/pubsub'
 
 	class Token
 
