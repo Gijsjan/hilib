@@ -6,6 +6,7 @@ require.config({
 		jquery: '../lib/jquery/jquery',
 		backbone: '../lib/backbone-amd/backbone',
 		underscore: '../lib/underscore-amd/underscore',
+		hilib: '.'
 	}
 });
 

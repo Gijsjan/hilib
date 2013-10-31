@@ -1,74 +1,85 @@
 (function() {
   define(function(require) {
-    var Backbone, Collections, ViewManager;
+    var Backbone, StringFn, ViewManager;
     Backbone = require('backbone');
-    Collections = {
-      'View': require('collections/view')
-    };
+    StringFn = require('hilib/functions/string');
     ViewManager = (function() {
-      var currentViews, selfDestruct;
+      var cachedViews, currentViews, selfDestruct;
 
-      currentViews = new Collections.View();
+      function ViewManager() {}
 
-      ViewManager.prototype.el = 'div#main';
+      currentViews = {};
+
+      cachedViews = {};
 
       selfDestruct = function(view) {
-        if (!currentViews.has(view)) {
-          return console.error('Unknown view!');
+        if (view.destroy != null) {
+          return view.destroy();
         } else {
-          if (view.destroy != null) {
-            return view.destroy();
-          } else {
-            return view.remove();
-          }
+          return view.remove();
         }
       };
-
-      function ViewManager() {
-        this.main = $(this.el);
-      }
 
       ViewManager.prototype.clear = function(view) {
         if (view != null) {
           selfDestruct(view);
-          return currentViews.remove(view.cid);
+          return delete currentViews[view.cid];
         } else {
-          currentViews.each(function(model) {
-            return selfDestruct(model.get('view'));
+          return _.each(currentViews, function(view) {
+            if (!view.options.cache) {
+              selfDestruct(view);
+              return delete currentViews[view.cid];
+            }
           });
-          return currentViews.reset();
         }
       };
 
-      ViewManager.prototype.register = function(view, options) {
+      ViewManager.prototype.clearCache = function() {
+        return cachedViews = {};
+      };
+
+      ViewManager.prototype.register = function(view) {
+        if (view != null) {
+          return currentViews[view.cid] = view;
+        }
+      };
+
+      ViewManager.prototype.show = function(el, View, options) {
+        var view, viewHashCode;
         if (options == null) {
           options = {};
         }
-        if (options.managed == null) {
-          options.managed = true;
+        if (_.isString(el)) {
+          el = document.querySelector(el);
         }
-        if (options.cached == null) {
-          options.cached = false;
+        if (options.cache == null) {
+          options.cache = true;
         }
-        if ((view != null) && options.managed) {
-          return currentViews.add({
-            id: view.cid,
-            options: options,
-            view: view
-          });
+        if (options.append == null) {
+          options.append = false;
         }
-      };
-
-      ViewManager.prototype.show = function(View, query) {
-        var html, view;
-        if (query == null) {
-          query = {};
+        if (options.prepend == null) {
+          options.prepend = false;
         }
-        this.clear();
-        view = new View(query);
-        html = view == null ? '' : view.el;
-        console.log(html);
-        return this.main.html(html);
+        if (options.cache) {
+          viewHashCode = StringFn.hashCode(View.toString() + JSON.stringify(options));
+          if (!cachedViews.hasOwnProperty(viewHashCode)) {
+            cachedViews[viewHashCode] = new View(options);
+          }
+          view = cachedViews[viewHashCode];
+        } else {
+          view = new View(options);
+        }
+        if (_.isElement(el) && (view != null)) {
+          if (!(options.append || options.prepend)) {
+            el.innerHTML = '';
+          }
+          if (options.prepend && (el.firstChild != null)) {
+            return el.insertBefore(view.el, el.firstChild);
+          } else {
+            return el.appendChild(view.el);
+          }
+        }
       };
 
       return ViewManager;

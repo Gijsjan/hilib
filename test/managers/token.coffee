@@ -1,5 +1,5 @@
 	describe "Token", ->
-		token = require 'managers/token'
+		token = require 'hilib/managers/token'
 
 		describe "set", ->
 			token.set 'somecooltoken'

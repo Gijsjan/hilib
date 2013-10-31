@@ -1,5 +1,5 @@
 	describe "StringFn", ->
-		StringFn = require 'functions/string'
+		StringFn = require 'hilib/functions/string'
 
 		describe "slugify", ->
 			it "should slugify strings", ->

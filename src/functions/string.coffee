@@ -41,3 +41,15 @@ define (require) ->
 	###
 	onlyNumbers: (str) ->
 		str.replace /[^\d.]/g, ''
+
+	hashCode: (str) ->
+		return false if str.length is 0 
+
+		hash = 0
+
+		for chr, i in str
+			c = str.charCodeAt i
+			hash = ((hash << 5) - hash) + c
+			hash = hash & hash
+
+		hash

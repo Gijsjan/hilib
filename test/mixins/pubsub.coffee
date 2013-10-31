@@ -1,5 +1,5 @@
 	describe "Pubsub", ->
-		pubsub = require('mixins/pubsub')
+		pubsub = require 'hilib/mixins/pubsub'
 		pubsubObj = _.extend(Backbone.Events, pubsub);
 		
 		describe "publish", ->

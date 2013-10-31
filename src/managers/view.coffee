@@ -1,61 +1,55 @@
-# * TODO Go native
-
 define (require) ->
 	Backbone = require 'backbone'
 
-	Collections =
-		# PUT IN HILIB
-		'View': require 'collections/view'
+	StringFn = require 'hilib/functions/string'
 
 	class ViewManager
 
-		currentViews = new Collections.View()
+		currentViews = {}
 
-		# debugCurrentViews: currentViews
+		cachedViews = {}
 
-		el: 'div#main'
-
-		selfDestruct = (view) ->
-			if not currentViews.has(view)
-				console.error 'Unknown view!'
-			else
-				if view.destroy? then view.destroy() else view.remove()
-
-		constructor: ->
-			# TODO: Make div#main optional
-			@main = $ @el
-
+		selfDestruct = (view) -> if view.destroy? then view.destroy() else view.remove()
 
 		clear: (view) ->
 			# Remove one view 
 			if view?
 				selfDestruct view 
-				currentViews.remove view.cid
+				delete currentViews[view.cid]
 			# Remove all views
 			else
-				currentViews.each (model) ->
-					selfDestruct model.get('view')
-				currentViews.reset()
+				_.each currentViews, (view) ->
+					unless view.options.cache
+						selfDestruct view 
+						delete currentViews[view.cid]
 
+		clearCache: -> cachedViews = {}
 
-		register: (view, options={}) ->
-			options.managed ?= true
-			options.cached ?= false
+		register: (view) ->
+			currentViews[view.cid] = view if view?
 
-			if view? and options.managed
-				currentViews.add
-					id: view.cid
-					options: options
-					view: view
+		show: (el, View, options={}) ->
+			el = document.querySelector el if _.isString el
 
+			options.cache ?= true
+			options.append ?= false
+			options.prepend ?= false
 
-		show: (View, query={}) ->
-			@clear() # Clear previous views
+			if options.cache
+				viewHashCode = StringFn.hashCode View.toString() + JSON.stringify options
 
-			view = new View query
+				cachedViews[viewHashCode] = new View(options) unless cachedViews.hasOwnProperty viewHashCode
+					
+				view = cachedViews[viewHashCode] 
+			else
+				view = new View options
 
-			html = if not view? then '' else view.el
-			console.log html
-			@main.html html
+			if _.isElement(el) and view?
+				el.innerHTML = '' unless options.append or options.prepend
 
-	new ViewManager();
+				if options.prepend and el.firstChild?
+					el.insertBefore view.el, el.firstChild
+				else
+					el.appendChild view.el
+				
+	new ViewManager()
