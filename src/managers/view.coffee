@@ -23,8 +23,9 @@ define (require) ->
 						selfDestruct view 
 						delete currentViews[view.cid]
 
+		clearCache: -> cachedViews = {}
 
-		register: (view, options={}) ->
+		register: (view) ->
 			currentViews[view.cid] = view if view?
 
 		show: (el, View, options={}) ->

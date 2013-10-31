@@ -34,10 +34,11 @@
         }
       };
 
-      ViewManager.prototype.register = function(view, options) {
-        if (options == null) {
-          options = {};
-        }
+      ViewManager.prototype.clearCache = function() {
+        return cachedViews = {};
+      };
+
+      ViewManager.prototype.register = function(view) {
         if (view != null) {
           return currentViews[view.cid] = view;
         }
