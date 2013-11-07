@@ -35,7 +35,7 @@ define (require) ->
 	###
 	Removes non numbers from a string
 	
-	Example: "There are 12 monkeys." => "12"
+	Example: "Count the 12 monkeys." => "12"
 	
 	return String
 	###
@@ -53,3 +53,5 @@ define (require) ->
 			hash = hash & hash
 
 		hash
+
+	insertAt: (str, needle, index) -> str.slice(0, index) + needle + str.slice(index);

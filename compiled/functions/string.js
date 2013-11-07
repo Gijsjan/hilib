@@ -38,7 +38,7 @@
       /*
       	Removes non numbers from a string
       	
-      	Example: "There are 12 monkeys." => "12"
+      	Example: "Count the 12 monkeys." => "12"
       	
       	return String
       */
@@ -59,6 +59,9 @@
           hash = hash & hash;
         }
         return hash;
+      },
+      insertAt: function(str, needle, index) {
+        return str.slice(0, index) + needle + str.slice(index);
       }
     };
   });
