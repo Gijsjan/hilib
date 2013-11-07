@@ -207,7 +207,7 @@ define (require) ->
 			if placeholders.length > 1
 				_.each placeholders, (placeholder) =>
 					# Find closest element with the attribute data-cid.
-					el = dom.closest placeholder, '[data-cid]'
+					el = dom(placeholder).closest '[data-cid]'
 					# If the data-cid matches the model.cid and the placeholder is still empty, append the view.
 					if el.getAttribute('data-cid') is model.cid and placeholder.innerHTML is ''
 						placeholder.appendChild view.el

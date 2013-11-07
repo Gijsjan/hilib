@@ -209,7 +209,7 @@
         if (placeholders.length > 1) {
           _.each(placeholders, function(placeholder) {
             var el;
-            el = dom.closest(placeholder, '[data-cid]');
+            el = dom(placeholder).closest('[data-cid]');
             if (el.getAttribute('data-cid') === model.cid && placeholder.innerHTML === '') {
               return placeholder.appendChild(view.el);
             }
