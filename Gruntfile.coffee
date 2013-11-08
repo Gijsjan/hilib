@@ -21,6 +21,12 @@ module.exports = (grunt) ->
 				command: 'bower install'
 
 		connect:
+			keepalive:
+				options:
+					port: 1234
+					base: ''
+					middleware: connect_middleware
+					keepalive: true
 			test:
 				options:
 					port: 1234
