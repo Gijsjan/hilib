@@ -31,7 +31,6 @@
           top = 0;
           loopEl = el;
           while (loopEl !== parent) {
-            console.log(loopEl, parent);
             if (this.hasDescendant(parent)) {
               break;
             }

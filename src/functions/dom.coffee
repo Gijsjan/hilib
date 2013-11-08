@@ -23,7 +23,6 @@ define (require) ->
 			loopEl = el
 
 			while loopEl isnt parent
-				console.log loopEl, parent
 				# Not every parent is an offsetParent. So in the case the user has passed a non offsetParent as the parent, 
 				# we check if we have passed the parent (by checking if the offsetParent has a descendant which is the parent).
 				break if @hasDescendant parent
