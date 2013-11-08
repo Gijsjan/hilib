@@ -2,7 +2,7 @@ define(['jade'], function(jade) { if(jade && jade['runtime'] !== undefined) { ja
 
 this["JST"] = this["JST"] || {};
 
-this["JST"]["src/mixins/dropdown/main"] = function anonymous(locals) {
+this["JST"]["hilib/mixins/dropdown/main.jade"] = function anonymous(locals) {
 var buf = [];
 buf.push("<% collection.each(function(model) { %><li data-id=\"<%= model.id %>\" class=\"list <% if (selected===model) { %>active<% } %>\"><%= model.get('title') %></li><% }); %>");;return buf.join("");
 };

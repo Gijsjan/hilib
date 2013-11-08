@@ -1,12 +1,10 @@
 (function() {
   define(function(require) {
-    var Backbone, Fn, Templates, optionMixin;
+    var Backbone, Fn, optionMixin, tpls;
     Backbone = require('backbone');
     Fn = require('hilib/functions/general');
     optionMixin = require('hilib/mixins/dropdown/options');
-    Templates = {
-      Options: require('text!hilib/mixins/dropdown/main.html')
-    };
+    tpls = require('hilib/templates');
     return {
       dropdownInitialize: function() {
         var models, _base, _base1, _base2, _base3, _ref, _ref1,
@@ -58,7 +56,7 @@
         if (this.preDropdownRender != null) {
           this.preDropdownRender();
         }
-        rtpl = _.template(tpl, {
+        rtpl = tpl({
           viewId: this.cid,
           selected: this.selected,
           settings: this.settings
@@ -82,7 +80,7 @@
       },
       renderOptions: function() {
         var rtpl;
-        rtpl = _.template(Templates.Options, {
+        rtpl = tpls['hilib/mixins/dropdown/main']({
           collection: this.filtered_options,
           selected: this.selected
         });

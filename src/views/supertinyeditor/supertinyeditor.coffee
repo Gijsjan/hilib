@@ -19,9 +19,11 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	Templates =
-		Main: require 'text!hilib/views/supertinyeditor/supertinyeditor.html'
-		Diacritics: require 'text!hilib/views/supertinyeditor/diacritics.html'
+	tpls = require 'hilib/templates'
+	# console.log tpls
+	# Templates =
+	# 	Main: require 'hilib/views/supertinyeditor/supertinyeditor.jade'
+	# 	Diacritics: require 'hilib/views/supertinyeditor/diacritics.jade'
 
 	# ## SuperTinyEditor
 	class SuperTinyEditor extends Views.Base
@@ -40,8 +42,9 @@ define (require) ->
 
 		# ### Render
 		render: ->
-			rtpl = _.template Templates.Main
-			@$el.html rtpl()
+			# rtpl = _.template Templates.Main
+			# console.log Templates.Main
+			@$el.html tpls['hilib/views/supertinyeditor/main']()
 
 			@$currentHeader = @$('.ste-header')
 
@@ -77,7 +80,7 @@ define (require) ->
 					diacriticsUL = document.createElement 'div'
 					diacriticsUL.className = 'diacritics-placeholder'
 					diacritics = 'ĀĂÀÁÂÃÄÅĄⱭ∀ÆāăàáâãäåąɑæαªƁßβɓÇĆĈĊČƆçςćĉċč¢ɔÐĎĐḎƊðďđɖḏɖɗÈÉÊËĒĖĘẸĚƏÆƎƐ€èéêëēėęẹěəæεɛ€ƑƩƒʃƭĜĞĠĢƢĝğġģɠƣĤĦĥħɦẖÌÍÎÏĪĮỊİIƗĲìíîïīįịiiɨĳιĴĲĵɟĳĶƘķƙĹĻĽŁΛĺļľłλÑŃŅŇŊƝ₦ñńņňŋɲÒÓÔÕÖŌØŐŒƠƟòóôõöōøőœơɵ°Ƥ¶ƥ¶ŔŘɌⱤŕřɍɽßſŚŜŞṢŠÞ§ßſśŝşṣšþ§ŢŤṮƬƮţťṯƭʈÙÚÛÜŪŬŮŰŲɄƯƱùúûüūŭůűųưμυʉʊƲʋŴẄΩŵẅωÝŶŸƔƳýŷÿɣyƴŹŻŽƵƷẔźżžƶẕʒƹ£¥€₩₨₳Ƀ¤¡‼‽¿‽‰…••±‐–—±†‡′″‴‘’‚‛“”„‟≤‹≥›≈≠≡'
-					diacriticsUL.innerHTML =	_.template Templates.Diacritics, diacritics: diacritics
+					diacriticsUL.innerHTML = tpls['hilib/views/supertinyeditor/diacritics'] diacritics: diacritics
 					
 					div.appendChild diacriticsUL
 

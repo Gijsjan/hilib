@@ -1,7 +1,6 @@
-input(data-view-id!="<%= viewId %>", placeholder!="<%= settings.placeholder %>")
+input(data-view-id=viewId, placeholder=settings.placeholder)
 button Add to list
 ul.selected
-	| <% selected.each(function(model) { %>
-	li(data-id!="<%= model.id %>")
-		span <%= model.id %>
-	| <% }); %>
+	each model in selected.models
+		li(data-id=model.id)
+			span= model.id

@@ -21,6 +21,12 @@ module.exports = (grunt) ->
 				command: 'bower install'
 
 		connect:
+			keepalive:
+				options:
+					port: 1234
+					base: ''
+					middleware: connect_middleware
+					keepalive: true
 			test:
 				options:
 					port: 1234
@@ -34,14 +40,24 @@ module.exports = (grunt) ->
 
 		jade:
 			compile:
-				files: [
-					expand: true
-					cwd: 'src'
-					src: '**/*.jade'
-					dest: 'compiled'
-					rename: (dest, src) -> 
-						dest + '/' + src.replace(/.jade/, '.html') # Use rename to preserve multiple dots in filenames (nav.user.coffee => nav.user.js)
-				]
+				files: 'compiled/templates.js': 'src/**/*.jade'
+				# files: [
+				# 	expand: true
+				# 	cwd: 'src'
+				# 	src: '**/*.jade'
+				# 	dest: 'compiled'
+				# 	rename: (dest, src) -> 
+				# 		dest + '/' + src + '.js' # Use rename to preserve multiple dots in filenames (nav.user.coffee => nav.user.js)
+				# ]
+				options:
+					compileDebug: false
+					client: true
+					amd: true
+					processName: (filename) ->
+						parts = filename.split('/')
+						parts[0] = 'hilib'
+						parts[parts.length-1] = parts[parts.length-1].replace('.jade', '')
+						parts.join('/')
 
 		stylus:
 			compile:

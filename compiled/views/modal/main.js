@@ -3,9 +3,9 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, Modal, Tpl, modalManager, _ref;
+    var Backbone, Modal, modalManager, tpls, _ref;
     Backbone = require('backbone');
-    Tpl = require('text!hilib/views/modal/main.html');
+    tpls = require('hilib/templates');
     modalManager = require('hilib/managers/modal');
     return Modal = (function(_super) {
       __extends(Modal, _super);
@@ -31,7 +31,7 @@
           cancelValue: 'Cancel',
           submitValue: 'Submit'
         }, this.options);
-        rtpl = _.template(Tpl, data);
+        rtpl = tpls['hilib/views/modal/main'](data);
         this.$el.html(rtpl);
         if (this.options.$html) {
           this.$(".body").html(this.options.$html);

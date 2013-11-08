@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Fn, Longpress, StringFn, SuperTinyEditor, Templates, Views, _ref;
+    var Fn, Longpress, StringFn, SuperTinyEditor, Views, tpls, _ref;
     Fn = require('hilib/functions/general');
     StringFn = require('hilib/functions/string');
     require('hilib/functions/jquery.mixin');
@@ -11,10 +11,7 @@
     Views = {
       Base: require('views/base')
     };
-    Templates = {
-      Main: require('text!hilib/views/supertinyeditor/supertinyeditor.html'),
-      Diacritics: require('text!hilib/views/supertinyeditor/diacritics.html')
-    };
+    tpls = require('hilib/templates');
     return SuperTinyEditor = (function(_super) {
       __extends(SuperTinyEditor, _super);
 
@@ -45,9 +42,7 @@
       };
 
       SuperTinyEditor.prototype.render = function() {
-        var rtpl;
-        rtpl = _.template(Templates.Main);
-        this.$el.html(rtpl());
+        this.$el.html(tpls['hilib/views/supertinyeditor/main']());
         this.$currentHeader = this.$('.ste-header');
         this.renderControls();
         this.renderIframe();
@@ -76,7 +71,7 @@
             diacriticsUL = document.createElement('div');
             diacriticsUL.className = 'diacritics-placeholder';
             diacritics = 'ĀĂÀÁÂÃÄÅĄⱭ∀ÆāăàáâãäåąɑæαªƁßβɓÇĆĈĊČƆçςćĉċč¢ɔÐĎĐḎƊðďđɖḏɖɗÈÉÊËĒĖĘẸĚƏÆƎƐ€èéêëēėęẹěəæεɛ€ƑƩƒʃƭĜĞĠĢƢĝğġģɠƣĤĦĥħɦẖÌÍÎÏĪĮỊİIƗĲìíîïīįịiiɨĳιĴĲĵɟĳĶƘķƙĹĻĽŁΛĺļľłλÑŃŅŇŊƝ₦ñńņňŋɲÒÓÔÕÖŌØŐŒƠƟòóôõöōøőœơɵ°Ƥ¶ƥ¶ŔŘɌⱤŕřɍɽßſŚŜŞṢŠÞ§ßſśŝşṣšþ§ŢŤṮƬƮţťṯƭʈÙÚÛÜŪŬŮŰŲɄƯƱùúûüūŭůűųưμυʉʊƲʋŴẄΩŵẅωÝŶŸƔƳýŷÿɣyƴŹŻŽƵƷẔźżžƶẕʒƹ£¥€₩₨₳Ƀ¤¡‼‽¿‽‰…••±‐–—±†‡′″‴‘’‚‛“”„‟≤‹≥›≈≠≡';
-            diacriticsUL.innerHTML = _.template(Templates.Diacritics, {
+            diacriticsUL.innerHTML = tpls['hilib/views/supertinyeditor/diacritics']({
               diacritics: diacritics
             });
             div.appendChild(diacriticsUL);

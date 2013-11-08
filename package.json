@@ -18,7 +18,8 @@
     "grunt-touch": "~0.1.0"
   },
   "scripts": {
-    "start": "node ./.test/bin/server.js"
+    "start": "node ./.test/bin/server.js",
+	"test": "mocha-phantomjs http://localhost:1234/.test/index.html"
   },
   "repository": {
     "type": "git",

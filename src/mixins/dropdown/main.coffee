@@ -36,8 +36,7 @@ define (require) ->
 		# Options: require 'hilib/mixins/dropdown/options'
 	optionMixin = require 'hilib/mixins/dropdown/options'
 
-	Templates =
-		Options: require 'text!hilib/mixins/dropdown/main.html'
+	tpls = require 'hilib/templates'
 
 	# ### Initialize
 
@@ -88,7 +87,7 @@ define (require) ->
 	dropdownRender: (tpl) ->
 		@preDropdownRender() if @preDropdownRender?
 
-		rtpl = _.template tpl,
+		rtpl = tpl
 			viewId: @cid
 			selected: @selected
 			settings: @settings
@@ -110,7 +109,7 @@ define (require) ->
 		@
 
 	renderOptions: ->
-		rtpl = _.template Templates.Options, 
+		rtpl = tpls['hilib/mixins/dropdown/main']
 			collection: @filtered_options
 			selected: @selected
 		@$optionlist.html rtpl
