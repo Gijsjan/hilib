@@ -131,3 +131,8 @@ module.exports = (grunt) ->
 		'shell:emptycompiled' # rm -rf compiled/
 		'init'
 	]
+
+	grunt.registerTask 'test', [
+		'connect:test'
+		'shell:mocha'
+	]

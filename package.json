@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "node ./.test/bin/server.js",
-	"test": "mocha-phantomjs http://localhost:1234/.test/index.html"
+	"test": "grunt test"
   },
   "repository": {
     "type": "git",
