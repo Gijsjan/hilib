@@ -3,11 +3,11 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var AutoSuggest, Tpl, Views, dropdown, _ref;
+    var AutoSuggest, Views, dropdown, tpls, _ref;
     Views = {
       Base: require('views/base')
     };
-    Tpl = require('text!hilib/views/form/autosuggest/main.html');
+    tpls = require('hilib/templates');
     dropdown = require('hilib/mixins/dropdown/main');
     return AutoSuggest = (function(_super) {
       __extends(AutoSuggest, _super);
@@ -34,7 +34,7 @@
         });
         /* DEBUG console.log @selected, @settings.getModel, @options.value, @collection*/
 
-        return this.dropdownRender(Tpl);
+        return this.dropdownRender(tpls['hilib/views/form/autosuggest/main']);
       };
 
       AutoSuggest.prototype.postDropdownRender = function() {

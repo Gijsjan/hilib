@@ -12,7 +12,8 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	Tpl = require 'text!hilib/views/form/autosuggest/main.html'
+	# Tpl = require 'hilib/views/form/autosuggest/main.jade'
+	tpls = require 'hilib/templates'
 
 	dropdown = require 'hilib/mixins/dropdown/main'
 
@@ -36,7 +37,7 @@ define (require) ->
 			@selected = getModel(@options.value, @collection) ? new Backbone.Model id: '', title: ''
 			### DEBUG console.log @selected, @settings.getModel, @options.value, @collection ###
 
-			@dropdownRender Tpl
+			@dropdownRender tpls['hilib/views/form/autosuggest/main']
 
 		# ### Render
 		postDropdownRender: ->

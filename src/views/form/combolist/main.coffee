@@ -10,7 +10,8 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	Tpl = require 'text!hilib/views/form/combolist/main.html'
+	# Tpl = require 'hilib/views/form/combolist/main.jade'
+	tpls = require 'hilib/templates'
 
 	# add to mixins
 	dropdown = require 'hilib/mixins/dropdown/main'
@@ -45,15 +46,15 @@ define (require) ->
 
 			@listenTo @selected, 'add', (model) =>
 				# @resetOptions()
-				@dropdownRender Tpl
+				@dropdownRender tpls['hilib/views/form/combolist/main']
 				@triggerChange added: model.id
 
 			@listenTo @selected, 'remove', (model) =>
 				# @resetOptions()
-				@dropdownRender Tpl
+				@dropdownRender tpls['hilib/views/form/combolist/main']
 				@triggerChange removed: model.id
 
-			@dropdownRender Tpl
+			@dropdownRender tpls['hilib/views/form/combolist/main']
 
 		# ### Events
 

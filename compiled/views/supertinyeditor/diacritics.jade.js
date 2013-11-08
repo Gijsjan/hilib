@@ -2,7 +2,7 @@ define(['jade'], function(jade) { if(jade && jade['runtime'] !== undefined) { ja
 
 this["JST"] = this["JST"] || {};
 
-this["JST"]["src/views/supertinyeditor/diacritics"] = function anonymous(locals) {
+this["JST"]["hilib/views/supertinyeditor/diacritics.jade"] = function anonymous(locals) {
 var buf = [];
 buf.push("<ul class=\"diacritics\"><% for (i in diacritics) { %><li><%= diacritics[i] %></li><% } %></ul>");;return buf.join("");
 };

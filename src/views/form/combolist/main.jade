@@ -1,12 +1,11 @@
 .input
-	input(type="text", data-view-id!="<%= viewId %>", placeholder!="<%= settings.placeholder %>")
+	input(type="text", data-view-id=viewId, placeholder=settings.placeholder)
 	.caret
-<% if (settings.editable) { %>
-button.edit Edit
-<% } %>
+if settings.editable
+	button.edit Edit
+
 ul.list
 ul.selected
-	| <% selected.each(function(model) { %>
-	li.selected(data-id!="<%= model.id %>")
-		span <%= model.get('title') %>
-	| <% }); %>
+	each model in selected.models
+		li.selected(data-id=model.id)
+			span= model.get('title')
