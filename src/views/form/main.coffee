@@ -93,7 +93,8 @@ define (require) ->
 
 			# After save we trigger the save:success so the instantiated Form view can capture it and take action.
 			@model.save [],
-				success: (model, response, options) => 
+				success: (model, response, options) =>
+					console.log 'suc'
 					@trigger 'save:success', model, response, options
 					@reset()
 				error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
