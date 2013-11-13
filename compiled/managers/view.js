@@ -1,10 +1,12 @@
 (function() {
+  var __hasProp = {}.hasOwnProperty;
+
   define(function(require) {
     var Backbone, StringFn, ViewManager;
     Backbone = require('backbone');
     StringFn = require('hilib/functions/string');
     ViewManager = (function() {
-      var cachedViews, currentViews, selfDestruct;
+      var cachedViews, currentViews;
 
       function ViewManager() {}
 
@@ -12,29 +14,33 @@
 
       cachedViews = {};
 
-      selfDestruct = function(view) {
-        if (view.destroy != null) {
-          return view.destroy();
-        } else {
-          return view.remove();
-        }
-      };
-
       ViewManager.prototype.clear = function(view) {
-        if (view != null) {
-          selfDestruct(view);
-          return delete currentViews[view.cid];
-        } else {
-          return _.each(currentViews, function(view) {
-            if (!view.options.cache) {
-              selfDestruct(view);
-              return delete currentViews[view.cid];
+        var cid, selfDestruct, _results;
+        selfDestruct = function(view) {
+          if (view.options.persist !== true) {
+            if (view.destroy != null) {
+              view.destroy();
+            } else {
+              view.remove();
             }
-          });
+            return delete currentViews[view.cid];
+          }
+        };
+        if (view != null) {
+          return selfDestruct(view);
+        } else {
+          _results = [];
+          for (cid in currentViews) {
+            if (!__hasProp.call(currentViews, cid)) continue;
+            view = currentViews[cid];
+            _results.push(selfDestruct(view));
+          }
+          return _results;
         }
       };
 
       ViewManager.prototype.clearCache = function() {
+        this.clear();
         return cachedViews = {};
       };
 
@@ -45,21 +51,34 @@
       };
 
       ViewManager.prototype.show = function(el, View, options) {
-        var view, viewHashCode;
+        var cid, view, viewHashCode;
         if (options == null) {
           options = {};
         }
+        for (cid in currentViews) {
+          if (!__hasProp.call(currentViews, cid)) continue;
+          view = currentViews[cid];
+          if (!view.options.cache && !view.options.persist) {
+            this.clear(view);
+          }
+        }
         if (_.isString(el)) {
           el = document.querySelector(el);
-        }
-        if (options.cache == null) {
-          options.cache = true;
         }
         if (options.append == null) {
           options.append = false;
         }
         if (options.prepend == null) {
           options.prepend = false;
+        }
+        if (options.persist == null) {
+          options.persist = false;
+        }
+        if (options.persist === true) {
+          options.cache = false;
+        }
+        if (options.cache == null) {
+          options.cache = true;
         }
         if (options.cache) {
           viewHashCode = StringFn.hashCode(View.toString() + JSON.stringify(options));

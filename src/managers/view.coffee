@@ -9,31 +9,35 @@ define (require) ->
 
 		cachedViews = {}
 
-		selfDestruct = (view) -> if view.destroy? then view.destroy() else view.remove()
-
 		clear: (view) ->
+			selfDestruct = (view) ->
+				unless view.options.persist is true
+					if view.destroy? then view.destroy() else view.remove()
+					delete currentViews[view.cid]
+
 			# Remove one view 
 			if view?
 				selfDestruct view 
-				delete currentViews[view.cid]
 			# Remove all views
 			else
-				_.each currentViews, (view) ->
-					unless view.options.cache
-						selfDestruct view 
-						delete currentViews[view.cid]
+				selfDestruct view for own cid, view of currentViews
 
-		clearCache: -> cachedViews = {}
+		clearCache: ->
+			@clear()
+			cachedViews = {}
 
-		register: (view) ->
-			currentViews[view.cid] = view if view?
+		register: (view) -> currentViews[view.cid] = view if view?
 
 		show: (el, View, options={}) ->
+			@clear view for own cid, view of currentViews when not view.options.cache and not view.options.persist
+
 			el = document.querySelector el if _.isString el
 
-			options.cache ?= true
 			options.append ?= false
 			options.prepend ?= false
+			options.persist ?= false
+			options.cache = false if options.persist is true
+			options.cache ?= true
 
 			if options.cache
 				viewHashCode = StringFn.hashCode View.toString() + JSON.stringify options
