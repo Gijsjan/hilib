@@ -1,8 +1,8 @@
 define (require) ->
 	Backbone = require 'backbone'
 
-	subscribe: (ev, cb) ->
-		this.listenTo Backbone, ev, cb
+	subscribe: (ev, done) ->
+		@listenTo Backbone, ev, done
 
 	publish: ->
 		# FIXME [UNSUPPORTED]: arguments can't be array like object in IE < 10
