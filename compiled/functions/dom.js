@@ -59,6 +59,15 @@
             node = node.parentNode;
           }
           return false;
+        },
+        boundingBox: function() {
+          var box;
+          box = this.position();
+          box.width = el.clientWidth;
+          box.height = el.clientHeight;
+          box.right = box.left + box.width;
+          box.bottom = box.top + box.height;
+          return box;
         }
       };
     };

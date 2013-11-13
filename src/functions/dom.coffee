@@ -48,3 +48,12 @@ define (require) ->
 				node = node.parentNode
 
 			return false
+
+		boundingBox: ->
+			box = @position()
+			box.width = el.clientWidth
+			box.height = el.clientHeight
+			box.right = box.left + box.width
+			box.bottom = box.top + box.height
+
+			box
