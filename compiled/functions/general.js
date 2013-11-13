@@ -153,7 +153,8 @@
       removeFromArray: function(arr, item) {
         var index;
         index = arr.indexOf(item);
-        return arr.splice(index, 1);
+        arr.splice(index, 1);
+        return arr;
       },
       /* Escape a regular expression*/
 

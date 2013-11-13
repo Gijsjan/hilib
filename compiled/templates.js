@@ -111,7 +111,6 @@ if ( (title !== ''))
 buf.push("<h2>" + (jade.escape(null == (jade.interp = title) ? "" : jade.interp)) + "</h2>");
 }
 buf.push("<p class=\"message\"></p></header><div class=\"body\"></div>");
-console.log(title)
 if ( (cancelAndSubmit))
 {
 buf.push("<footer><button class=\"cancel\">" + (jade.escape(null == (jade.interp = cancelValue) ? "" : jade.interp)) + "</button><button class=\"submit\">" + (jade.escape(null == (jade.interp = submitValue) ? "" : jade.interp)) + "</button></footer>");

@@ -71,6 +71,12 @@
         },
         "click .overlay": function() {
           return this.cancel();
+        },
+        "keydown input": function(ev) {
+          if (ev.keyCode === 13) {
+            ev.preventDefault();
+            return this.trigger('submit');
+          }
         }
       };
 

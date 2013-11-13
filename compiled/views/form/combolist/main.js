@@ -90,7 +90,7 @@
           options.removed = null;
         }
         return this.trigger('change', {
-          values: this.selected.pluck('id'),
+          collection: this.selected,
           added: options.added,
           removed: options.removed
         });

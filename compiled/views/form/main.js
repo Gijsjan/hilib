@@ -83,7 +83,6 @@
         ev.preventDefault();
         return this.model.save([], {
           success: function(model, response, options) {
-            console.log('suc');
             _this.trigger('save:success', model, response, options);
             return _this.reset();
           },

@@ -150,6 +150,7 @@ define (require) ->
 	removeFromArray: (arr, item) ->
 		index = arr.indexOf item
 		arr.splice index, 1
+		arr
 
 	### Escape a regular expression ###
 	escapeRegExp: (str) -> str.replace /[-\/\\^$*+?.()|[\]{}]/g, '\\$&'

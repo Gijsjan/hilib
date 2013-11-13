@@ -79,7 +79,11 @@ define (require) ->
 			"click button.submit": -> @trigger 'submit'
 			"click button.cancel": -> @cancel()
 			"click .overlay": -> @cancel()
-
+			"keydown input": (ev) ->
+				if ev.keyCode is 13
+					ev.preventDefault()
+					@trigger 'submit'
+					
 		cancel: ->
 			@trigger "cancel"
 			@close()

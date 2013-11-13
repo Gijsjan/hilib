@@ -87,7 +87,7 @@ define (require) ->
 			options.removed ?= null
 
 			@trigger 'change', 
-				values: @selected.pluck 'id'
+				collection: @selected
 				added: options.added
 				removed: options.removed
 
