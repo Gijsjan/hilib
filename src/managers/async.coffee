@@ -6,16 +6,9 @@ define (require) ->
 			_.extend(@, Backbone.Events)
 
 			@callbacksCalled = {}
+			@callbacksCalled[name] = false for name in names
 			
-			@register names
-
-		register: (names) -> 
-			for name in names
-				@callbacksCalled[name] = false
 				
 		called: (name, data = true) ->
 			@callbacksCalled[name] = data
-			@ready() if _.every @callbacksCalled, (called) -> 
-				called isnt false
-
-		ready: -> @trigger 'ready', @callbacksCalled
+			@trigger 'ready', @callbacksCalled if _.every @callbacksCalled, (called) -> called isnt false
