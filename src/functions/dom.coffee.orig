@@ -1,15 +1,10 @@
 define (require) ->
-	(el) ->
-		# Native alternative to $.closest
-		# See http://stackoverflow.com/questions/15329167/closest-ancestor-matching-selector-using-native-dom
-		closest: (selector) ->
-			matchesSelector = el.matches or el.webkitMatchesSelector or el.mozMatchesSelector or el.msMatchesSelector
-
 <<<<<<< HEAD
-			while (el)
-				if (matchesSelector.bind(el)(selector)) then return el else	el = el.parentNode
-
 =======
+
+	require 'hilib/vendor/classList/classList'
+
+>>>>>>> Add highlightUntil to functions/dom
 	(el) ->
 		# Native alternative to $.closest
 		# See http://stackoverflow.com/questions/15329167/closest-ancestor-matching-selector-using-native-dom
@@ -19,7 +14,6 @@ define (require) ->
 			while (el)
 				if (matchesSelector.bind(el)(selector)) then return el else	el = el.parentNode
 
->>>>>>> Add caching to view manager
 		prepend: (childEl) ->
 			el.insertBefore childEl, el.firstChild
 
@@ -34,10 +28,6 @@ define (require) ->
 			loopEl = el
 
 			while loopEl isnt parent
-<<<<<<< HEAD
-=======
-				console.log loopEl, parent
->>>>>>> Add caching to view manager
 				# Not every parent is an offsetParent. So in the case the user has passed a non offsetParent as the parent, 
 				# we check if we have passed the parent (by checking if the offsetParent has a descendant which is the parent).
 				break if @hasDescendant parent
@@ -62,7 +52,6 @@ define (require) ->
 				return true if node is el
 				node = node.parentNode
 
-<<<<<<< HEAD
 			return false
 
 		boundingBox: ->
@@ -116,7 +105,8 @@ define (require) ->
 				for el in document.querySelectorAll('.' + highlightClass)
 					classNames = ' ' + el.className + ' '
 					classNames = classNames.replace ' ' + highlightClass + ' ', ''
+<<<<<<< HEAD
 					el.className = classNames.replace /^\s+|\s+$/g, ''
 =======
-			return false
->>>>>>> Add caching to view manager
+					el.className = classNames.replace /^\s+|\s+$/g, ''
+>>>>>>> Add highlightUntil to functions/dom
