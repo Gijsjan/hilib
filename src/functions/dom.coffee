@@ -1,5 +1,7 @@
 define (require) ->
 
+	require 'hilib/vendor/classList/classList'
+
 	(el) ->
 		# Native alternative to $.closest
 		# See http://stackoverflow.com/questions/15329167/closest-ancestor-matching-selector-using-native-dom
@@ -57,3 +59,39 @@ define (require) ->
 			box.bottom = box.top + box.height
 
 			box
+
+		insertAfter: (newElement, referenceElement) -> referenceElement.parentNode.insertBefore newElement, referenceElement.nextSibling
+
+		highlightUntil: (endNode, args={}) ->
+			{className, tagName} = args
+
+			className = 'hilite' if not className?
+			tagName = 'span' if not tagName?
+			
+			on: ->
+				range = document.createRange()
+				range.setStartAfter el
+				range.setEndBefore endNode
+
+				# clone range
+				# convert to array: arr = Array.prototype.slice.call(nl)
+				# check if element is in array (arr.indexOf el)
+				# accept all elements that are in array
+				# add class
+
+				treewalker = document.createTreeWalker range.commonAncestorContainer, NodeFilter.SHOW_ELEMENT,
+					acceptNode: (node) => NodeFilter.FILTER_ACCEPT
+
+				while treewalker.nextNode()
+					console.log treewalker.currentNode.classList
+					treewalker.currentNode.classList.add className
+
+
+
+				# el = document.createElement tagName
+				# el.className = className
+				# el.appendChild range.extractContents()
+				
+				# range.insertNode el
+			off: ->
+				# $(el).replaceWith -> $(@).contents()

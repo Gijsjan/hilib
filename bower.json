@@ -1,13 +1,8 @@
 {
   "name": "hilib",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {},
   "devDependencies": {
-  	"jquery": "1.x",
-    "underscore-amd": "*",
-    "backbone-amd": "1.0.0",
-  	"requirejs": "*",
-    "mocha": "*",
-    "chai": "*"
+    "classList": "https://github.com/eligrey/classList.js.git"
   }
 }
