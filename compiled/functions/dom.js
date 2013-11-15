@@ -73,38 +73,51 @@
         insertAfter: function(newElement, referenceElement) {
           return referenceElement.parentNode.insertBefore(newElement, referenceElement.nextSibling);
         },
-        highlightUntil: function(endNode, args) {
-          var className, tagName;
-          if (args == null) {
-            args = {};
-          }
-          className = args.className, tagName = args.tagName;
-          if (className == null) {
-            className = 'hilite';
-          }
-          if (tagName == null) {
-            tagName = 'span';
+        highlightUntil: function(endNode, highlightClass) {
+          if (highlightClass == null) {
+            highlightClass = 'highlight';
           }
           return {
             on: function() {
-              var range, treewalker, _results,
+              var currentNode, filter, range, treewalker,
                 _this = this;
               range = document.createRange();
               range.setStartAfter(el);
               range.setEndBefore(endNode);
-              treewalker = document.createTreeWalker(range.commonAncestorContainer, NodeFilter.SHOW_ELEMENT, {
-                acceptNode: function(node) {
+              filter = function(node) {
+                var end, r, start;
+                r = document.createRange();
+                r.selectNode(node);
+                start = r.compareBoundaryPoints(Range.START_TO_START, range);
+                end = r.compareBoundaryPoints(Range.END_TO_START, range);
+                if (start === -1 || end === 1) {
+                  return NodeFilter.FILTER_SKIP;
+                } else {
                   return NodeFilter.FILTER_ACCEPT;
                 }
-              });
-              _results = [];
+              };
+              filter.acceptNode = filter;
+              treewalker = document.createTreeWalker(range.commonAncestorContainer, NodeFilter.SHOW_ELEMENT, filter, false);
               while (treewalker.nextNode()) {
-                console.log(treewalker.currentNode.classList);
-                _results.push(treewalker.currentNode.classList.add(className));
+                currentNode = treewalker.currentNode;
+                if ((' ' + currentNode.className + ' ').indexOf(' text ') > -1) {
+                  currentNode.className = currentNode.className + ' ' + highlightClass;
+                }
+              }
+              return this;
+            },
+            off: function() {
+              var classNames, _i, _len, _ref, _results;
+              _ref = document.querySelectorAll('.' + highlightClass);
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                el = _ref[_i];
+                classNames = ' ' + el.className + ' ';
+                classNames = classNames.replace(' ' + highlightClass + ' ', '');
+                _results.push(el.className = classNames.replace(/^\s+|\s+$/g, ''));
               }
               return _results;
-            },
-            off: function() {}
+            }
           };
         }
       };
