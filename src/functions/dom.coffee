@@ -62,6 +62,16 @@ define (require) ->
 
 		insertAfter: (newElement, referenceElement) -> referenceElement.parentNode.insertBefore newElement, referenceElement.nextSibling
 
+
+		# Example usage:
+		# highlighter = null # Create a reference highlighter
+		# @$("div.hover")
+		# 	.mouseenter (ev) =>
+		# 		startNode = @el.querySelector "span.start_node']"
+		# 		endNode = @el.querySelector "span.end_node']"
+		# 		highlighter = dom(startNode).highlightUntil(endNode).on()
+		# 	.mouseleave (ev) =>
+		# 		highlighter.off()
 		highlightUntil: (endNode, highlightClass='highlight') ->
 			on: ->
 				range = document.createRange()
