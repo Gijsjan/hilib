@@ -19,9 +19,11 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	Templates =
-		Main: require 'text!hilib/views/supertinyeditor/supertinyeditor.html'
-		Diacritics: require 'text!hilib/views/supertinyeditor/diacritics.html'
+	tpls = require 'hilib/templates'
+	# console.log tpls
+	# Templates =
+	# 	Main: require 'hilib/views/supertinyeditor/supertinyeditor.jade'
+	# 	Diacritics: require 'hilib/views/supertinyeditor/diacritics.jade'
 
 	# ## SuperTinyEditor
 	class SuperTinyEditor extends Views.Base
@@ -40,8 +42,9 @@ define (require) ->
 
 		# ### Render
 		render: ->
-			rtpl = _.template Templates.Main
-			@$el.html rtpl()
+			# rtpl = _.template Templates.Main
+			# console.log Templates.Main
+			@$el.html tpls['hilib/views/supertinyeditor/main']()
 
 			@$currentHeader = @$('.ste-header')
 
@@ -77,7 +80,7 @@ define (require) ->
 					diacriticsUL = document.createElement 'div'
 					diacriticsUL.className = 'diacritics-placeholder'
 					diacritics = 'ĀĂÀÁÂÃÄÅĄⱭ∀ÆāăàáâãäåąɑæαªƁßβɓÇĆĈĊČƆçςćĉċč¢ɔÐĎĐḎƊðďđɖḏɖɗÈÉÊËĒĖĘẸĚƏÆƎƐ€èéêëēėęẹěəæεɛ€ƑƩƒʃƭĜĞĠĢƢĝğġģɠƣĤĦĥħɦẖÌÍÎÏĪĮỊİIƗĲìíîïīįịiiɨĳιĴĲĵɟĳĶƘķƙĹĻĽŁΛĺļľłλÑŃŅŇŊƝ₦ñńņňŋɲÒÓÔÕÖŌØŐŒƠƟòóôõöōøőœơɵ°Ƥ¶ƥ¶ŔŘɌⱤŕřɍɽßſŚŜŞṢŠÞ§ßſśŝşṣšþ§ŢŤṮƬƮţťṯƭʈÙÚÛÜŪŬŮŰŲɄƯƱùúûüūŭůűųưμυʉʊƲʋŴẄΩŵẅωÝŶŸƔƳýŷÿɣyƴŹŻŽƵƷẔźżžƶẕʒƹ£¥€₩₨₳Ƀ¤¡‼‽¿‽‰…••±‐–—±†‡′″‴‘’‚‛“”„‟≤‹≥›≈≠≡'
-					diacriticsUL.innerHTML =	_.template Templates.Diacritics, diacritics: diacritics
+					diacriticsUL.innerHTML = tpls['hilib/views/supertinyeditor/diacritics'] diacritics: diacritics
 					
 					div.appendChild diacriticsUL
 
@@ -134,21 +137,12 @@ define (require) ->
 			# Scroll is also triggered when using the contentWindow.scrollTo function in @setScrollPercentage, 
 			# but should not update the other scroll(s).@autoScroll is used to prevent both scrollers of updating eachother
 			# and thus forming a loop.
-			@iframeDocument.addEventListener 'scroll', =>
-				unless @autoScroll
-					target =
-						scrollLeft: $(iframe).contents().scrollLeft()
-						scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth
-						clientWidth: iframe.contentWindow.document.documentElement.clientWidth
-						scrollTop: $(iframe).contents().scrollTop()
-						scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight
-						clientHeight: iframe.contentWindow.document.documentElement.clientHeight
-					
-					Fn.timeoutWithReset 200, => @trigger 'scrolled', Fn.getScrollPercentage target
+			@iframeDocument.addEventListener 'scroll', => @triggerScroll() unless @autoScroll
 
 			@iframeDocument.addEventListener 'keyup', (ev) =>
-				Fn.timeoutWithReset 500, => @saveHTMLToModel()
-
+				Fn.timeoutWithReset 500, => 
+					@triggerScroll()
+					@saveHTMLToModel()
 
 		
 		# ### Events
@@ -161,8 +155,6 @@ define (require) ->
 			action = ev.currentTarget.getAttribute 'data-action'
 			@iframeDocument.execCommand action, false, null
 			@saveHTMLToModel()
-			# @model.set @options.htmlAttribute, @getHTML()
-			# @trigger 'change', action, @iframeBody.innerHTML
 
 		buttonClicked: (ev) ->
 			action = ev.currentTarget.getAttribute 'data-action'
@@ -190,6 +182,18 @@ define (require) ->
 
 		saveHTMLToModel: -> @model.set @options.htmlAttribute, @iframeBody.innerHTML
 
+		triggerScroll: ->
+			iframe = @el.querySelector 'iframe'
+
+			target =
+				scrollLeft: $(iframe).contents().scrollLeft()
+				scrollWidth: iframe.contentWindow.document.documentElement.scrollWidth
+				clientWidth: iframe.contentWindow.document.documentElement.clientWidth
+				scrollTop: $(iframe).contents().scrollTop()
+				scrollHeight: iframe.contentWindow.document.documentElement.scrollHeight
+				clientHeight: iframe.contentWindow.document.documentElement.clientHeight
+
+			@trigger 'scrolled', Fn.getScrollPercentage target
 
 		setModel: (model) ->
 			@setInnerHTML model.get @options.htmlAttribute

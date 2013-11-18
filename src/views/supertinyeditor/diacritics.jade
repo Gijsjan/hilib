@@ -1,7 +1,6 @@
 ul.diacritics
-	| <% for (i in diacritics) { %>
-	li <%= diacritics[i] %>
-	| <% } %>
+	each diacritic in diacritics
+		li= diacritic
 
 //- table.diacritics
 //- 	| <% for (i in diacritics) { %>

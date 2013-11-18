@@ -1,53 +1,59 @@
 define (require) ->
 	Backbone = require 'backbone'
-	Collections =
-		# PUT IN HILIB
-		'View': require 'collections/view'
+
+	StringFn = require 'hilib/functions/string'
 
 	class ViewManager
 
-		currentViews = new Collections.View()
+		currentViews = {}
 
-		debugCurrentViews: currentViews
-
-		selfDestruct = (view) ->
-			if not currentViews.has(view)
-				console.error 'Unknown view!'
-				return false;
-
-			if view.destroy then view.destroy() else view.remove()
-
-		constructor: ->
-			# TODO: Make div#main optional
-			@main = $ 'div#main'
-
+		cachedViews = {}
 
 		clear: (view) ->
-			# Remove one view
-			if view
+			selfDestruct = (view) ->
+				unless view.options.persist is true
+					if view.destroy? then view.destroy() else view.remove()
+					delete currentViews[view.cid]
+
+			# Remove one view 
+			if view?
 				selfDestruct view 
-				currentViews.remove view.cid
 			# Remove all views
 			else
-				currentViews.each (model) ->
-					selfDestruct model.get('view')
-				currentViews.reset()
+				selfDestruct view for own cid, view of currentViews
 
+		clearCache: ->
+			@clear()
+			cachedViews = {}
 
-		register: (view) ->
-			if view
-				currentViews.add
-					'id': view.cid
-					'view': view
+		register: (view) -> currentViews[view.cid] = view if view?
 
+		show: (el, View, options={}) ->
+			@clear view for own cid, view of currentViews when not view.options.cache and not view.options.persist
 
-		show: (View, query={}) ->
-			@clear() # Clear previous views
+			el = document.querySelector el if _.isString el
 
-			view = new View query
+			options.append ?= false
+			options.prepend ?= false
+			options.persist ?= false
+			options.cache = false if options.persist is true
+			options.cache ?= true
 
-			html = if not view? then '' else view.$el
+			if options.cache
+				viewHashCode = StringFn.hashCode View.toString() + JSON.stringify options
 
-			@main.html html
+				cachedViews[viewHashCode] = new View(options) unless cachedViews.hasOwnProperty viewHashCode
+					
+				view = cachedViews[viewHashCode] 
+			else
+				view = new View options
 
-	new ViewManager();
+			if _.isElement(el) and view?
+				el.innerHTML = '' unless options.append or options.prepend
+
+				if options.prepend and el.firstChild?
+					el.insertBefore view.el, el.firstChild
+				else
+					el.appendChild view.el
+				
+	new ViewManager()

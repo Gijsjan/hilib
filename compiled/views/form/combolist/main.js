@@ -3,14 +3,14 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Collections, ComboList, Tpl, Views, dropdown, _ref;
+    var Collections, ComboList, Views, dropdown, tpls, _ref;
     Collections = {
       Base: require('collections/base')
     };
     Views = {
       Base: require('views/base')
     };
-    Tpl = require('text!hilib/views/form/combolist/main.html');
+    tpls = require('hilib/templates');
     dropdown = require('hilib/mixins/dropdown/main');
     return ComboList = (function(_super) {
       __extends(ComboList, _super);
@@ -37,18 +37,18 @@
           console.error('No valid value passed to combolist');
         }
         this.listenTo(this.selected, 'add', function(model) {
-          _this.dropdownRender(Tpl);
+          _this.dropdownRender(tpls['hilib/views/form/combolist/main']);
           return _this.triggerChange({
             added: model.id
           });
         });
         this.listenTo(this.selected, 'remove', function(model) {
-          _this.dropdownRender(Tpl);
+          _this.dropdownRender(tpls['hilib/views/form/combolist/main']);
           return _this.triggerChange({
             removed: model.id
           });
         });
-        return this.dropdownRender(Tpl);
+        return this.dropdownRender(tpls['hilib/views/form/combolist/main']);
       };
 
       ComboList.prototype.events = function() {
@@ -90,7 +90,7 @@
           options.removed = null;
         }
         return this.trigger('change', {
-          values: this.selected.pluck('id'),
+          collection: this.selected,
           added: options.added,
           removed: options.removed
         });

@@ -153,7 +153,8 @@
       removeFromArray: function(arr, item) {
         var index;
         index = arr.indexOf(item);
-        return arr.splice(index, 1);
+        arr.splice(index, 1);
+        return arr;
       },
       /* Escape a regular expression*/
 
@@ -247,13 +248,14 @@
         };
       },
       setScrollPercentage: function(el, percentages) {
-        var clientHeight, clientWidth, scrollHeight, scrollWidth;
-        clientWidth = el.clientWidth;
-        scrollWidth = el.scrollWidth;
-        clientHeight = el.clientHeight;
-        scrollHeight = el.scrollHeight;
-        el.scrollTop = (scrollHeight - clientHeight) * percentages.top / 100;
-        return el.scrollLeft = (scrollWidth - clientWidth) * percentages.left / 100;
+        if (percentages.top < 5) {
+          percentages.top = 0;
+        }
+        if (percentages.top > 95) {
+          percentages.top = 100;
+        }
+        el.scrollTop = (el.scrollHeight - el.clientHeight) * percentages.top / 100;
+        return el.scrollLeft = (el.scrollWidth - el.clientWidth) * percentages.left / 100;
       },
       checkCheckboxes: function(selector, checked, baseEl) {
         var cb, checkboxes, _i, _len, _results;

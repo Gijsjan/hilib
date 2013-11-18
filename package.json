@@ -1,6 +1,6 @@
 {
   "name": "helpers",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "",
   "directories": {
@@ -18,7 +18,8 @@
     "grunt-touch": "~0.1.0"
   },
   "scripts": {
-    "start": "node ./.test/bin/server.js"
+    "start": "node ./.test/bin/server.js",
+	"test": "grunt test"
   },
   "repository": {
     "type": "git",

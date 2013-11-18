@@ -3,14 +3,14 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Collections, EditableList, Tpl, Views, _ref;
+    var Collections, EditableList, Views, tpls, _ref;
     Collections = {
       Base: require('collections/base')
     };
     Views = {
       Base: require('views/base')
     };
-    Tpl = require('text!hilib/views/form/editablelist/main.html');
+    tpls = require('hilib/templates');
     return EditableList = (function(_super) {
       __extends(EditableList, _super);
 
@@ -47,7 +47,7 @@
 
       EditableList.prototype.render = function() {
         var rtpl;
-        rtpl = _.template(Tpl, {
+        rtpl = tpls['hilib/views/form/editablelist/main']({
           viewId: this.cid,
           selected: this.selected,
           settings: this.settings

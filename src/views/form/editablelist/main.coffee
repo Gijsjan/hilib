@@ -6,7 +6,8 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	Tpl = require 'text!hilib/views/form/editablelist/main.html'
+	# Tpl = require 'hilib/views/form/editablelist/main.jade'
+	tpls = require 'hilib/templates'
 
 	class EditableList extends Views.Base
 
@@ -36,7 +37,7 @@ define (require) ->
 
 		# ### Render
 		render: ->
-			rtpl = _.template Tpl, 
+			rtpl = tpls['hilib/views/form/editablelist/main']
 				viewId: @cid
 				selected: @selected
 				settings: @settings

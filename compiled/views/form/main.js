@@ -111,7 +111,7 @@
         if (this.tpl == null) {
           throw 'Unknow template!';
         }
-        rtpl = _.template(this.tpl, this.data);
+        rtpl = _.isString(this.tpl) ? _.template(this.tpl, this.data) : this.tpl(this.data);
         this.$el.html(rtpl);
         this.el.setAttribute('data-view-cid', this.cid);
         if (this.subforms == null) {
@@ -209,7 +209,7 @@
         if (placeholders.length > 1) {
           _.each(placeholders, function(placeholder) {
             var el;
-            el = dom.closest(placeholder, '[data-cid]');
+            el = dom(placeholder).closest('[data-cid]');
             if (el.getAttribute('data-cid') === model.cid && placeholder.innerHTML === '') {
               return placeholder.appendChild(view.el);
             }

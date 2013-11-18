@@ -38,13 +38,30 @@
       /*
       	Removes non numbers from a string
       	
-      	Example: "There are 12 monkeys." => "12"
+      	Example: "Count the 12 monkeys." => "12"
       	
       	return String
       */
 
       onlyNumbers: function(str) {
         return str.replace(/[^\d.]/g, '');
+      },
+      hashCode: function(str) {
+        var c, chr, hash, i, _i, _len;
+        if (str.length === 0) {
+          return false;
+        }
+        hash = 0;
+        for (i = _i = 0, _len = str.length; _i < _len; i = ++_i) {
+          chr = str[i];
+          c = str.charCodeAt(i);
+          hash = ((hash << 5) - hash) + c;
+          hash = hash & hash;
+        }
+        return hash;
+      },
+      insertAt: function(str, needle, index) {
+        return str.slice(0, index) + needle + str.slice(index);
       }
     };
   });

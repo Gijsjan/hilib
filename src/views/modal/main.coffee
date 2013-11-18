@@ -9,7 +9,10 @@
 
 define (require) ->
 	Backbone = require 'backbone'
-	Tpl = require 'text!hilib/views/modal/main.html'
+	# Tpl = require 'text!hilib/views/modal/main.html'
+
+	# tpl = require 'hilib/views/modal/main.jade'
+	tpls = require 'hilib/templates'
 
 	modalManager = require 'hilib/managers/modal'
 	
@@ -32,7 +35,8 @@ define (require) ->
 			, 
 				@options
 
-			rtpl = _.template Tpl, data
+			# rtpl = _.template Tpl, data
+			rtpl = tpls['hilib/views/modal/main'] data
 			@$el.html rtpl
 
 			# Clone @options.$html and set to div.body
@@ -75,7 +79,11 @@ define (require) ->
 			"click button.submit": -> @trigger 'submit'
 			"click button.cancel": -> @cancel()
 			"click .overlay": -> @cancel()
-
+			"keydown input": (ev) ->
+				if ev.keyCode is 13
+					ev.preventDefault()
+					@trigger 'submit'
+					
 		cancel: ->
 			@trigger "cancel"
 			@close()

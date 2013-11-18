@@ -93,7 +93,7 @@ define (require) ->
 
 			# After save we trigger the save:success so the instantiated Form view can capture it and take action.
 			@model.save [],
-				success: (model, response, options) => 
+				success: (model, response, options) =>
 					@trigger 'save:success', model, response, options
 					@reset()
 				error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
@@ -108,15 +108,12 @@ define (require) ->
 
 			@data ?= {}
 			@data.viewId = @cid
-			
-			if @model?
-				@data.model = @model
-			if @collection?
-				@data.collection = @collection
+			@data.model = @model if @model?
+			@data.collection = @collection if @collection?
 
 			throw 'Unknow template!' unless @tpl?
-			
-			rtpl = _.template @tpl, @data
+
+			rtpl = if _.isString(@tpl) then _.template @tpl, @data else @tpl @data
 			@$el.html rtpl
 
 			@el.setAttribute 'data-view-cid', @cid
@@ -210,7 +207,7 @@ define (require) ->
 			if placeholders.length > 1
 				_.each placeholders, (placeholder) =>
 					# Find closest element with the attribute data-cid.
-					el = dom.closest placeholder, '[data-cid]'
+					el = dom(placeholder).closest '[data-cid]'
 					# If the data-cid matches the model.cid and the placeholder is still empty, append the view.
 					if el.getAttribute('data-cid') is model.cid and placeholder.innerHTML is ''
 						placeholder.appendChild view.el

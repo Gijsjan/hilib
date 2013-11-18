@@ -35,9 +35,23 @@ define (require) ->
 	###
 	Removes non numbers from a string
 	
-	Example: "There are 12 monkeys." => "12"
+	Example: "Count the 12 monkeys." => "12"
 	
 	return String
 	###
 	onlyNumbers: (str) ->
 		str.replace /[^\d.]/g, ''
+
+	hashCode: (str) ->
+		return false if str.length is 0 
+
+		hash = 0
+
+		for chr, i in str
+			c = str.charCodeAt i
+			hash = ((hash << 5) - hash) + c
+			hash = hash & hash
+
+		hash
+
+	insertAt: (str, needle, index) -> str.slice(0, index) + needle + str.slice(index);

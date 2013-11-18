@@ -1,63 +1,104 @@
 (function() {
+  var __hasProp = {}.hasOwnProperty;
+
   define(function(require) {
-    var Backbone, Collections, ViewManager;
+    var Backbone, StringFn, ViewManager;
     Backbone = require('backbone');
-    Collections = {
-      'View': require('collections/view')
-    };
+    StringFn = require('hilib/functions/string');
     ViewManager = (function() {
-      var currentViews, selfDestruct;
+      var cachedViews, currentViews;
 
-      currentViews = new Collections.View();
+      function ViewManager() {}
 
-      ViewManager.prototype.debugCurrentViews = currentViews;
+      currentViews = {};
 
-      selfDestruct = function(view) {
-        if (!currentViews.has(view)) {
-          console.error('Unknown view!');
-          return false;
-        }
-        if (view.destroy) {
-          return view.destroy();
+      cachedViews = {};
+
+      ViewManager.prototype.clear = function(view) {
+        var cid, selfDestruct, _results;
+        selfDestruct = function(view) {
+          if (view.options.persist !== true) {
+            if (view.destroy != null) {
+              view.destroy();
+            } else {
+              view.remove();
+            }
+            return delete currentViews[view.cid];
+          }
+        };
+        if (view != null) {
+          return selfDestruct(view);
         } else {
-          return view.remove();
+          _results = [];
+          for (cid in currentViews) {
+            if (!__hasProp.call(currentViews, cid)) continue;
+            view = currentViews[cid];
+            _results.push(selfDestruct(view));
+          }
+          return _results;
         }
       };
 
-      function ViewManager() {
-        this.main = $('div#main');
-      }
-
-      ViewManager.prototype.clear = function(view) {
-        if (view) {
-          selfDestruct(view);
-          return currentViews.remove(view.cid);
-        } else {
-          currentViews.each(function(model) {
-            return selfDestruct(model.get('view'));
-          });
-          return currentViews.reset();
-        }
+      ViewManager.prototype.clearCache = function() {
+        this.clear();
+        return cachedViews = {};
       };
 
       ViewManager.prototype.register = function(view) {
-        if (view) {
-          return currentViews.add({
-            'id': view.cid,
-            'view': view
-          });
+        if (view != null) {
+          return currentViews[view.cid] = view;
         }
       };
 
-      ViewManager.prototype.show = function(View, query) {
-        var html, view;
-        if (query == null) {
-          query = {};
+      ViewManager.prototype.show = function(el, View, options) {
+        var cid, view, viewHashCode;
+        if (options == null) {
+          options = {};
         }
-        this.clear();
-        view = new View(query);
-        html = view == null ? '' : view.$el;
-        return this.main.html(html);
+        for (cid in currentViews) {
+          if (!__hasProp.call(currentViews, cid)) continue;
+          view = currentViews[cid];
+          if (!view.options.cache && !view.options.persist) {
+            this.clear(view);
+          }
+        }
+        if (_.isString(el)) {
+          el = document.querySelector(el);
+        }
+        if (options.append == null) {
+          options.append = false;
+        }
+        if (options.prepend == null) {
+          options.prepend = false;
+        }
+        if (options.persist == null) {
+          options.persist = false;
+        }
+        if (options.persist === true) {
+          options.cache = false;
+        }
+        if (options.cache == null) {
+          options.cache = true;
+        }
+        if (options.cache) {
+          viewHashCode = StringFn.hashCode(View.toString() + JSON.stringify(options));
+          if (!cachedViews.hasOwnProperty(viewHashCode)) {
+            cachedViews[viewHashCode] = new View(options);
+          }
+          view = cachedViews[viewHashCode];
+        } else {
+          view = new View(options);
+        }
+        if (_.isElement(el) && (view != null)) {
+          if (!(options.append || options.prepend)) {
+            el.innerHTML = '';
+          }
+          if (options.prepend && (el.firstChild != null)) {
+            return el.insertBefore(view.el, el.firstChild);
+          } else {
+            return el.appendChild(view.el);
+          }
+        }
       };
 
       return ViewManager;
