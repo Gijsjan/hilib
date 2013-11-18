@@ -15,11 +15,14 @@
     "grunt-contrib-jade": "*",
     "grunt-contrib-stylus": "*",
     "grunt-contrib-connect": "*",
-    "grunt-touch": "~0.1.0"
+    "grunt-touch": "~0.1.0",
+    "grunt-newer": "~0.6.0",
+    "load-grunt-tasks": "~0.2.0",
+    "grunt-concurrent": "~0.4.1"
   },
   "scripts": {
     "start": "node ./.test/bin/server.js",
-	"test": "grunt test"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
