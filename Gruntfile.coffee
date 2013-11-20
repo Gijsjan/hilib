@@ -2,6 +2,8 @@ connect_middleware = require './middleware.connect'
 
 module.exports = (grunt) ->
 
+	require('load-grunt-tasks') grunt
+
 	##############
 	### CONFIG ###
 	##############
@@ -19,6 +21,9 @@ module.exports = (grunt) ->
 				command: 'rm -rf compiled/*'
 			bowerinstall:
 				command: 'bower install'
+
+		concurrent:
+			compile: ['jade:compile', 'coffee:compile', 'stylus:compile']
 
 		connect:
 			keepalive:
@@ -90,28 +95,20 @@ module.exports = (grunt) ->
 		watch:
 			coffeetest:
 				files: 'test/**/*.coffee'
-				tasks: ['coffee:test', 'shell:mocha']
+				tasks: ['newer:coffee:test', 'shell:mocha']
 			coffee:
 				files: 'src/**/*.coffee'
-				tasks: ['coffee:compile', 'touch:js']
+				tasks: ['newer:coffee:compile', 'touch:js']
 			stylus:
 				files: 'src/**/*.styl'
-				tasks: ['stylus:compile', 'touch:css']
+				tasks: ['newer:stylus:compile', 'touch:css']
 			jade:
 				files: 'src/**/*.jade'
-				tasks: ['jade:compile', 'touch:html']
+				tasks: ['newer:jade:compile', 'touch:html']
 
 	#############
 	### TASKS ###
 	#############
-
-	grunt.loadNpmTasks 'grunt-contrib-jade'
-	grunt.loadNpmTasks 'grunt-contrib-stylus'
-	grunt.loadNpmTasks 'grunt-contrib-coffee'
-	grunt.loadNpmTasks 'grunt-contrib-watch'
-	grunt.loadNpmTasks 'grunt-contrib-connect'
-	grunt.loadNpmTasks 'grunt-shell'
-	grunt.loadNpmTasks 'grunt-touch'
 
 	grunt.registerTask 'sw', [
 		'connect:test'
@@ -120,7 +117,7 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'w', 'watch'
 
-	grunt.registerTask 'init', ['coffee:compile', 'stylus:compile', 'jade:compile']
+	grunt.registerTask 'init', 'concurrent:compile'
 	grunt.registerTask 'i', 'init'
 
 	grunt.registerTask 'd', 'shell:groc'
@@ -129,7 +126,7 @@ module.exports = (grunt) ->
 	grunt.registerTask 'c', 'compile'
 	grunt.registerTask 'compile', [
 		'shell:emptycompiled' # rm -rf compiled/
-		'init'
+		'concurrent:compile'
 	]
 
 	grunt.registerTask 'test', [
