@@ -42,6 +42,7 @@
       };
 
       SuperTinyEditor.prototype.render = function() {
+        console.log('render');
         this.$el.html(tpls['hilib/views/supertinyeditor/main']());
         this.$currentHeader = this.$('.ste-header');
         this.renderControls();

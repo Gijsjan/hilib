@@ -1,4 +1,4 @@
-connect_middleware = require './middleware.connect.coffee'
+connect_middleware = require './middleware.connect'
 
 module.exports = (grunt) ->
 

@@ -44,6 +44,7 @@ define (require) ->
 		render: ->
 			# rtpl = _.template Templates.Main
 			# console.log Templates.Main
+			console.log 'render'
 			@$el.html tpls['hilib/views/supertinyeditor/main']()
 
 			@$currentHeader = @$('.ste-header')

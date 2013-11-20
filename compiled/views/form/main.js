@@ -4,9 +4,8 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Fn, Form, Views, dom, validation, _ref;
+    var Fn, Form, Views, validation, _ref;
     Fn = require('hilib/functions/general');
-    dom = require('hilib/functions/dom');
     Views = {
       Base: require('views/base')
     };
@@ -209,7 +208,7 @@
         if (placeholders.length > 1) {
           _.each(placeholders, function(placeholder) {
             var el;
-            el = dom(placeholder).closest('[data-cid]');
+            el = Fn.closest(placeholder, '[data-cid]');
             if (el.getAttribute('data-cid') === model.cid && placeholder.innerHTML === '') {
               return placeholder.appendChild(view.el);
             }

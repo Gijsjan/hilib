@@ -10,6 +10,7 @@ define (require) ->
 		cachedViews = {}
 
 		clear: (view) ->
+			console.log 'clearing', view, view.options
 			selfDestruct = (view) ->
 				unless view.options.persist is true
 					if view.destroy? then view.destroy() else view.remove()
@@ -23,6 +24,7 @@ define (require) ->
 				selfDestruct view for own cid, view of currentViews
 
 		clearCache: ->
+			console.log 'cache clear'
 			@clear()
 			cachedViews = {}
 

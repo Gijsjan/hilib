@@ -5,6 +5,17 @@
     var $;
     $ = require('jquery');
     return {
+      closest: function(el, selector) {
+        var matchesSelector;
+        matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
+        while (el) {
+          if (matchesSelector.bind(el)(selector)) {
+            return el;
+          } else {
+            el = el.parentNode;
+          }
+        }
+      },
       /*
       	Generates an ID that starts with a letter
       	

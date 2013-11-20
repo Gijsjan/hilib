@@ -16,6 +16,7 @@
 
       ViewManager.prototype.clear = function(view) {
         var cid, selfDestruct, _results;
+        console.log('clearing', view, view.options);
         selfDestruct = function(view) {
           if (view.options.persist !== true) {
             if (view.destroy != null) {
@@ -40,6 +41,7 @@
       };
 
       ViewManager.prototype.clearCache = function() {
+        console.log('cache clear');
         this.clear();
         return cachedViews = {};
       };
