@@ -34,7 +34,7 @@ define (require) ->
 			# Create a collection holding the selected or created options
 			if @options.value instanceof Backbone.Collection # If data is a Backbone.Collection
 				# * **CHANGE** instead of creating a new collection, we could add a 'options mixin' to current collection
-				@selected = @options.value
+				@selected = @options.value.clone()
 			else if _.isArray @options.value # Else if data is an array of strings
 				models = @strArray2optionArray @options.value
 				@selected = new Collections.Base models
