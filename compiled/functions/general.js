@@ -248,14 +248,16 @@
         return Object.getPrototypeOf(obj) === ObjProto;
       },
       getScrollPercentage: function(el) {
-        var scrolledLeft, scrolledTop, totalLeft, totalTop;
+        var left, scrolledLeft, scrolledTop, top, totalLeft, totalTop;
         scrolledTop = el.scrollTop;
         totalTop = el.scrollHeight - el.clientHeight;
         scrolledLeft = el.scrollLeft;
         totalLeft = el.scrollWidth - el.clientWidth;
+        top = totalTop === 0 ? 0 : Math.floor((scrolledTop / totalTop) * 100);
+        left = totalLeft === 0 ? 0 : Math.floor((scrolledLeft / totalLeft) * 100);
         return {
-          top: Math.floor((scrolledTop / totalTop) * 100),
-          left: Math.floor((scrolledLeft / totalLeft) * 100)
+          top: top,
+          left: left
         };
       },
       setScrollPercentage: function(el, percentages) {

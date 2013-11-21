@@ -213,6 +213,14 @@ define (require) ->
 				@resetFocus()
 
 		# ### Methods
+
+		destroy: ->
+			@iframeBody.removeEventListener 'keydown', @onKeydown
+			@iframeBody.removeEventListener 'keyup', @onKeyup
+			@editorBody.removeEventListener 'click', @onClick
+
+			@remove()
+
 		rangeManager: do ->
 			currentRange = null
 

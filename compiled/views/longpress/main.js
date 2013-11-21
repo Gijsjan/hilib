@@ -208,6 +208,13 @@
         }
       };
 
+      Longpress.prototype.destroy = function() {
+        this.iframeBody.removeEventListener('keydown', this.onKeydown);
+        this.iframeBody.removeEventListener('keyup', this.onKeyup);
+        this.editorBody.removeEventListener('click', this.onClick);
+        return this.remove();
+      };
+
       Longpress.prototype.rangeManager = (function() {
         var currentRange,
           _this = this;

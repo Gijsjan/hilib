@@ -16,7 +16,6 @@
 
       ViewManager.prototype.clear = function(view) {
         var cid, selfDestruct, _results;
-        console.log('clearing', view, view.options);
         selfDestruct = function(view) {
           if (view.options.persist !== true) {
             if (view.destroy != null) {
@@ -41,7 +40,6 @@
       };
 
       ViewManager.prototype.clearCache = function() {
-        console.log('cache clear');
         this.clear();
         return cachedViews = {};
       };
@@ -96,11 +94,12 @@
             el.innerHTML = '';
           }
           if (options.prepend && (el.firstChild != null)) {
-            return el.insertBefore(view.el, el.firstChild);
+            el.insertBefore(view.el, el.firstChild);
           } else {
-            return el.appendChild(view.el);
+            el.appendChild(view.el);
           }
         }
+        return view;
       };
 
       return ViewManager;

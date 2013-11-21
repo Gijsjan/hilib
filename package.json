@@ -18,7 +18,8 @@
     "grunt-touch": "~0.1.0",
     "grunt-newer": "~0.6.0",
     "load-grunt-tasks": "~0.2.0",
-    "grunt-concurrent": "~0.4.1"
+    "grunt-concurrent": "~0.4.1",
+    "my-grunt-modules": "Gijsjan/my-grunt-modules"
   },
   "scripts": {
     "start": "node ./.test/bin/server.js",

@@ -1,8 +1,8 @@
-connect_middleware = require './middleware.connect'
+connect_middleware = require 'my-grunt-modules/connect-middleware'
 
 module.exports = (grunt) ->
-
 	require('load-grunt-tasks') grunt
+	# require('my-grunt-modules/create-symlinks') grunt
 
 	##############
 	### CONFIG ###

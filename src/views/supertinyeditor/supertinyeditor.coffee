@@ -28,6 +28,8 @@ define (require) ->
 	# ## SuperTinyEditor
 	class SuperTinyEditor extends Views.Base
 
+		className: 'supertinyeditor'
+
 		# ### Initialize
 		initialize: ->
 			super
@@ -42,10 +44,7 @@ define (require) ->
 
 		# ### Render
 		render: ->
-			# rtpl = _.template Templates.Main
-			# console.log Templates.Main
-			console.log 'render'
-			@$el.html tpls['hilib/views/supertinyeditor/main']()
+			@el.innerHTML = tpls['hilib/views/supertinyeditor/main']()
 
 			@$currentHeader = @$('.ste-header')
 
@@ -53,7 +52,7 @@ define (require) ->
 
 			@renderIframe()
 
-			@setFocus()
+			# @setFocus()
 			
 			@
 
@@ -103,48 +102,46 @@ define (require) ->
 
 		# The iframe is already present (in the template), but has to be filled with a document.
 		renderIframe: ->
-			iframe = @el.querySelector 'iframe'
+			
+			iframe = document.createElement 'iframe'
 			iframe.style.width = @options.width + 'px'
 			iframe.style.height = @options.height + 'px'
+			iframe.src = "about:blank"
+			iframe.onload = =>
+				@iframeDocument = iframe.contentDocument
+				@iframeDocument.designMode = 'On'
+				@iframeDocument.open()
+				@iframeDocument.write 	"<!DOCTYPE html>
+										<html>
+										<head><meta charset='UTF-8'><link rel='stylesheet' href='#{@options.cssFile}'></head>
+										<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>#{@model.get(@options.htmlAttribute)}</body>
+										</html>"
+				@iframeDocument.close()
 
-			html = "<!DOCTYPE html>
-					<html>
-					<head><meta charset='UTF-8'><link rel='stylesheet' href='#{@options.cssFile}'></head>
-					<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>#{@model.get(@options.htmlAttribute)}</body>
-					</html>"
+				@iframeBody = @iframeDocument.querySelector 'body'
+				@iframeBody.style.whiteSpace = 'normal' if @options.wrap
 
-			@iframeDocument = iframe.contentDocument
-			@iframeDocument.designMode = 'On'
-			@iframeDocument.open()
-			@iframeDocument.write html
-			@iframeDocument.close()
+				@longpress = new Longpress
+					parent: @el.querySelector '.ste-body'
 
-			@iframeBody = @iframeDocument.querySelector 'body'
-			@iframeBody.style.whiteSpace = 'normal' if @options.wrap
+				# Hack, hack, hack.
+				# The scroll event on the iframe is fired (through the contentDocument or contentWindow), but no scrollLeft,
+				# scrollWidth or clientWidth are given. ScrollWidth and clientWidth are found by document.documentElement, but
+				# for scrollLeft we need jQuery. Normally Fn.scrollPercentage receives ev.currentTarget or ev.target, but we have
+				# to construct the object ourselves in this case.
+				# 
+				# Scroll is also triggered when using the contentWindow.scrollTo function in @setScrollPercentage, 
+				# but should not update the other scroll(s).@autoScroll is used to prevent both scrollers of updating eachother
+				# and thus forming a loop.
+				@iframeDocument.addEventListener 'scroll', => @triggerScroll() unless @autoScroll
 
-			# new Longpress @iframeDocument, @el.querySelector '.ste-body'
-			lp = new Longpress
-				parent: @el.querySelector '.ste-body'
+				@iframeDocument.addEventListener 'keyup', (ev) =>
+					Fn.timeoutWithReset 500, => 
+						@triggerScroll()
+						@saveHTMLToModel()
 
-
-			# @setFocus()
-
-			# Hack, hack, hack.
-			# The scroll event on the iframe is fired (through the contentDocument or contentWindow), but no scrollLeft,
-			# scrollWidth or clientWidth are given. ScrollWidth and clientWidth are found by document.documentElement, but
-			# for scrollLeft we need jQuery. Normally Fn.scrollPercentage receives ev.currentTarget or ev.target, but we have
-			# to construct the object ourselves in this case.
-			# 
-			# Scroll is also triggered when using the contentWindow.scrollTo function in @setScrollPercentage, 
-			# but should not update the other scroll(s).@autoScroll is used to prevent both scrollers of updating eachother
-			# and thus forming a loop.
-			@iframeDocument.addEventListener 'scroll', => @triggerScroll() unless @autoScroll
-
-			@iframeDocument.addEventListener 'keyup', (ev) =>
-				Fn.timeoutWithReset 500, => 
-					@triggerScroll()
-					@saveHTMLToModel()
-
+			steBody = @el.querySelector '.ste-body'
+			steBody.appendChild iframe
 		
 		# ### Events
 		events: ->
@@ -180,6 +177,10 @@ define (require) ->
 			@saveHTMLToModel()
 
 		# ### Methods
+
+		destroy: ->
+			@longpress.destroy()
+			@remove()
 
 		saveHTMLToModel: -> @model.set @options.htmlAttribute, @iframeBody.innerHTML
 

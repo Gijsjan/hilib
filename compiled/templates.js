@@ -148,7 +148,7 @@ buf.push("</ul>");;return buf.join("");
 
 this["JST"]["hilib/views/supertinyeditor/main"] = function anonymous(locals) {
 var buf = [];
-buf.push("<div class=\"supertinyeditor\"><div class=\"ste-header\"></div><div class=\"ste-body\"><iframe></iframe></div></div>");;return buf.join("");
+buf.push("<div class=\"ste-header\"></div><div class=\"ste-body\"></div>");;return buf.join("");
 };
 
 return this["JST"];

@@ -20,6 +20,8 @@
         return _ref;
       }
 
+      SuperTinyEditor.prototype.className = 'supertinyeditor';
+
       SuperTinyEditor.prototype.initialize = function() {
         var _base, _base1, _base2, _base3, _base4;
         SuperTinyEditor.__super__.initialize.apply(this, arguments);
@@ -42,12 +44,10 @@
       };
 
       SuperTinyEditor.prototype.render = function() {
-        console.log('render');
-        this.$el.html(tpls['hilib/views/supertinyeditor/main']());
+        this.el.innerHTML = tpls['hilib/views/supertinyeditor/main']();
         this.$currentHeader = this.$('.ste-header');
         this.renderControls();
         this.renderIframe();
-        this.setFocus();
         return this;
       };
 
@@ -95,35 +95,39 @@
       };
 
       SuperTinyEditor.prototype.renderIframe = function() {
-        var html, iframe, lp,
+        var iframe, steBody,
           _this = this;
-        iframe = this.el.querySelector('iframe');
+        iframe = document.createElement('iframe');
         iframe.style.width = this.options.width + 'px';
         iframe.style.height = this.options.height + 'px';
-        html = "<!DOCTYPE html>					<html>					<head><meta charset='UTF-8'><link rel='stylesheet' href='" + this.options.cssFile + "'></head>					<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>" + (this.model.get(this.options.htmlAttribute)) + "</body>					</html>";
-        this.iframeDocument = iframe.contentDocument;
-        this.iframeDocument.designMode = 'On';
-        this.iframeDocument.open();
-        this.iframeDocument.write(html);
-        this.iframeDocument.close();
-        this.iframeBody = this.iframeDocument.querySelector('body');
-        if (this.options.wrap) {
-          this.iframeBody.style.whiteSpace = 'normal';
-        }
-        lp = new Longpress({
-          parent: this.el.querySelector('.ste-body')
-        });
-        this.iframeDocument.addEventListener('scroll', function() {
-          if (!_this.autoScroll) {
-            return _this.triggerScroll();
+        iframe.src = "about:blank";
+        iframe.onload = function() {
+          _this.iframeDocument = iframe.contentDocument;
+          _this.iframeDocument.designMode = 'On';
+          _this.iframeDocument.open();
+          _this.iframeDocument.write("<!DOCTYPE html>										<html>										<head><meta charset='UTF-8'><link rel='stylesheet' href='" + _this.options.cssFile + "'></head>										<body class='ste-iframe-body' spellcheck='false' contenteditable='true'>" + (_this.model.get(_this.options.htmlAttribute)) + "</body>										</html>");
+          _this.iframeDocument.close();
+          _this.iframeBody = _this.iframeDocument.querySelector('body');
+          if (_this.options.wrap) {
+            _this.iframeBody.style.whiteSpace = 'normal';
           }
-        });
-        return this.iframeDocument.addEventListener('keyup', function(ev) {
-          return Fn.timeoutWithReset(500, function() {
-            _this.triggerScroll();
-            return _this.saveHTMLToModel();
+          _this.longpress = new Longpress({
+            parent: _this.el.querySelector('.ste-body')
           });
-        });
+          _this.iframeDocument.addEventListener('scroll', function() {
+            if (!_this.autoScroll) {
+              return _this.triggerScroll();
+            }
+          });
+          return _this.iframeDocument.addEventListener('keyup', function(ev) {
+            return Fn.timeoutWithReset(500, function() {
+              _this.triggerScroll();
+              return _this.saveHTMLToModel();
+            });
+          });
+        };
+        steBody = this.el.querySelector('.ste-body');
+        return steBody.appendChild(iframe);
       };
 
       SuperTinyEditor.prototype.events = function() {
@@ -159,6 +163,11 @@
         sel.removeAllRanges();
         sel.addRange(range);
         return this.saveHTMLToModel();
+      };
+
+      SuperTinyEditor.prototype.destroy = function() {
+        this.longpress.destroy();
+        return this.remove();
       };
 
       SuperTinyEditor.prototype.saveHTMLToModel = function() {

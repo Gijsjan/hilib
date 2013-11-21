@@ -223,8 +223,11 @@ define (require) ->
 		scrolledLeft = el.scrollLeft
 		totalLeft = el.scrollWidth - el.clientWidth
 
-		top: Math.floor (scrolledTop/totalTop) * 100
-		left: Math.floor (scrolledLeft/totalLeft) * 100
+		top = if totalTop is 0 then 0 else Math.floor (scrolledTop/totalTop) * 100
+		left = if totalLeft is 0 then 0 else Math.floor (scrolledLeft/totalLeft) * 100
+
+		top: top
+		left: left
 
 	setScrollPercentage: (el, percentages) ->
 		percentages.top = 0 if percentages.top < 5
