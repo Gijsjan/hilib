@@ -1,0 +1,2 @@
+button.loader{background:#fff;padding-bottom:6px;cursor:default;}
+button.loader:after{content:url("/images/modal/loader.gif");margin-left:6px;position:relative;top:3px}
