@@ -100,3 +100,14 @@ define (require) ->
 					classNames = ' ' + el.className + ' '
 					classNames = classNames.replace ' ' + highlightClass + ' ', ''
 					el.className = classNames.replace /^\s+|\s+$/g, ''
+
+		hasClass: (name) -> (' ' + el.className + ' ').indexOf(' ' + name + ' ') > -1
+
+		addClas: (name) -> el.className += ' ' + name unless @hasClass name
+
+		removeClass: (name) ->
+			names = ' ' + el.className + ' '
+			names = names.replace ' ' + name + ' ', ''
+			el.className = names.replace /^\s+|\s+$/g, ''
+
+		toggleClass: (name) -> if @hasClass name then @addClass name else @removeClass name

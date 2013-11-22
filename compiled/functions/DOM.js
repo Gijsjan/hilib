@@ -118,6 +118,27 @@
               return _results;
             }
           };
+        },
+        hasClass: function(name) {
+          return (' ' + el.className + ' ').indexOf(' ' + name + ' ') > -1;
+        },
+        addClas: function(name) {
+          if (!this.hasClass(name)) {
+            return el.className += ' ' + name;
+          }
+        },
+        removeClass: function(name) {
+          var names;
+          names = ' ' + el.className + ' ';
+          names = names.replace(' ' + name + ' ', '');
+          return el.className = names.replace(/^\s+|\s+$/g, '');
+        },
+        toggleClass: function(name) {
+          if (this.hasClass(name)) {
+            return this.addClass(name);
+          } else {
+            return this.removeClass(name);
+          }
         }
       };
     };
