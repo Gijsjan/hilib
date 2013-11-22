@@ -14,6 +14,7 @@ define (require) ->
 	# tpl = require 'hilib/views/modal/main.jade'
 	tpls = require 'hilib/templates'
 
+	dom = require 'hilib/functions/DOM'
 	modalManager = require 'hilib/managers/modal'
 	
 	# ## Modal
@@ -86,7 +87,11 @@ define (require) ->
 					@submit ev
 
 		submit: (ev) ->
-			@trigger 'submit'
+			el = dom(ev.currentTarget)
+			unless el.hasClass 'loader'
+				@el.querySelector('button.cancel').style.display = 'none'
+				el.addClass 'loader'
+				@trigger 'submit'
 
 		cancel: ->
 			@trigger "cancel"

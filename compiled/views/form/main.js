@@ -59,6 +59,7 @@
         evs['change select'] = 'inputChanged';
         evs['keydown textarea'] = 'textareaKeyup';
         evs['click input[type="submit"]'] = 'submit';
+        evs['click button[name="submit"]'] = 'submit';
         return evs;
       };
 
@@ -81,19 +82,23 @@
       };
 
       Form.prototype.submit = function(ev) {
-        var _this = this;
+        var el,
+          _this = this;
         ev.preventDefault();
-        dom(ev.currentTarget).addClass('loader');
-        return this.model.save([], {
-          success: function(model, response, options) {
-            dom(ev.currentTarget).removeClass('loader');
-            _this.trigger('save:success', model, response, options);
-            return _this.reset();
-          },
-          error: function(model, xhr, options) {
-            return _this.trigger('save:error', model, xhr, options);
-          }
-        });
+        el = dom(ev.currentTarget);
+        if (!el.hasClass('loader')) {
+          el.addClass('loader');
+          return this.model.save([], {
+            success: function(model, response, options) {
+              dom(ev.currentTarget).removeClass('loader');
+              _this.trigger('save:success', model, response, options);
+              return _this.reset();
+            },
+            error: function(model, xhr, options) {
+              return _this.trigger('save:error', model, xhr, options);
+            }
+          });
+        }
       };
 
       Form.prototype.preRender = function() {};

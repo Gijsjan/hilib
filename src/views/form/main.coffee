@@ -69,6 +69,7 @@ define (require) ->
 			evs['change select'] = 'inputChanged'
 			evs['keydown textarea'] = 'textareaKeyup'
 			evs['click input[type="submit"]'] = 'submit'
+			evs['click button[name="submit"]'] = 'submit'
 
 			evs
 
@@ -92,15 +93,18 @@ define (require) ->
 		submit: (ev) ->
 			ev.preventDefault()
 
-			dom(ev.currentTarget).addClass 'loader'
+			el = dom(ev.currentTarget)
 
-			# After save we trigger the save:success so the instantiated Form view can capture it and take action.
-			@model.save [],
-				success: (model, response, options) =>
-					dom(ev.currentTarget).removeClass 'loader'
-					@trigger 'save:success', model, response, options
-					@reset()
-				error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
+			unless el.hasClass 'loader'
+				el.addClass 'loader'
+
+				# After save we trigger the save:success so the instantiated Form view can capture it and take action.
+				@model.save [],
+					success: (model, response, options) =>
+						dom(ev.currentTarget).removeClass 'loader'
+						@trigger 'save:success', model, response, options
+						@reset()
+					error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
 
 		# ### Render
 

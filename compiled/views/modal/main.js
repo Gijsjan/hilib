@@ -3,9 +3,10 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, Modal, modalManager, tpls, _ref;
+    var Backbone, Modal, dom, modalManager, tpls, _ref;
     Backbone = require('backbone');
     tpls = require('hilib/templates');
+    dom = require('hilib/functions/DOM');
     modalManager = require('hilib/managers/modal');
     return Modal = (function(_super) {
       __extends(Modal, _super);
@@ -84,7 +85,13 @@
       };
 
       Modal.prototype.submit = function(ev) {
-        return this.trigger('submit');
+        var el;
+        el = dom(ev.currentTarget);
+        if (!el.hasClass('loader')) {
+          this.el.querySelector('button.cancel').style.display = 'none';
+          el.addClass('loader');
+          return this.trigger('submit');
+        }
       };
 
       Modal.prototype.cancel = function() {
