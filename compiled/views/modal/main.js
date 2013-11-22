@@ -21,6 +21,7 @@
       Modal.prototype.defaultOptions = function() {
         return {
           title: '',
+          titleClass: '',
           cancelAndSubmit: true,
           cancelValue: 'Cancel',
           submitValue: 'Submit',
@@ -40,7 +41,9 @@
         rtpl = tpls['hilib/views/modal/main'](data);
         this.$el.html(rtpl);
         if (this.options.$html) {
-          this.$(".body").html(this.options.$html);
+          this.el.querySelector(".body").innerHTML = this.options.$html;
+        } else {
+          this.el.querySelector(".body").style.display = 'none';
         }
         modalManager.add(this);
         if (this.options.width != null) {
@@ -120,6 +123,7 @@
         if (["success", "warning", "error"].indexOf(type) === -1) {
           return console.error("Unknown message type!");
         }
+        this.$("p.message").show();
         return this.$("p.message").html(message).addClass(type);
       };
 

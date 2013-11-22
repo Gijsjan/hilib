@@ -105,10 +105,10 @@ buf.push("</ul>");;return buf.join("");
 
 this["JST"]["hilib/views/modal/main"] = function anonymous(locals) {
 var buf = [];
-var locals_ = (locals || {}),title = locals_.title,cancelAndSubmit = locals_.cancelAndSubmit,cancelValue = locals_.cancelValue,submitValue = locals_.submitValue;buf.push("<div class=\"overlay\"></div><div class=\"modalbody\"><header>");
+var locals_ = (locals || {}),title = locals_.title,titleClass = locals_.titleClass,cancelAndSubmit = locals_.cancelAndSubmit,cancelValue = locals_.cancelValue,submitValue = locals_.submitValue;buf.push("<div class=\"overlay\"></div><div class=\"modalbody\"><header>");
 if ( (title !== ''))
 {
-buf.push("<h2>" + (jade.escape(null == (jade.interp = title) ? "" : jade.interp)) + "</h2>");
+buf.push("<h2" + (jade.attrs({ "class": [(titleClass)] }, {"class":true})) + ">" + (null == (jade.interp = title) ? "" : jade.interp) + "</h2>");
 }
 buf.push("<p class=\"message\"></p></header><div class=\"body\"></div>");
 if ( (cancelAndSubmit))
@@ -144,31 +144,6 @@ buf.push("<li>" + (jade.escape(null == (jade.interp = diacritic) ? "" : jade.int
 }).call(this);
 
 buf.push("</ul>");;return buf.join("");
-};
-
-this["JST"]["hilib/views/supertinyeditor/main"] = function anonymous(locals) {
-var buf = [];
-buf.push("<div class=\"ste-header\"></div><div class=\"ste-body\"></div>");;return buf.join("");
-};
-
-this["JST"]["hilib/views/supertinyeditor/main.BACKUP.30361.jade"] = function anonymous(locals) {
-var buf = [];
-buf.push("<div class=\"ste-header\"></div><div class=\"ste-body\"></div>");;return buf.join("");
-};
-
-this["JST"]["hilib/views/supertinyeditor/main.BASE.30361.jade"] = function anonymous(locals) {
-var buf = [];
-buf.push("<div class=\"supertinyeditor\"><div class=\"ste-header\"></div><div class=\"ste-body\"><iframe></iframe></div></div>");;return buf.join("");
-};
-
-this["JST"]["hilib/views/supertinyeditor/main.LOCAL.30361.jade"] = function anonymous(locals) {
-var buf = [];
-;return buf.join("");
-};
-
-this["JST"]["hilib/views/supertinyeditor/main.REMOTE.30361.jade"] = function anonymous(locals) {
-var buf = [];
-buf.push("<div class=\"ste-header\"></div><div class=\"ste-body\"></div>");;return buf.join("");
 };
 
 return this["JST"];

@@ -23,6 +23,7 @@ define (require) ->
 
 		defaultOptions: ->
 			title: ''
+			titleClass: ''
 			cancelAndSubmit: true
 			cancelValue: 'Cancel'
 			submitValue: 'Submit'
@@ -42,7 +43,10 @@ define (require) ->
 			@$el.html rtpl
 
 			# Clone @options.$html and set to div.body
-			@$(".body").html @options.$html if @options.$html
+			if @options.$html
+				@el.querySelector(".body").innerHTML = @options.$html 
+			else
+				@el.querySelector(".body").style.display = 'none'
 
 			modalManager.add @
 
@@ -114,6 +118,7 @@ define (require) ->
 
 		message: (type, message) ->
 			return console.error("Unknown message type!")  if ["success", "warning", "error"].indexOf(type) is -1
+			@$("p.message").show()
 			@$("p.message").html(message).addClass type
 
 		messageAndFade: (type, message, delay) ->
