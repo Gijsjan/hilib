@@ -74,8 +74,10 @@ define (require) ->
 			@listenTo @collection, 'add', (model, collection, options) =>
 				@selected = model
 				@triggerChange()
-				@filtered_options.add model
-			@listenTo @filtered_options, 'add', @renderOptions
+		else
+		@listenTo @collection, 'add', (model, collection, options) =>
+			@filtered_options.add model
+		@listenTo @filtered_options, 'add', @renderOptions
 		
 		@listenTo @filtered_options, 'reset', @renderOptions
 		@listenTo @filtered_options, 'currentOption:change', (model) => @$('li[data-id="'+model.id+'"]').addClass 'active'

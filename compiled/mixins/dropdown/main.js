@@ -37,11 +37,15 @@
         if (this.settings.mutable) {
           this.listenTo(this.collection, 'add', function(model, collection, options) {
             _this.selected = model;
-            _this.triggerChange();
-            return _this.filtered_options.add(model);
+            return _this.triggerChange();
           });
-          this.listenTo(this.filtered_options, 'add', this.renderOptions);
+        } else {
+
         }
+        this.listenTo(this.collection, 'add', function(model, collection, options) {
+          return _this.filtered_options.add(model);
+        });
+        this.listenTo(this.filtered_options, 'add', this.renderOptions);
         this.listenTo(this.filtered_options, 'reset', this.renderOptions);
         this.listenTo(this.filtered_options, 'currentOption:change', function(model) {
           return _this.$('li[data-id="' + model.id + '"]').addClass('active');
