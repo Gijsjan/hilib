@@ -4,8 +4,9 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Fn, Form, Views, validation, _ref;
+    var Fn, Form, Views, dom, validation, _ref;
     Fn = require('hilib/functions/general');
+    dom = require('hilib/functions/DOM');
     Views = {
       Base: require('views/base')
     };
@@ -82,8 +83,10 @@
       Form.prototype.submit = function(ev) {
         var _this = this;
         ev.preventDefault();
+        dom(ev.currentTarget).addClass('loader');
         return this.model.save([], {
           success: function(model, response, options) {
+            dom(ev.currentTarget).removeClass('loader');
             _this.trigger('save:success', model, response, options);
             return _this.reset();
           },

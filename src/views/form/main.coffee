@@ -10,7 +10,7 @@
 
 define (require) ->
 	Fn = require 'hilib/functions/general'
-	# dom = require 'hilib/functions/dom'
+	dom = require 'hilib/functions/DOM'
 	Views = 
 		Base: require 'views/base'
 
@@ -92,9 +92,12 @@ define (require) ->
 		submit: (ev) ->
 			ev.preventDefault()
 
+			dom(ev.currentTarget).addClass 'loader'
+
 			# After save we trigger the save:success so the instantiated Form view can capture it and take action.
 			@model.save [],
 				success: (model, response, options) =>
+					dom(ev.currentTarget).removeClass 'loader'
 					@trigger 'save:success', model, response, options
 					@reset()
 				error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
