@@ -103,7 +103,7 @@ define (require) ->
 
 		hasClass: (name) -> (' ' + el.className + ' ').indexOf(' ' + name + ' ') > -1
 
-		addClas: (name) -> el.className += ' ' + name unless @hasClass name
+		addClass: (name) -> el.className += ' ' + name unless @hasClass name
 
 		removeClass: (name) ->
 			names = ' ' + el.className + ' '

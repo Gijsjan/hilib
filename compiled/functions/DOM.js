@@ -122,7 +122,7 @@
         hasClass: function(name) {
           return (' ' + el.className + ' ').indexOf(' ' + name + ' ') > -1;
         },
-        addClas: function(name) {
+        addClass: function(name) {
           if (!this.hasClass(name)) {
             return el.className += ' ' + name;
           }
