@@ -72,15 +72,15 @@
       };
 
       EditableList.prototype.removeLi = function(ev) {
-        var layerName,
+        var listitemID,
           _this = this;
-        layerName = ev.currentTarget.getAttribute('data-id');
+        listitemID = ev.currentTarget.getAttribute('data-id');
         if (this.settings.confirmRemove) {
-          return this.trigger('confirmRemove', layerName, function() {
-            return _this.selected.removeById(layerName);
+          return this.trigger('confirmRemove', listitemID, function() {
+            return _this.selected.removeById(listitemID);
           });
         } else {
-          return this.selected.removeById(layerName);
+          return this.selected.removeById(listitemID);
         }
       };
 

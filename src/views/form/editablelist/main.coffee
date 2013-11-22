@@ -62,12 +62,12 @@ define (require) ->
 			evs
 
 		removeLi: (ev) ->
-			layerName = ev.currentTarget.getAttribute('data-id')
+			listitemID = ev.currentTarget.getAttribute('data-id')
 
 			if @settings.confirmRemove
-				@trigger 'confirmRemove', layerName, => @selected.removeById layerName
+				@trigger 'confirmRemove', listitemID, => @selected.removeById listitemID
 			else
-				@selected.removeById layerName
+				@selected.removeById listitemID
 
 		onKeyup: (ev) ->
 			valueLength = ev.currentTarget.value.length

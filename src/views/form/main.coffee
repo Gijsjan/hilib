@@ -34,6 +34,7 @@ define (require) ->
 			@Model ?= @options.Model
 			@Model ?= Backbone.Model
 
+			@tplData = @options.tplData ? {}
 			@tpl ?= @options.tpl
 			throw 'Unknow template!' unless @tpl?
 
@@ -106,14 +107,13 @@ define (require) ->
 		render: ->
 			@preRender()
 
-			@data ?= {}
-			@data.viewId = @cid
-			@data.model = @model if @model?
-			@data.collection = @collection if @collection?
+			@tplData.viewId = @cid
+			@tplData.model = @model if @model?
+			@tplData.collection = @collection if @collection?
 
 			throw 'Unknow template!' unless @tpl?
 
-			rtpl = if _.isString(@tpl) then _.template @tpl, @data else @tpl @data
+			rtpl = if _.isString(@tpl) then _.template @tpl, @tplData else @tpl @tplData
 			@$el.html rtpl
 
 			@el.setAttribute 'data-view-cid', @cid

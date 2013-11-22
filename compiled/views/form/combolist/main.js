@@ -23,9 +23,16 @@
       ComboList.prototype.className = 'combolist';
 
       ComboList.prototype.initialize = function() {
-        var models,
+        var models, _base, _base1, _ref1,
           _this = this;
         ComboList.__super__.initialize.apply(this, arguments);
+        if ((_base = this.options).config == null) {
+          _base.config = {};
+        }
+        this.settings = (_ref1 = this.options.config.settings) != null ? _ref1 : {};
+        if ((_base1 = this.settings).confirmRemove == null) {
+          _base1.confirmRemove = false;
+        }
         _.extend(this, dropdown);
         this.dropdownInitialize();
         if (this.options.value instanceof Backbone.Collection) {
@@ -62,10 +69,17 @@
       };
 
       ComboList.prototype.removeSelected = function(ev) {
-        var id, model;
-        id = ev.currentTarget.getAttribute('data-id');
-        model = this.selected.get(id);
-        return this.selected.remove(model);
+        var listitemID, remove,
+          _this = this;
+        listitemID = ev.currentTarget.getAttribute('data-id');
+        remove = function() {
+          return _this.selected.removeById(listitemID);
+        };
+        if (this.settings.confirmRemove) {
+          return this.trigger('confirmRemove', listitemID, remove);
+        } else {
+          return remove();
+        }
       };
 
       ComboList.prototype.selectItem = function(ev) {

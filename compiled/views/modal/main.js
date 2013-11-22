@@ -17,6 +17,16 @@
 
       Modal.prototype.className = "modal";
 
+      Modal.prototype.defaultOptions = function() {
+        return {
+          title: '',
+          cancelAndSubmit: true,
+          cancelValue: 'Cancel',
+          submitValue: 'Submit',
+          loader: true
+        };
+      };
+
       Modal.prototype.initialize = function(options) {
         this.options = options;
         Modal.__super__.initialize.apply(this, arguments);
@@ -25,12 +35,7 @@
 
       Modal.prototype.render = function() {
         var data, marginLeft, marginTop, rtpl, scrollTop, top, viewportHeight;
-        data = _.extend({
-          title: '',
-          cancelAndSubmit: true,
-          cancelValue: 'Cancel',
-          submitValue: 'Submit'
-        }, this.options);
+        data = _.extend(this.defaultOptions(), this.options);
         rtpl = tpls['hilib/views/modal/main'](data);
         this.$el.html(rtpl);
         if (this.options.$html) {
@@ -63,9 +68,7 @@
       };
 
       Modal.prototype.events = {
-        "click button.submit": function() {
-          return this.trigger('submit');
-        },
+        "click button.submit": 'submit',
         "click button.cancel": function() {
           return this.cancel();
         },
@@ -75,9 +78,13 @@
         "keydown input": function(ev) {
           if (ev.keyCode === 13) {
             ev.preventDefault();
-            return this.trigger('submit');
+            return this.submit(ev);
           }
         }
+      };
+
+      Modal.prototype.submit = function(ev) {
+        return this.trigger('submit');
       };
 
       Modal.prototype.cancel = function() {

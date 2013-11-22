@@ -27,6 +27,10 @@ define (require) ->
 		initialize: ->
 			super
 
+			@options.config ?= {}
+			@settings = @options.config.settings ? {}
+			@settings.confirmRemove ?= false
+
 			_.extend @, dropdown
 
 			@dropdownInitialize()
@@ -61,10 +65,16 @@ define (require) ->
 		events: -> _.extend @dropdownEvents(), 'click li.selected': 'removeSelected'
 
 		addSelected: (model) -> @selected.add model
+		
 		removeSelected: (ev) -> 
-			id = ev.currentTarget.getAttribute('data-id')
-			model = @selected.get id
-			@selected.remove model
+			listitemID = ev.currentTarget.getAttribute('data-id')
+
+			remove = => @selected.removeById listitemID
+
+			if @settings.confirmRemove
+				@trigger 'confirmRemove', listitemID, remove
+			else
+				remove()
 
 		selectItem: (ev) ->
 			# Check if ev is coming from keyup and double check if keyCode is 13

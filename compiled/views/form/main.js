@@ -23,6 +23,7 @@
       Form.prototype.className = 'form';
 
       Form.prototype.initialize = function() {
+        var _ref1;
         Form.__super__.initialize.apply(this, arguments);
         if (this.subformConfig == null) {
           this.subformConfig = this.options.subformConfig;
@@ -36,6 +37,7 @@
         if (this.Model == null) {
           this.Model = Backbone.Model;
         }
+        this.tplData = (_ref1 = this.options.tplData) != null ? _ref1 : {};
         if (this.tpl == null) {
           this.tpl = this.options.tpl;
         }
@@ -97,20 +99,17 @@
         var View, attr, rtpl, _ref1,
           _this = this;
         this.preRender();
-        if (this.data == null) {
-          this.data = {};
-        }
-        this.data.viewId = this.cid;
+        this.tplData.viewId = this.cid;
         if (this.model != null) {
-          this.data.model = this.model;
+          this.tplData.model = this.model;
         }
         if (this.collection != null) {
-          this.data.collection = this.collection;
+          this.tplData.collection = this.collection;
         }
         if (this.tpl == null) {
           throw 'Unknow template!';
         }
-        rtpl = _.isString(this.tpl) ? _.template(this.tpl, this.data) : this.tpl(this.data);
+        rtpl = _.isString(this.tpl) ? _.template(this.tpl, this.tplData) : this.tpl(this.tplData);
         this.$el.html(rtpl);
         this.el.setAttribute('data-view-cid', this.cid);
         if (this.subforms == null) {

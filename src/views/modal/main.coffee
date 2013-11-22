@@ -20,6 +20,13 @@ define (require) ->
 	class Modal extends Backbone.View
 		className: "modal"
 
+		defaultOptions: ->
+			title: ''
+			cancelAndSubmit: true
+			cancelValue: 'Cancel'
+			submitValue: 'Submit'
+			loader: true
+
 		# ### Initialize
 		initialize: (@options) ->
 			super
@@ -27,13 +34,7 @@ define (require) ->
 
 		# ### Render
 		render: ->
-			data = _.extend
-				title: ''
-				cancelAndSubmit: true
-				cancelValue: 'Cancel'
-				submitValue: 'Submit'
-			, 
-				@options
+			data = _.extend @defaultOptions(), @options
 
 			# rtpl = _.template Tpl, data
 			rtpl = tpls['hilib/views/modal/main'] data
@@ -76,14 +77,17 @@ define (require) ->
 
 		# ### Events
 		events:
-			"click button.submit": -> @trigger 'submit'
+			"click button.submit": 'submit'
 			"click button.cancel": -> @cancel()
 			"click .overlay": -> @cancel()
 			"keydown input": (ev) ->
 				if ev.keyCode is 13
 					ev.preventDefault()
-					@trigger 'submit'
-					
+					@submit ev
+
+		submit: (ev) ->
+			@trigger 'submit'
+
 		cancel: ->
 			@trigger "cancel"
 			@close()
