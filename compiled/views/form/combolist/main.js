@@ -36,7 +36,7 @@
         _.extend(this, dropdown);
         this.dropdownInitialize();
         if (this.options.value instanceof Backbone.Collection) {
-          this.selected = this.options.value.clone();
+          this.selected = this.options.value;
         } else if (_.isArray(this.options.value)) {
           models = this.strArray2optionArray(this.options.value);
           this.selected = new Collections.Base(models);
