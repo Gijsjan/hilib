@@ -1,5 +1,16 @@
 define (require) ->
-	(el) ->
+	DOM = (el) ->
+		q: (query) ->
+			DOM el.querySelector(query)
+
+		html: (html) ->
+			# Check if html is an HTMLelement
+			if html? and html.nodeType is 1
+				el.appendChild html
+			# Assume html is a String
+			else
+				el.innerHTML = html
+
 		# Native alternative to $.closest
 		# See http://stackoverflow.com/questions/15329167/closest-ancestor-matching-selector-using-native-dom
 		closest: (selector) ->

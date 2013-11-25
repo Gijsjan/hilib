@@ -1,7 +1,18 @@
 (function() {
   define(function(require) {
-    return function(el) {
+    var DOM;
+    return DOM = function(el) {
       return {
+        q: function(query) {
+          return DOM(el.querySelector(query));
+        },
+        html: function(html) {
+          if ((html != null) && html.nodeType === 1) {
+            return el.appendChild(html);
+          } else {
+            return el.innerHTML = html;
+          }
+        },
         closest: function(selector) {
           var matchesSelector;
           matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
