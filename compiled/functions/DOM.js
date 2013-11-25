@@ -3,6 +3,7 @@
     var DOM;
     return DOM = function(el) {
       return {
+        el: el,
         q: function(query) {
           return DOM(el.querySelector(query));
         },
@@ -12,6 +13,17 @@
           } else {
             return el.innerHTML = html;
           }
+        },
+        hide: function() {
+          el.style.display = 'none';
+          return this;
+        },
+        show: function(displayType) {
+          if (displayType == null) {
+            displayType = 'block';
+          }
+          el.style.display = displayType;
+          return this;
         },
         closest: function(selector) {
           var matchesSelector;

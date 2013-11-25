@@ -1,5 +1,7 @@
 define (require) ->
 	DOM = (el) ->
+		el: el
+
 		q: (query) ->
 			DOM el.querySelector(query)
 
@@ -10,6 +12,14 @@ define (require) ->
 			# Assume html is a String
 			else
 				el.innerHTML = html
+
+		hide: -> 
+			el.style.display = 'none'
+			@
+
+		show: (displayType='block') -> 
+			el.style.display = displayType
+			@
 
 		# Native alternative to $.closest
 		# See http://stackoverflow.com/questions/15329167/closest-ancestor-matching-selector-using-native-dom
