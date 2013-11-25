@@ -36,14 +36,15 @@
       };
 
       Modal.prototype.render = function() {
-        var data, marginLeft, marginTop, rtpl, scrollTop, top, viewportHeight;
+        var body, data, marginLeft, marginTop, rtpl, scrollTop, top, viewportHeight;
         data = _.extend(this.defaultOptions(), this.options);
         rtpl = tpls['hilib/views/modal/main'](data);
         this.$el.html(rtpl);
+        body = dom(this.el).q('.body');
         if (this.options.html) {
-          dom(this.el).q('.body').html(this.options.html);
+          body.html(this.options.html);
         } else {
-          this.el.querySelector(".body").style.display = 'none';
+          body.style.display = 'none';
         }
         modalManager.add(this);
         if (this.options.width != null) {

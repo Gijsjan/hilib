@@ -42,12 +42,9 @@ define (require) ->
 			rtpl = tpls['hilib/views/modal/main'] data
 			@$el.html rtpl
 
+			body = dom(@el).q('.body')
 			# Clone @options.html and set to div.body
-			if @options.html
-				dom(@el).q('.body').html @options.html
-				# @el.querySelector(".body").appendChild @options.html 
-			else
-				@el.querySelector(".body").style.display = 'none'
+			if @options.html then body.html @options.html else body.style.display = 'none'
 
 			modalManager.add @
 
