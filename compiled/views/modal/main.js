@@ -40,8 +40,8 @@
         data = _.extend(this.defaultOptions(), this.options);
         rtpl = tpls['hilib/views/modal/main'](data);
         this.$el.html(rtpl);
-        if (this.options.$html) {
-          this.el.querySelector(".body").innerHTML = this.options.$html;
+        if (this.options.html) {
+          dom(this.el).q('.body').html(this.options.html);
         } else {
           this.el.querySelector(".body").style.display = 'none';
         }
@@ -98,11 +98,12 @@
       };
 
       Modal.prototype.cancel = function() {
-        this.trigger("cancel");
+        this.trigger('cancel');
         return this.close();
       };
 
       Modal.prototype.close = function() {
+        this.trigger('close');
         return modalManager.remove(this);
       };
 

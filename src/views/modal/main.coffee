@@ -2,7 +2,7 @@
 # 
 # 	modal = new Modal
 # 		title: "My title!"
-# 		$html: $('<div />').html('lalala')
+# 		html: $('<div />').html('lalala')
 # 		submitValue: 'OK'
 # 	modal.on 'cancel', => cancelAction()
 # 	modal.on 'submit', => modal.messageAndFade 'success', 'Modal submitted!'
@@ -42,9 +42,10 @@ define (require) ->
 			rtpl = tpls['hilib/views/modal/main'] data
 			@$el.html rtpl
 
-			# Clone @options.$html and set to div.body
-			if @options.$html
-				@el.querySelector(".body").innerHTML = @options.$html 
+			# Clone @options.html and set to div.body
+			if @options.html
+				dom(@el).q('.body').html @options.html
+				# @el.querySelector(".body").appendChild @options.html 
 			else
 				@el.querySelector(".body").style.display = 'none'
 
@@ -98,12 +99,14 @@ define (require) ->
 				@trigger 'submit'
 
 		cancel: ->
-			@trigger "cancel"
+			@trigger 'cancel'
 			@close()
 
 		# ### Methods
 
-		close: -> modalManager.remove @
+		close: ->
+			@trigger 'close'
+			modalManager.remove @
 
 		fadeOut: (delay = 1000) ->
 			# Speed is used for $.fadeOut and to calculate the time at which to @remove the modal.
