@@ -2,7 +2,5 @@
   "name": "hilib",
   "version": "0.0.2",
   "dependencies": {},
-  "devDependencies": {
-    "classList": "https://github.com/eligrey/classList.js.git"
-  }
+  "devDependencies": {}
 }
