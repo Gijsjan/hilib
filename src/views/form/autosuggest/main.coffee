@@ -31,7 +31,7 @@ define (require) ->
 
 			@dropdownInitialize()
 
-			getModel = @settings.getModel ? (val, coll) -> coll.get val.id
+			getModel = @settings.getModel ? (val, coll) -> coll.get val
 
 			# Extract the @selected model from @collection, using the passed in getModel function and value or use a Backbone model.
 			@selected = getModel(@options.value, @collection) ? new Backbone.Model id: '', title: ''
@@ -48,15 +48,22 @@ define (require) ->
 
 		events: -> _.extend @dropdownEvents(),
 			'click button.add': 'addOption'
+			'click button.edit': -> @trigger 'edit', @selected
 
 		addOption: (ev) ->
+			@$('button.add').removeClass 'visible'
+			@$('button.edit').addClass 'visible'
+			
+			value = @el.querySelector('input').value
+
 			if @settings.defaultAdd
 				# Add new model to the collection. In the collections add event listener,
 				# @selected is set to the passed model and triggerChange is called.
 				@collection.add
-					id: @$('input').val()
-					title: @$('input').val()
-				# @$('button.add').removeClass 'visible'
+					id: value
+					title: value
+			else
+				trigger 'add', value
 
 		# User has selected an item/option and @selected is set to the selected model. This function only sets the input value and calls the change event.
 		selectItem: (ev) ->
@@ -66,7 +73,7 @@ define (require) ->
 				if @filtered_options.currentOption?
 					@selected = @filtered_options.currentOption 
 				else
-					@selected = @filtered_options.find (option) => option.get('title') is ev.currentTarget.value
+					@selected = @filtered_options.find (option) => option.get('title').toLowerCase() is ev.currentTarget.value.toLowerCase()
 
 					if not @selected? and @settings.mutable
 						@$('button.add').addClass 'visible'
@@ -76,7 +83,7 @@ define (require) ->
 				@selected = @collection.get ev.currentTarget.getAttribute 'data-id'
 			
 			if @selected?
-				@$('input').val @selected.get('title')
+				@$('input').val @selected.get 'title'
 				@$('button.edit').addClass 'visible'
 				@$('button.add').removeClass 'visible' if @settings.defaultAdd
 				@triggerChange()

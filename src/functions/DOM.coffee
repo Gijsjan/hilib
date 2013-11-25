@@ -1,5 +1,7 @@
 define (require) ->
 	DOM = (el) ->
+		el = document.querySelector(el) if _.isString(el)
+		
 		el: el
 
 		q: (query) ->

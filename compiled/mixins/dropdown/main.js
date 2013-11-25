@@ -39,8 +39,6 @@
             _this.selected = model;
             return _this.triggerChange();
           });
-        } else {
-
         }
         this.listenTo(this.collection, 'add', function(model, collection, options) {
           return _this.filtered_options.add(model);
@@ -139,6 +137,10 @@
       },
       filter: function(value) {
         var models, re;
+        if (this.settings.editable) {
+          this.$('button.edit').removeClass('visible');
+        }
+        this.resetOptions();
         if (value.length > 1) {
           value = Fn.escapeRegExp(value);
           re = new RegExp(value, 'i');
@@ -148,11 +150,7 @@
           if (models.length > 0) {
             this.filtered_options.reset(models);
             this.$optionlist.show();
-          } else {
-            this.resetOptions();
           }
-        } else {
-          this.resetOptions();
         }
         if (this.postDropdownFilter != null) {
           return this.postDropdownFilter(models);

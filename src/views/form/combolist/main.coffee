@@ -4,8 +4,10 @@
 
 define (require) ->
 
+	dom = require 'hilib/functions/DOM'
+
 	Collections =
-		Base: require 'collections/base'
+		Base: require 'hilib/collections/base'
 
 	Views = 
 		Base: require 'views/base'
@@ -62,9 +64,18 @@ define (require) ->
 
 		# ### Events
 
-		events: -> _.extend @dropdownEvents(), 'click li.selected': 'removeSelected'
+		events: -> _.extend @dropdownEvents(), 
+			'click li.selected': 'removeSelected'
+			'click button.add': 'createModel'
+			'keyup input': 'toggleButton'
 
-		addSelected: (model) -> @selected.add model
+		toggleButton: (ev) ->
+			button = dom(@el).q('button')
+			if ev.currentTarget.value.length > 1 and ev.keyCode isnt 13
+				button.show('inline-block')
+			else
+				button.hide()
+
 		
 		removeSelected: (ev) -> 
 			listitemID = ev.currentTarget.getAttribute('data-id')
@@ -76,21 +87,28 @@ define (require) ->
 			else
 				remove()
 
+		createModel: (ev) ->
+			value = @el.querySelector('input').value
+
+			@selected.add id: value, title: value if @settings.mutable and value.length > 1
+
+		# ### Methods
 		selectItem: (ev) ->
 			# Check if ev is coming from keyup and double check if keyCode is 13
 			# The model is a filtered option if it is current/active otherwise it is the value of input
 			if ev.keyCode? and ev.keyCode is 13
-				# value = ev.currentTarget.value if ev.currentTarget.value.length > 0
+				
 				model = @filtered_options.currentOption if @filtered_options.currentOption?
 
-				# model = id: value, title: value
+				unless model?
+					@createModel()
+					return
+					
 			# Else it was a click event on li.list. Model is retrieved from @collection with <li data-id="13">
 			else
 				model = @collection.get ev.currentTarget.getAttribute 'data-id'
 			
-			@selected.add model if model?
-
-		# ### Public Methods
+			@selected.add model
 
 		triggerChange: (options) -> 
 			options.added ?= null

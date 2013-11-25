@@ -1,7 +1,10 @@
+# TODO change @options.value to @options.values
+# TODO remove collection; it's overkill
+
 define (require) ->
 
 	Collections =
-		Base: require 'collections/base'
+		Base: require 'hilib/collections/base'
 
 	Views = 
 		Base: require 'views/base'

@@ -5,7 +5,7 @@
   define(function(require) {
     var Collections, EditableList, Views, tpls, _ref;
     Collections = {
-      Base: require('collections/base')
+      Base: require('hilib/collections/base')
     };
     Views = {
       Base: require('views/base')

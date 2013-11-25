@@ -2,6 +2,9 @@
   define(function(require) {
     var DOM;
     return DOM = function(el) {
+      if (_.isString(el)) {
+        el = document.querySelector(el);
+      }
       return {
         el: el,
         q: function(query) {

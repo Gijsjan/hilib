@@ -3,9 +3,10 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Collections, ComboList, Views, dropdown, tpls, _ref;
+    var Collections, ComboList, Views, dom, dropdown, tpls, _ref;
+    dom = require('hilib/functions/DOM');
     Collections = {
-      Base: require('collections/base')
+      Base: require('hilib/collections/base')
     };
     Views = {
       Base: require('views/base')
@@ -60,12 +61,20 @@
 
       ComboList.prototype.events = function() {
         return _.extend(this.dropdownEvents(), {
-          'click li.selected': 'removeSelected'
+          'click li.selected': 'removeSelected',
+          'click button.add': 'createModel',
+          'keyup input': 'toggleButton'
         });
       };
 
-      ComboList.prototype.addSelected = function(model) {
-        return this.selected.add(model);
+      ComboList.prototype.toggleButton = function(ev) {
+        var button;
+        button = dom(this.el).q('button');
+        if (ev.currentTarget.value.length > 1 && ev.keyCode !== 13) {
+          return button.show('inline-block');
+        } else {
+          return button.hide();
+        }
       };
 
       ComboList.prototype.removeSelected = function(ev) {
@@ -82,18 +91,31 @@
         }
       };
 
+      ComboList.prototype.createModel = function(ev) {
+        var value;
+        value = this.el.querySelector('input').value;
+        if (this.settings.mutable && value.length > 1) {
+          return this.selected.add({
+            id: value,
+            title: value
+          });
+        }
+      };
+
       ComboList.prototype.selectItem = function(ev) {
         var model;
         if ((ev.keyCode != null) && ev.keyCode === 13) {
           if (this.filtered_options.currentOption != null) {
             model = this.filtered_options.currentOption;
           }
+          if (model == null) {
+            this.createModel();
+            return;
+          }
         } else {
           model = this.collection.get(ev.currentTarget.getAttribute('data-id'));
         }
-        if (model != null) {
-          return this.selected.add(model);
-        }
+        return this.selected.add(model);
       };
 
       ComboList.prototype.triggerChange = function(options) {

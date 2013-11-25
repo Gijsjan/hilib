@@ -53,7 +53,6 @@ define (require) ->
 		@selected = null
 
 		# First get the models, than create a collection holding all the options
-
 		if @data instanceof Backbone.Collection # If data is a Backbone.Collection
 			@collection = @data
 		else if _.isArray(@data) and _.isString(@data[0]) # Else if data is an array of strings
@@ -74,7 +73,7 @@ define (require) ->
 			@listenTo @collection, 'add', (model, collection, options) =>
 				@selected = model
 				@triggerChange()
-		else
+
 		@listenTo @collection, 'add', (model, collection, options) =>
 			@filtered_options.add model
 		@listenTo @filtered_options, 'add', @renderOptions
@@ -110,6 +109,7 @@ define (require) ->
 
 		@
 
+	# (Re)Renders the dropdown list with filtered options.
 	renderOptions: ->
 		rtpl = tpls['hilib/mixins/dropdown/main']
 			collection: @filtered_options
@@ -168,6 +168,10 @@ define (require) ->
 	hideOptionlist: -> @$optionlist.hide()
 
 	filter: (value) ->
+		@$('button.edit').removeClass 'visible' if @settings.editable
+		
+		@resetOptions()
+
 		if value.length > 1
 			value = Fn.escapeRegExp value
 			re = new RegExp value, 'i'
@@ -176,10 +180,6 @@ define (require) ->
 			if models.length > 0
 				@filtered_options.reset models
 				@$optionlist.show()
-			else
-				 @resetOptions()
-		else
-			@resetOptions()
 
 		# Call post filter hook for views that have implemented it
 		@postDropdownFilter models if @postDropdownFilter?

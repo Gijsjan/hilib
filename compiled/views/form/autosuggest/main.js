@@ -26,7 +26,7 @@
         _.extend(this, dropdown);
         this.dropdownInitialize();
         getModel = (_ref1 = this.settings.getModel) != null ? _ref1 : function(val, coll) {
-          return coll.get(val.id);
+          return coll.get(val);
         };
         this.selected = (_ref2 = getModel(this.options.value, this.collection)) != null ? _ref2 : new Backbone.Model({
           id: '',
@@ -48,16 +48,25 @@
 
       AutoSuggest.prototype.events = function() {
         return _.extend(this.dropdownEvents(), {
-          'click button.add': 'addOption'
+          'click button.add': 'addOption',
+          'click button.edit': function() {
+            return this.trigger('edit', this.selected);
+          }
         });
       };
 
       AutoSuggest.prototype.addOption = function(ev) {
+        var value;
+        this.$('button.add').removeClass('visible');
+        this.$('button.edit').addClass('visible');
+        value = this.el.querySelector('input').value;
         if (this.settings.defaultAdd) {
           return this.collection.add({
-            id: this.$('input').val(),
-            title: this.$('input').val()
+            id: value,
+            title: value
           });
+        } else {
+          return trigger('add', value);
         }
       };
 
@@ -68,7 +77,7 @@
             this.selected = this.filtered_options.currentOption;
           } else {
             this.selected = this.filtered_options.find(function(option) {
-              return option.get('title') === ev.currentTarget.value;
+              return option.get('title').toLowerCase() === ev.currentTarget.value.toLowerCase();
             });
             if ((this.selected == null) && this.settings.mutable) {
               this.$('button.add').addClass('visible');
