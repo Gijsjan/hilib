@@ -43,8 +43,7 @@ define (require) ->
 			@$el.html rtpl
 
 			body = dom(@el).q('.body')
-			# Clone @options.html and set to div.body
-			if @options.html then body.html @options.html else body.style.display = 'none'
+			if @options.html then body.html @options.html else body.hide()
 
 			modalManager.add @
 
@@ -102,6 +101,7 @@ define (require) ->
 		# ### Methods
 
 		close: ->
+			# Trigger close before removing the modal, otherwise there won't be a trigger!
 			@trigger 'close'
 			modalManager.remove @
 

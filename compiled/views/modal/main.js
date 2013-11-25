@@ -44,7 +44,7 @@
         if (this.options.html) {
           body.html(this.options.html);
         } else {
-          body.style.display = 'none';
+          body.hide();
         }
         modalManager.add(this);
         if (this.options.width != null) {
