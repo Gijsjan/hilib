@@ -59,9 +59,16 @@
         return this.dropdownRender(tpls['hilib/views/form/combolist/main']);
       };
 
+      ComboList.prototype.postDropdownRender = function() {
+        var _this = this;
+        return this.filtered_options.reset(this.collection.reject(function(model) {
+          return _this.selected.get(model.id) != null;
+        }));
+      };
+
       ComboList.prototype.events = function() {
         return _.extend(this.dropdownEvents(), {
-          'click li.selected': 'removeSelected',
+          'click li.selected span': 'removeSelected',
           'click button.add': 'createModel',
           'keyup input': 'toggleButton'
         });
@@ -77,20 +84,6 @@
         }
       };
 
-      ComboList.prototype.removeSelected = function(ev) {
-        var listitemID, remove,
-          _this = this;
-        listitemID = ev.currentTarget.getAttribute('data-id');
-        remove = function() {
-          return _this.selected.removeById(listitemID);
-        };
-        if (this.settings.confirmRemove) {
-          return this.trigger('confirmRemove', listitemID, remove);
-        } else {
-          return remove();
-        }
-      };
-
       ComboList.prototype.createModel = function(ev) {
         var value;
         value = this.el.querySelector('input').value;
@@ -102,7 +95,21 @@
         }
       };
 
-      ComboList.prototype.selectItem = function(ev) {
+      ComboList.prototype.removeSelected = function(ev) {
+        var listitemID, remove,
+          _this = this;
+        listitemID = ev.currentTarget.parentNode.getAttribute('data-id');
+        remove = function() {
+          return _this.selected.removeById(listitemID);
+        };
+        if (this.settings.confirmRemove) {
+          return this.trigger('confirmRemove', listitemID, remove);
+        } else {
+          return remove();
+        }
+      };
+
+      ComboList.prototype.addSelected = function(ev) {
         var model;
         if ((ev.keyCode != null) && ev.keyCode === 13) {
           if (this.filtered_options.currentOption != null) {
@@ -126,7 +133,7 @@
           options.removed = null;
         }
         return this.trigger('change', {
-          collection: this.selected,
+          selected: this.selected.toJSON(),
           added: options.added,
           removed: options.removed
         });

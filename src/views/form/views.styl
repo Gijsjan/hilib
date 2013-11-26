@@ -1,6 +1,6 @@
 myblue = #88B1C8
 
-.combolist
+.autosuggest, .combolist, .editablelist
 	position relative
 
 	.input
@@ -37,47 +37,22 @@ myblue = #88B1C8
 				content ""
 				margin 0 4px 0 16px
 
-	button
-		display none
-		margin-left 10px
-		background lighten(myblue, 50%)
-		border none
-		border-radius 4px
+	button.add, button.edit
+		background-color myblue
 		color white
-		font-size 12px
+		border-radius 4px
+		border 0
+		height 18px
+		margin 3px 0 3px 10px
+		display none
 
 		&:hover
-			background myblue
+			background-color darken(myblue, 20%)
 
-	div.empty
-		color #AAA
-		font-style italic
-		padding 4px 0 0 16px
+		&.visible
+			display inline-block
 
-	ul.selected
-		display block
-		list-style square
-		padding 8px 0 0 16px
-
-		li
-			cursor pointer
-			line-height 16px
-
-			&:hover
-				span
-					background #FFCFCF
-					// display inline-lbock
-					border-radius 6px
-					padding 0 4px
-
-				&:after
-					content 'x'
-					font-weight	bold
-					color red
-					margin-left 6px
-					vertical-align top
-					font-size 0.8em
-
+.autosuggest, .combolist
 	ul.list
 		white-space nowrap
 		max-height 360px
@@ -88,7 +63,7 @@ myblue = #88B1C8
 		left 0px
 		background-color white
 		list-style none
-		margin -1px 0 0 0
+		margin 3px 0 0 0
 		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 		padding 4px 0
 		border-radius 4px
@@ -103,6 +78,34 @@ myblue = #88B1C8
 				color white
 				background-image linear-gradient(to bottom, myblue, #6291AC)
 
-		li.active
-			color white
-			background-image: linear-gradient(to bottom, myblue, #6291AC);
+			&.active
+				color white
+				background-image: linear-gradient(to bottom, myblue, #6291AC);
+
+.editablelist, .combolist
+	.empty
+		color #AAA
+		font-style italic
+		padding 4px 0 0 16px
+
+	ul.selected
+		display block
+		list-style square
+		padding 4px 0 0 16px
+
+		li
+			line-height 16px
+
+			span:hover
+				cursor pointer
+				background #FFCFCF
+				border-radius 6px
+				padding 0 4px
+
+				&:after
+					content 'x'
+					font-weight	bold
+					color red
+					margin-left 6px
+					vertical-align top
+					font-size 0.8em

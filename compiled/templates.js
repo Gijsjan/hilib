@@ -89,7 +89,7 @@ buf.push("<div class=\"empty\">The list is empty.</div>");
 
 this["JST"]["hilib/views/form/editablelist/main"] = function anonymous(locals) {
 var buf = [];
-var locals_ = (locals || {}),viewId = locals_.viewId,settings = locals_.settings,selected = locals_.selected;buf.push("<input" + (jade.attrs({ 'data-view-id':(viewId), 'placeholder':(settings.placeholder) }, {"data-view-id":true,"placeholder":true})) + "/><button>Add to list</button>");
+var locals_ = (locals || {}),viewId = locals_.viewId,settings = locals_.settings,selected = locals_.selected;buf.push("<div class=\"input\"><input" + (jade.attrs({ 'data-view-id':(viewId), 'placeholder':(settings.placeholder) }, {"data-view-id":true,"placeholder":true})) + "/></div><button class=\"add\">Add</button>");
 if ( selected.length > 0)
 {
 buf.push("<ul class=\"selected\">");

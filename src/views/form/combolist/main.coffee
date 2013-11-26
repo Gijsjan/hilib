@@ -51,21 +51,25 @@ define (require) ->
 			# @selected = new Collections.Base selectedData
 
 			@listenTo @selected, 'add', (model) =>
-				# @resetOptions()
 				@dropdownRender tpls['hilib/views/form/combolist/main']
 				@triggerChange added: model.id
 
 			@listenTo @selected, 'remove', (model) =>
-				# @resetOptions()
 				@dropdownRender tpls['hilib/views/form/combolist/main']
 				@triggerChange removed: model.id
 
 			@dropdownRender tpls['hilib/views/form/combolist/main']
 
+		# ### Render
+		postDropdownRender: ->
+			# console.log 'before'
+			@filtered_options.reset @collection.reject (model) => @selected.get(model.id)?
+			# console.log 'after'
+			# 'myval'
 		# ### Events
 
 		events: -> _.extend @dropdownEvents(), 
-			'click li.selected': 'removeSelected'
+			'click li.selected span': 'removeSelected'
 			'click button.add': 'createModel'
 			'keyup input': 'toggleButton'
 
@@ -76,9 +80,13 @@ define (require) ->
 			else
 				button.hide()
 
+		createModel: (ev) ->
+			value = @el.querySelector('input').value
+
+			@selected.add id: value, title: value if @settings.mutable and value.length > 1
 		
 		removeSelected: (ev) -> 
-			listitemID = ev.currentTarget.getAttribute('data-id')
+			listitemID = ev.currentTarget.parentNode.getAttribute('data-id')
 
 			remove = => @selected.removeById listitemID
 
@@ -87,13 +95,8 @@ define (require) ->
 			else
 				remove()
 
-		createModel: (ev) ->
-			value = @el.querySelector('input').value
-
-			@selected.add id: value, title: value if @settings.mutable and value.length > 1
-
 		# ### Methods
-		selectItem: (ev) ->
+		addSelected: (ev) ->
 			# Check if ev is coming from keyup and double check if keyCode is 13
 			# The model is a filtered option if it is current/active otherwise it is the value of input
 			if ev.keyCode? and ev.keyCode is 13
@@ -115,7 +118,7 @@ define (require) ->
 			options.removed ?= null
 
 			@trigger 'change', 
-				collection: @selected
+				selected: @selected.toJSON()
 				added: options.added
 				removed: options.removed
 

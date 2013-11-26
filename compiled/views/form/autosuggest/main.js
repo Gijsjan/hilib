@@ -50,7 +50,7 @@
         return _.extend(this.dropdownEvents(), {
           'click button.add': 'addOption',
           'click button.edit': function() {
-            return this.trigger('edit', this.selected);
+            return this.trigger('edit', this.selected.toJSON());
           }
         });
       };
@@ -70,7 +70,7 @@
         }
       };
 
-      AutoSuggest.prototype.selectItem = function(ev) {
+      AutoSuggest.prototype.addSelected = function(ev) {
         var _this = this;
         if ((ev.keyCode != null) && ev.keyCode === 13) {
           if (this.filtered_options.currentOption != null) {

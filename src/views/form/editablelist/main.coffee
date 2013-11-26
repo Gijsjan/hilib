@@ -57,7 +57,7 @@ define (require) ->
 		# ### Events
 		events: ->
 			evs =
-				'click li': 'removeLi'
+				'click li span': 'removeLi'
 				'click button': 'addSelected'
 
 			evs['keyup input']	= 'onKeyup'
@@ -65,7 +65,7 @@ define (require) ->
 			evs
 
 		removeLi: (ev) ->
-			listitemID = ev.currentTarget.getAttribute('data-id')
+			listitemID = ev.currentTarget.parentNode.getAttribute('data-id')
 
 			if @settings.confirmRemove
 				@trigger 'confirmRemove', listitemID, => @selected.removeById listitemID

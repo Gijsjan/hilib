@@ -92,7 +92,7 @@
         var evs;
         evs = {
           'click .caret': 'toggleList',
-          'click li.list': 'selectItem'
+          'click li.list': 'addSelected'
         };
         evs['keyup input[data-view-id="' + this.cid + '"]'] = 'onKeyup';
         evs['keydown input[data-view-id="' + this.cid + '"]'] = 'onKeydown';
@@ -116,7 +116,7 @@
           this.$optionlist.show();
           return this.filtered_options.next();
         } else if (ev.keyCode === 13) {
-          return this.selectItem(ev);
+          return this.addSelected(ev);
         } else if (ev.keyCode === 27) {
           return this.$optionlist.hide();
         } else {
@@ -128,7 +128,10 @@
         return this.remove();
       },
       resetOptions: function() {
-        this.filtered_options.reset(this.collection.models);
+        var _this = this;
+        this.filtered_options.reset(this.collection.reject(function(model) {
+          return _this.selected.get(model.id) != null;
+        }));
         this.filtered_options.resetCurrentOption();
         return this.hideOptionlist();
       },

@@ -76,8 +76,8 @@ define (require) ->
 
 		@listenTo @collection, 'add', (model, collection, options) =>
 			@filtered_options.add model
+
 		@listenTo @filtered_options, 'add', @renderOptions
-		
 		@listenTo @filtered_options, 'reset', @renderOptions
 		@listenTo @filtered_options, 'currentOption:change', (model) => @$('li[data-id="'+model.id+'"]').addClass 'active'
 
@@ -121,7 +121,7 @@ define (require) ->
 	dropdownEvents: ->
 		evs =
 			'click .caret': 'toggleList'
-			'click li.list': 'selectItem'
+			'click li.list': 'addSelected'
 
 		evs['keyup input[data-view-id="'+@cid+'"]']	= 'onKeyup'
 		evs['keydown input[data-view-id="'+@cid+'"]']	= 'onKeydown'
@@ -146,13 +146,11 @@ define (require) ->
 			@$optionlist.show()
 			@filtered_options.next()
 		else if ev.keyCode is 13 # Enter
-			@selectItem(ev)
+			@addSelected(ev)
 		else if ev.keyCode is 27 # Escape
 			@$optionlist.hide()
 		else
 			@filter ev.currentTarget.value
-
-	# ### Public Methods
 
 	# Before removing the view, remove the body click event listener
 	destroy: ->
@@ -160,8 +158,9 @@ define (require) ->
 		@remove()
 
 	# Reset the filtered options collection
+	# TODO This is only triggered by combolist, use it to reject the selected model in autosuggest too!
 	resetOptions: ->
-		@filtered_options.reset @collection.models
+		@filtered_options.reset @collection.reject (model) => @selected.get(model.id)?
 		@filtered_options.resetCurrentOption()
 		@hideOptionlist()
 

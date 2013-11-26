@@ -64,7 +64,7 @@
       EditableList.prototype.events = function() {
         var evs;
         evs = {
-          'click li': 'removeLi',
+          'click li span': 'removeLi',
           'click button': 'addSelected'
         };
         evs['keyup input'] = 'onKeyup';
@@ -74,7 +74,7 @@
       EditableList.prototype.removeLi = function(ev) {
         var listitemID,
           _this = this;
-        listitemID = ev.currentTarget.getAttribute('data-id');
+        listitemID = ev.currentTarget.parentNode.getAttribute('data-id');
         if (this.settings.confirmRemove) {
           return this.trigger('confirmRemove', listitemID, function() {
             return _this.selected.removeById(listitemID);

@@ -48,12 +48,12 @@ define (require) ->
 
 		events: -> _.extend @dropdownEvents(),
 			'click button.add': 'addOption'
-			'click button.edit': -> @trigger 'edit', @selected
+			'click button.edit': -> @trigger 'edit', @selected.toJSON()
 
 		addOption: (ev) ->
 			@$('button.add').removeClass 'visible'
 			@$('button.edit').addClass 'visible'
-			
+
 			value = @el.querySelector('input').value
 
 			if @settings.defaultAdd
@@ -65,8 +65,10 @@ define (require) ->
 			else
 				trigger 'add', value
 
+		# ### Methods
+
 		# User has selected an item/option and @selected is set to the selected model. This function only sets the input value and calls the change event.
-		selectItem: (ev) ->
+		addSelected: (ev) ->
 			# Was the event a keyup? And was it 'enter'?
 			if ev.keyCode? and ev.keyCode is 13
 				# Did the user go through the option list and select one?
