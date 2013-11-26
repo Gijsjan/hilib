@@ -21,6 +21,10 @@
         return _ref;
       }
 
+      Form.prototype.customAdd = function() {
+        return console.error('Form.customAdd is not implemented!');
+      };
+
       Form.prototype.className = 'form';
 
       Form.prototype.initialize = function() {
@@ -223,8 +227,12 @@
         } else {
           placeholders[0].appendChild(view.el);
         }
-        return this.listenTo(view, 'change', function(data) {
+        this.listenTo(view, 'change', function(data) {
           return model.set(attr, data);
+        });
+        this.listenTo(view, 'customAdd', this.customAdd);
+        return this.listenTo(view, 'change:data', function(models) {
+          return _this.subformConfig[attr].data = _this.subformConfig[attr].data.reset(models);
         });
       };
 

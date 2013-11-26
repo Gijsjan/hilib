@@ -42,7 +42,7 @@ define (require) ->
 		jQuery.fn.appendCloseButton = (args={}) ->
 			{corner, html, close} = args
 
-			html ?= '<img src="/images/icon.close.png">'
+			html ?= '<img src="/images/hilib/icon.close.png">'
 			corner ?= 'topright'
 
 			$closeButton = $('<div class="closebutton">').html html

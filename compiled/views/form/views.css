@@ -1,9 +1,9 @@
 .autosuggest,.combolist,.editablelist{position:relative;}
-.autosuggest .input,.combolist .input,.editablelist .input{position:relative;display:inline-block;width:180px;z-index:2;}
+.autosuggest .input,.combolist .input,.editablelist .input{position:relative;display:inline-block;z-index:2;}
 .autosuggest .input input,.combolist .input input,.editablelist .input input{width:180px;border:1px solid #ccc;padding-left:4px;}
 .autosuggest .input input:focus,.combolist .input input:focus,.editablelist .input input:focus{outline-color:#88b1c8}
-.autosuggest .input div.caret,.combolist .input div.caret,.editablelist .input div.caret{cursor:pointer;position:absolute;right:0;top:50%;margin-top:-7px;bottom:1px;background:linear-gradient(to right,rgba(255,255,255,0) 0%,#fff 50%);}
-.autosuggest .input div.caret:after,.combolist .input div.caret:after,.editablelist .input div.caret:after{display:inline-block;width:0;height:0;vertical-align:middle;border-top:4px solid #000;border-right:4px solid rgba(0,0,0,0);border-left:4px solid rgba(0,0,0,0);content:"";margin:0 4px 0 16px}
+.autosuggest .input div.caret,.combolist .input div.caret,.editablelist .input div.caret{cursor:pointer;position:absolute;top:1px;right:1px;bottom:1px;padding:0 16px;background:linear-gradient(to right,rgba(255,255,255,0) 0%,#fff 50%);}
+.autosuggest .input div.caret:after,.combolist .input div.caret:after,.editablelist .input div.caret:after{position:absolute;top:50%;margin-top:-2px;right:6px;width:0;height:0;border-top:4px solid #000;border-right:4px solid rgba(0,0,0,0);border-left:4px solid rgba(0,0,0,0);content:""}
 .autosuggest button.add,.combolist button.add,.editablelist button.add,.autosuggest button.edit,.combolist button.edit,.editablelist button.edit{background-color:#88b1c8;color:#fff;border-radius:4px;border:0;height:18px;margin:3px 0 3px 10px;display:none;}
 .autosuggest button.add:hover,.combolist button.add:hover,.editablelist button.add:hover,.autosuggest button.edit:hover,.combolist button.edit:hover,.editablelist button.edit:hover{background-color:#5a93b3}
 .autosuggest button.add.visible,.combolist button.add.visible,.editablelist button.add.visible,.autosuggest button.edit.visible,.combolist button.edit.visible,.editablelist button.edit.visible{display:inline-block}

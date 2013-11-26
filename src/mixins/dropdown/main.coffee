@@ -54,7 +54,7 @@ define (require) ->
 
 		# First get the models, than create a collection holding all the options
 		if @data instanceof Backbone.Collection # If data is a Backbone.Collection
-			@collection = @data
+			@collection = @data.clone()
 		else if _.isArray(@data) and _.isString(@data[0]) # Else if data is an array of strings
 			models = @strArray2optionArray @data
 			@collection = new Backbone.Collection models
@@ -75,6 +75,7 @@ define (require) ->
 				@triggerChange()
 
 		@listenTo @collection, 'add', (model, collection, options) =>
+			@trigger 'change:data', @collection.models
 			@filtered_options.add model
 
 		@listenTo @filtered_options, 'add', @renderOptions

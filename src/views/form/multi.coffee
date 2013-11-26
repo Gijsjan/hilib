@@ -34,11 +34,16 @@ define (require) ->
 
 		# AddListeners is called from From
 		addListeners: ->
-			@listenTo @collection, 'add', @render
+			# One of the models attributes has changed:
+			@listenTo @collection, 'change', => @triggerChange()
+
+			# The user has clicked button.addform:
+			@listenTo @collection, 'add', => @render()
+
+			# The user has clicked button.remove
 			@listenTo @collection, 'remove', =>
 				@triggerChange()
 				@render()
-			@listenTo @collection, 'change', => @triggerChange()
 
 
 		# Helper function to get specific model from collection, depending on the event

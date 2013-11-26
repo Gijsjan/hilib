@@ -19,6 +19,9 @@ define (require) ->
 	# ## Form
 	class Form extends Views.Base
 
+		# noop
+		customAdd: -> console.error 'Form.customAdd is not implemented!'
+
 		# Overwritten by subclass
 		className: 'form'
 
@@ -184,9 +187,7 @@ define (require) ->
 		
 		# Fires change event. Data passed depends on an available @model (Form)	or @collection (MultiForm)
 		triggerChange: ->
-
 			object = if @model? then @model else @collection
-			# data = if @model? then @model.toJSON() else @collection.toJSON()
 			@trigger 'change', object.toJSON(), object
 
 		# Add subform delegates to renderSubform. In MultiForm @renderSubform is called for every model inside the collection.
@@ -198,8 +199,8 @@ define (require) ->
 			# If not, just get the value from the model the regular way.
 			value = if attr.indexOf('.') > -1 then Fn.flattenObject(model.attributes)[attr] else model.get attr
 			console.error 'Subform value is undefined!', @model unless value?
-			
-			view = new View 
+
+			view = new View
 				value: value
 				config: @subformConfig[attr]
 
@@ -223,3 +224,10 @@ define (require) ->
 				placeholders[0].appendChild view.el
 
 			@listenTo view, 'change', (data) => model.set attr, data
+			@listenTo view, 'customAdd', @customAdd
+
+			# Multiform has multiple instances of the same form elements. Those form elements can have a config.data (Backbone.Collection)
+			# attribute which populates (for example) an autosuggest. The config.data is cloned, otherwise the elements would update eachother.
+			# Therefor we need a central reference to the collection: @subformConfig[attr].data. If one of the elements changes the data,
+			# @subformConfig[attr].data will be updated, so all the elements get the same data on rerender.
+			@listenTo view, 'change:data', (models) => @subformConfig[attr].data = @subformConfig[attr].data.reset models

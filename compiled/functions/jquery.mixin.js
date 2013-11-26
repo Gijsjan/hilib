@@ -51,7 +51,7 @@
         }
         corner = args.corner, html = args.html, close = args.close;
         if (html == null) {
-          html = '<img src="/images/icon.close.png">';
+          html = '<img src="/images/hilib/icon.close.png">';
         }
         if (corner == null) {
           corner = 'topright';

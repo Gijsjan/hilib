@@ -31,6 +31,8 @@ define (require) ->
 
 			@dropdownInitialize()
 
+			# By default @options.value is equal to the model's ID, so the getModel function
+			# looks in the collection and selects the correct model by ID (coll.get(val)).
 			getModel = @settings.getModel ? (val, coll) -> coll.get val
 
 			# Extract the @selected model from @collection, using the passed in getModel function and value or use a Backbone model.
@@ -51,19 +53,19 @@ define (require) ->
 			'click button.edit': -> @trigger 'edit', @selected.toJSON()
 
 		addOption: (ev) ->
-			@$('button.add').removeClass 'visible'
-			@$('button.edit').addClass 'visible'
+			@$('button.add').removeClass 'visible' if @settings.defaultAdd
 
 			value = @el.querySelector('input').value
 
 			if @settings.defaultAdd
+				@$('button.edit').addClass 'visible'
 				# Add new model to the collection. In the collections add event listener,
 				# @selected is set to the passed model and triggerChange is called.
 				@collection.add
 					id: value
 					title: value
 			else
-				trigger 'add', value
+				@trigger 'customAdd', value, @collection
 
 		# ### Methods
 
@@ -100,4 +102,4 @@ define (require) ->
 				if models? and not models.length
 					@$('button.add').addClass 'visible'
 				else
-					@$('button.add').removeClass 'visible'
+					@$('button.add').removeClass 'visible' if @settings.defaultAdd

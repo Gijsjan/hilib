@@ -57,16 +57,18 @@
 
       AutoSuggest.prototype.addOption = function(ev) {
         var value;
-        this.$('button.add').removeClass('visible');
-        this.$('button.edit').addClass('visible');
+        if (this.settings.defaultAdd) {
+          this.$('button.add').removeClass('visible');
+        }
         value = this.el.querySelector('input').value;
         if (this.settings.defaultAdd) {
+          this.$('button.edit').addClass('visible');
           return this.collection.add({
             id: value,
             title: value
           });
         } else {
-          return trigger('add', value);
+          return this.trigger('customAdd', value, this.collection);
         }
       };
 
@@ -105,7 +107,9 @@
           if ((models != null) && !models.length) {
             return this.$('button.add').addClass('visible');
           } else {
-            return this.$('button.add').removeClass('visible');
+            if (this.settings.defaultAdd) {
+              return this.$('button.add').removeClass('visible');
+            }
           }
         }
       };

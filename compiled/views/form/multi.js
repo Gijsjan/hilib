@@ -45,13 +45,15 @@
 
       MultiForm.prototype.addListeners = function() {
         var _this = this;
-        this.listenTo(this.collection, 'add', this.render);
-        this.listenTo(this.collection, 'remove', function() {
-          _this.triggerChange();
+        this.listenTo(this.collection, 'change', function() {
+          return _this.triggerChange();
+        });
+        this.listenTo(this.collection, 'add', function() {
           return _this.render();
         });
-        return this.listenTo(this.collection, 'change', function() {
-          return _this.triggerChange();
+        return this.listenTo(this.collection, 'remove', function() {
+          _this.triggerChange();
+          return _this.render();
         });
       };
 

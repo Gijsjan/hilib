@@ -25,7 +25,7 @@
         }
         this.selected = null;
         if (this.data instanceof Backbone.Collection) {
-          this.collection = this.data;
+          this.collection = this.data.clone();
         } else if (_.isArray(this.data) && _.isString(this.data[0])) {
           models = this.strArray2optionArray(this.data);
           this.collection = new Backbone.Collection(models);
@@ -41,6 +41,7 @@
           });
         }
         this.listenTo(this.collection, 'add', function(model, collection, options) {
+          _this.trigger('change:data', _this.collection.models);
           return _this.filtered_options.add(model);
         });
         this.listenTo(this.filtered_options, 'add', this.renderOptions);

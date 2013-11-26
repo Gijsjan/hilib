@@ -1,9 +1,9 @@
 .ste-iframe-body{margin:0;padding:0 0 10px 0;font:12px Verdana,Arial,Helvetica,sans-serif;white-space:nowrap}
 .supertinyeditor iframe{min-height:46px;border:none}
-.supertinyeditor .ste-header{font-family:Bookman;color:#666;height:31px;border-bottom:1px solid #bbb;background:url("../images/supertinyeditor/header-bg.gif") repeat-x;padding-top:1px;}
+.supertinyeditor .ste-header{font-family:Bookman;color:#666;height:31px;border-bottom:1px solid #bbb;background:url("../images/hilib/views/supertinyeditor/header-bg.gif") repeat-x;padding-top:1px;}
 .supertinyeditor .ste-header select{float:left;margin-top:5px}
 .supertinyeditor .ste-header .ste-divider{float:left;width:1px;height:30px;background:#ccc}
-.supertinyeditor .ste-header .ste-control,.supertinyeditor .ste-header .ste-control-diacritics{float:left;width:24px;height:30px;cursor:pointer;background-image:url("../images/supertinyeditor/icons2-small.png");background-repeat:no-repeat;}
+.supertinyeditor .ste-header .ste-control,.supertinyeditor .ste-header .ste-control-diacritics{float:left;width:24px;height:30px;cursor:pointer;background-image:url("../images/hilib/views/supertinyeditor/icons2-small.png");background-repeat:no-repeat;}
 .supertinyeditor .ste-header .ste-control:hover,.supertinyeditor .ste-header .ste-control-diacritics:hover{background-color:#fff}
 .supertinyeditor .ste-header .ste-control.bold{background-position:0 -120px}
 .supertinyeditor .ste-header .ste-control.italic{background-position:0 -150px}
@@ -25,7 +25,7 @@
 .supertinyeditor .ste-font{margin-left:12px}
 .supertinyeditor .ste-size{margin:0 3px}
 .supertinyeditor .ste-style{margin-right:12px}
-.supertinyeditor .toggle{float:left;background:url("../images/supertinyeditor/icons2.png") -34px 2px no-repeat;padding:9px 13px 0 31px;height:23px;border-right:1px solid #ccc;cursor:pointer;color:#666;}
+.supertinyeditor .toggle{float:left;background:url("../images/hilib/views/supertinyeditor/icons2.png") -34px 2px no-repeat;padding:9px 13px 0 31px;height:23px;border-right:1px solid #ccc;cursor:pointer;color:#666;}
 .supertinyeditor .toggle:hover{background-color:#fff}
-.supertinyeditor .resize{float:right;height:32px;width:32px;background:url("../images/supertinyeditor/resize.gif") 15px 15px no-repeat;cursor:s-resize}
+.supertinyeditor .resize{float:right;height:32px;width:32px;background:url("../images/hilib/views/supertinyeditor/resize.gif") 15px 15px no-repeat;cursor:s-resize}
 .supertinyeditor #editor{cursor:text;margin:10px}
