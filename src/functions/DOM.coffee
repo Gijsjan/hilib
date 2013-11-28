@@ -9,10 +9,12 @@ define (require) ->
 
 		html: (html) ->
 			# Check if html is an HTMLelement
-			if html? and html.nodeType is 1
+			if html? and (html.nodeType is 1 or html.nodeType is 11)
+				console.log 'appding'
 				el.appendChild html
 			# Assume html is a String
 			else
+				console.log 'innering', html.nodeType
 				el.innerHTML = html
 
 		hide: -> 
