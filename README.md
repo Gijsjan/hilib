@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Gijsjan/hilib.png)](https://travis-ci.org/Gijsjan/hilib)
+[![Build Status](https://travis-ci.org/HuygensING/hilib.png)](https://travis-ci.org/HuygensING/hilib)
 
 ### v0.0.2
 #### Nov 8, 2013
