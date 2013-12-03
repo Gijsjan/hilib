@@ -138,6 +138,21 @@ buf.push("<footer><button class=\"cancel\">" + (jade.escape(null == (jade.interp
 buf.push("</div>");;return buf.join("");
 };
 
+this["JST"]["hilib/views/pagination/main"] = function anonymous(locals) {
+var buf = [];
+var locals_ = (locals || {}),step10 = locals_.step10,pageCount = locals_.pageCount,currentPage = locals_.currentPage;buf.push("<ul class=\"pagination\">");
+if ( (step10 && pageCount >= 10))
+{
+buf.push("<li" + (jade.attrs({ "class": [('prev10'),(currentPage>10?'active':'')] }, {"class":true})) + ">&laquo;</li>");
+}
+buf.push("<li" + (jade.attrs({ "class": [('prev'),(currentPage>1?'active':'')] }, {"class":true})) + ">&lsaquo;</li><li class=\"current\">" + (jade.escape(null == (jade.interp = currentPage) ? "" : jade.interp)) + "</li><li class=\"text\">of</li><li class=\"pagecount\">" + (jade.escape(null == (jade.interp = pageCount) ? "" : jade.interp)) + "</li><li" + (jade.attrs({ "class": [('next'),(currentPage<pageCount?'active':'')] }, {"class":true})) + ">&rsaquo;</li>");
+if ( (step10 && pageCount >= 10))
+{
+buf.push("<li" + (jade.attrs({ "class": [('next10'),(currentPage<=pageCount-10?'active':'')] }, {"class":true})) + ">&raquo;</li>");
+}
+buf.push("</ul>");;return buf.join("");
+};
+
 this["JST"]["hilib/views/supertinyeditor/diacritics"] = function anonymous(locals) {
 var buf = [];
 var locals_ = (locals || {}),diacritics = locals_.diacritics;buf.push("<ul class=\"diacritics\">");
