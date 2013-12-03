@@ -14,7 +14,7 @@ define (require) ->
 	Views = 
 		Base: require 'views/base'
 
-	validation = require 'hilib/managers/validation'
+	validation = require 'hilib/mixins/validation'
 
 	# ## Form
 	class Form extends Views.Base
@@ -87,7 +87,7 @@ define (require) ->
 
 			value = if ev.currentTarget.type is 'checkbox' then ev.currentTarget.checked else ev.currentTarget.value
 
-			model.set ev.currentTarget.name, value, validate: true if ev.currentTarget.name isnt ''
+			model.set ev.currentTarget.name, value if ev.currentTarget.name isnt ''
 
 		textareaKeyup: (ev) ->
 			ev.currentTarget.style.height = '32px'
@@ -107,7 +107,9 @@ define (require) ->
 						dom(ev.currentTarget).removeClass 'loader'
 						@trigger 'save:success', model, response, options
 						@reset()
-					error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
+					error: (model, xhr, options) => 
+						dom(ev.currentTarget).removeClass 'loader'
+						@trigger 'save:error', model, xhr, options
 
 		# ### Render
 
@@ -142,7 +144,7 @@ define (require) ->
 		# PostRender is a NOOP that can be called by a child view 
 		postRender: ->
 
-		# ### Public Methods
+		# ### METHODS
 
 		# Reset the form to original state
 		# * TODO: this only works on new models, not on editting a model
@@ -150,8 +152,13 @@ define (require) ->
 			# Clone the model to remove any references
 			@model = @model.clone()
 
-			# Clear the model to restore the attributes to default values
+			# Clear the model and restore the attributes to default values
 			@model.clear silent: true
+			@model.set @model.defaults()
+
+			@el.querySelector('[data-model-id]').setAttribute 'data-model-id', @model.cid
+			
+			@addValidation()
 
 			# Empty the form elements
 			@el.querySelector('form').reset()
@@ -176,7 +183,9 @@ define (require) ->
 			_.extend @, validation
 
 			@validator
-				invalid: (model, attr, msg) => @$("[data-cid='#{model.cid}'] [name='#{attr}']").addClass('invalid').attr 'title', msg
+				invalid: (model, attr, msg) => 
+					dom(@el).q('button[name="submit"]').removeClass 'loader'
+					@$("[data-model-id='#{model.cid}'] [name='#{attr}']").addClass('invalid').attr 'title', msg
 				
 			### @on 'validator:validated', => $('button.save').prop('disabled', false).removeAttr('title') ###
 			### @on 'validator:invalidated', => $('button.save').prop('disabled', true).attr 'title', 'The form cannot be saved due to invalid values.' ###

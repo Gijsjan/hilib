@@ -77,7 +77,7 @@
       ComboList.prototype.toggleButton = function(ev) {
         var button;
         button = dom(this.el).q('button');
-        if (ev.currentTarget.value.length > 1 && ev.keyCode !== 13) {
+        if ((button != null) && ev.currentTarget.value.length > 1 && ev.keyCode !== 13) {
           return button.show('inline-block');
         } else {
           return button.hide();

@@ -12,10 +12,8 @@
         },
         html: function(html) {
           if ((html != null) && (html.nodeType === 1 || html.nodeType === 11)) {
-            console.log('appding');
             return el.appendChild(html);
           } else {
-            console.log('innering', html.nodeType);
             return el.innerHTML = html;
           }
         },

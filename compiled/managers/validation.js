@@ -17,6 +17,7 @@
           for (attr in _ref) {
             if (!__hasProp.call(_ref, attr)) continue;
             settings = _ref[attr];
+            console.log(attr, settings);
             if (!settings.required && flatAttrs[attr].length !== 0) {
               if ((settings.pattern != null) && settings.pattern === 'number') {
                 if (!/^\d+$/.test(flatAttrs[attr])) {
@@ -35,6 +36,7 @@
           }
         };
         if (this.model != null) {
+          console.log('YES MODEL');
           listenToObject = this.model;
           this.model.validate = validate;
         } else if (this.collection != null) {

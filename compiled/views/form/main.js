@@ -10,7 +10,7 @@
     Views = {
       Base: require('views/base')
     };
-    validation = require('hilib/managers/validation');
+    validation = require('hilib/mixins/validation');
     return Form = (function(_super) {
       __extends(Form, _super);
 
@@ -74,9 +74,7 @@
         model = this.model != null ? this.model : this.getModel(ev);
         value = ev.currentTarget.type === 'checkbox' ? ev.currentTarget.checked : ev.currentTarget.value;
         if (ev.currentTarget.name !== '') {
-          return model.set(ev.currentTarget.name, value, {
-            validate: true
-          });
+          return model.set(ev.currentTarget.name, value);
         }
       };
 
@@ -99,6 +97,7 @@
               return _this.reset();
             },
             error: function(model, xhr, options) {
+              dom(ev.currentTarget).removeClass('loader');
               return _this.trigger('save:error', model, xhr, options);
             }
           });
@@ -147,6 +146,9 @@
         this.model.clear({
           silent: true
         });
+        this.model.set(this.model.defaults());
+        this.el.querySelector('[data-model-id]').setAttribute('data-model-id', this.model.cid);
+        this.addValidation();
         return this.el.querySelector('form').reset();
       };
 
@@ -177,7 +179,8 @@
         _.extend(this, validation);
         return this.validator({
           invalid: function(model, attr, msg) {
-            return _this.$("[data-cid='" + model.cid + "'] [name='" + attr + "']").addClass('invalid').attr('title', msg);
+            dom(_this.el).q('button[name="submit"]').removeClass('loader');
+            return _this.$("[data-model-id='" + model.cid + "'] [name='" + attr + "']").addClass('invalid').attr('title', msg);
           }
         });
         /* @on 'validator:validated', => $('button.save').prop('disabled', false).removeAttr('title')*/

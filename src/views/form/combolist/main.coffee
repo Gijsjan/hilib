@@ -75,7 +75,7 @@ define (require) ->
 
 		toggleButton: (ev) ->
 			button = dom(@el).q('button')
-			if ev.currentTarget.value.length > 1 and ev.keyCode isnt 13
+			if button? and ev.currentTarget.value.length > 1 and ev.keyCode isnt 13
 				button.show('inline-block')
 			else
 				button.hide()

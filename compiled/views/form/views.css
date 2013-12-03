@@ -12,7 +12,7 @@
 .autosuggest ul.list li:hover,.combolist ul.list li:hover{color:#fff;background-image:linear-gradient(to bottom,#88b1c8,#6291ac)}
 .autosuggest ul.list li.active,.combolist ul.list li.active{color:#fff;background-image:linear-gradient(to bottom,#88b1c8,#6291ac)}
 .editablelist .empty,.combolist .empty{color:#aaa;font-style:italic;padding:4px 0 0 16px}
-.editablelist ul.selected,.combolist ul.selected{display:block;list-style:square;padding:4px 0 0 16px;}
+.editablelist ul.selected,.combolist ul.selected{display:block;list-style:square;padding:10px 0 0 16px;}
 .editablelist ul.selected li,.combolist ul.selected li{line-height:16px;}
-.editablelist ul.selected li span:hover,.combolist ul.selected li span:hover{cursor:pointer;background:#ffcfcf;border-radius:6px;padding:0 4px;}
-.editablelist ul.selected li span:hover:after,.combolist ul.selected li span:hover:after{content:'x';font-weight:bold;color:#f00;margin-left:6px;vertical-align:top;font-size:.8em}
+.editablelist ul.selected li span:hover,.combolist ul.selected li span:hover{cursor:pointer;background:#ffcfcf;position:relative;border-radius:2px;padding:2px 24px 2px 4px;}
+.editablelist ul.selected li span:hover:after,.combolist ul.selected li span:hover:after{position:absolute;content:'';background:url("../images/hilib/views/form/icon.bin.png") no-repeat;right:0;width:14px;height:14px;top:50%;margin-top:-7px}

@@ -91,7 +91,7 @@ myblue = #88B1C8
 	ul.selected
 		display block
 		list-style square
-		padding 4px 0 0 16px
+		padding 10px 0 0 16px
 
 		li
 			line-height 16px
@@ -99,13 +99,30 @@ myblue = #88B1C8
 			span:hover
 				cursor pointer
 				background #FFCFCF
-				border-radius 6px
-				padding 0 4px
+				position relative
+				border-radius 2px
+				padding 2px 24px 2px 4px
 
 				&:after
-					content 'x'
-					font-weight	bold
-					color red
-					margin-left 6px
-					vertical-align top
-					font-size 0.8em
+					position absolute
+					content ''
+					background url('../images/hilib/views/form/icon.bin.png') no-repeat
+					right 0
+					width 14px
+					height 14px
+					top 50%
+					margin-top -7px
+
+			// span:hover
+			// 	cursor pointer
+			// 	background #FFCFCF
+			// 	border-radius 6px
+			// 	padding 0 4px
+
+			// 	&:after
+			// 		content 'x'
+			// 		font-weight	bold
+			// 		color red
+			// 		margin-left 6px
+			// 		vertical-align top
+			// 		font-size 0.8em

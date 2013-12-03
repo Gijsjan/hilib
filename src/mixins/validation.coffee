@@ -1,43 +1,47 @@
 define (require) ->
 	Fn = require 'hilib/functions/general'
 
+	# A validate function we're adding to every model instance we're listening to
+	validate: (attrs, options) ->
+		invalids = []
+
+		# Flatten attributes, because nested attributes must also be targeted by a string (<input name="namespace.level.level2"> for namespace: {level: {level2: 'some value'}})
+		flatAttrs = Fn.flattenObject(attrs)
+
+		# Loop the validation settings
+		for own attr, settings of @validation
+			# Don't validate empty strings which are not required
+			if not settings.required and flatAttrs[attr].length isnt 0
+				# Turn into switch or hash with functions?
+				if settings.pattern? and settings.pattern is 'number'
+					unless /^\d+$/.test flatAttrs[attr]
+						invalids.push
+							attr: attr
+							msg: 'Please enter a valid number.'
+			else if settings.required and flatAttrs[attr].length is 0
+				invalids.push
+					attr: attr
+					msg: 'Please enter a value.'
+
+		# Return invalids array if populated, otherwise return nothing (and Backbone can continue with setting the model)
+		if invalids.length then return invalids else return
+
 	validator: (args) ->
 		{valid, invalid} = args
 
-		# A validate function we're adding to every model instance we're listening to
-		validate = (attrs, options) ->
-			invalids = []
-
-			# Flatten attributes, because nested attributes must also be targeted by a string (<input name="namespace.level.level2"> for namespace: {level: {level2: 'some value'}})
-			flatAttrs = Fn.flattenObject(attrs)
-
-			# Loop the validation settings
-			for own attr, settings of @validation
-
-				# Don't validate empty strings which are not required
-				if not settings.required and flatAttrs[attr].length isnt 0
-					# Turn into switch or hash with functions?
-					if settings.pattern? and settings.pattern is 'number'
-						unless /^\d+$/.test flatAttrs[attr]
-							invalids.push
-								attr: attr
-								msg: 'Please enter a valid number.'
-
-			# Return invalids array if populated, otherwise return nothing (and Backbone can continue with setting the model)
-			if invalids.length then return invalids else return
 
 		# Are we listening to a model or a collection?
 		# Add the validate function to (all) the model(s)
 		if @model?
 			listenToObject = @model
-			@model.validate = validate
+			@model.validate = @validate
 		else if @collection?
 			listenToObject = @collection
 			@collection.each (model) =>
-				model.validate = validate
+				model.validate = @validate
 
 			# Add validate function to models which are added dynamically
-			@listenTo @collection, 'add', (model, collection, options) => model.validate = validate
+			@listenTo @collection, 'add', (model, collection, options) => model.validate = @validate
 		else
 			console.error "Validator mixin: no model or collection attached to view!"
 			return

@@ -15,6 +15,7 @@ define (require) ->
 
 			# Loop the validation settings
 			for own attr, settings of @validation
+				console.log attr, settings
 
 				# Don't validate empty strings which are not required
 				if not settings.required and flatAttrs[attr].length isnt 0
@@ -31,6 +32,7 @@ define (require) ->
 		# Are we listening to a model or a collection?
 		# Add the validate function to (all) the model(s)
 		if @model?
+			console.log 'YES MODEL'
 			listenToObject = @model
 			@model.validate = validate
 		else if @collection?

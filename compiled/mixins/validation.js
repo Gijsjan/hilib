@@ -5,45 +5,50 @@
     var Fn;
     Fn = require('hilib/functions/general');
     return {
-      validator: function(args) {
-        var invalid, listenToObject, valid, validate,
-          _this = this;
-        valid = args.valid, invalid = args.invalid;
-        validate = function(attrs, options) {
-          var attr, flatAttrs, invalids, settings, _ref;
-          invalids = [];
-          flatAttrs = Fn.flattenObject(attrs);
-          _ref = this.validation;
-          for (attr in _ref) {
-            if (!__hasProp.call(_ref, attr)) continue;
-            settings = _ref[attr];
-            if (!settings.required && flatAttrs[attr].length !== 0) {
-              if ((settings.pattern != null) && settings.pattern === 'number') {
-                if (!/^\d+$/.test(flatAttrs[attr])) {
-                  invalids.push({
-                    attr: attr,
-                    msg: 'Please enter a valid number.'
-                  });
-                }
+      validate: function(attrs, options) {
+        var attr, flatAttrs, invalids, settings, _ref;
+        invalids = [];
+        flatAttrs = Fn.flattenObject(attrs);
+        _ref = this.validation;
+        for (attr in _ref) {
+          if (!__hasProp.call(_ref, attr)) continue;
+          settings = _ref[attr];
+          if (!settings.required && flatAttrs[attr].length !== 0) {
+            if ((settings.pattern != null) && settings.pattern === 'number') {
+              if (!/^\d+$/.test(flatAttrs[attr])) {
+                invalids.push({
+                  attr: attr,
+                  msg: 'Please enter a valid number.'
+                });
               }
             }
+          } else if (settings.required && flatAttrs[attr].length === 0) {
+            invalids.push({
+              attr: attr,
+              msg: 'Please enter a value.'
+            });
           }
-          if (invalids.length) {
-            return invalids;
-          } else {
+        }
+        if (invalids.length) {
+          return invalids;
+        } else {
 
-          }
-        };
+        }
+      },
+      validator: function(args) {
+        var invalid, listenToObject, valid,
+          _this = this;
+        valid = args.valid, invalid = args.invalid;
         if (this.model != null) {
           listenToObject = this.model;
-          this.model.validate = validate;
+          this.model.validate = this.validate;
         } else if (this.collection != null) {
           listenToObject = this.collection;
           this.collection.each(function(model) {
-            return model.validate = validate;
+            return model.validate = _this.validate;
           });
           this.listenTo(this.collection, 'add', function(model, collection, options) {
-            return model.validate = validate;
+            return model.validate = _this.validate;
           });
         } else {
           console.error("Validator mixin: no model or collection attached to view!");
