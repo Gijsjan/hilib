@@ -1,11 +1,11 @@
 require.config({
 	baseUrl: '/compiled/',
 	paths: {
-		mocha: '../lib/mocha/mocha',
-		chai: '../lib/chai/chai',
-		jquery: '../lib/jquery/jquery',
-		backbone: '../lib/backbone-amd/backbone',
-		underscore: '../lib/underscore-amd/underscore',
+		mocha: '../vendor/mocha/mocha',
+		chai: '../vendor/chai/chai',
+		jquery: '../vendor/jquery/jquery',
+		backbone: '../vendor/backbone-amd/backbone',
+		underscore: '../vendor/underscore-amd/underscore',
 		hilib: '.'
 	}
 });

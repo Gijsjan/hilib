@@ -1,8 +1,8 @@
 # @options:
 #	rowCount: Number 			Number of rows per page
 # 	resultCount: Number 		The total number of results (resultCount/rowCount=pageCount)
-#	step10: Boolean				Render (<< and >>) for steps of 10. Defaults to false.
-#	triggerPageNumber: Boolean	Trigger the new pageNumber (true) or prev/next (false). Defaults to false.
+#	step10: Boolean				Render (<< and >>) for steps of 10. Defaults to true.
+#	triggerPageNumber: Boolean	Trigger the new pageNumber (true) or prev/next (false). Defaults to true.
 
 define (require) ->
 
@@ -22,14 +22,15 @@ define (require) ->
 		initialize: ->
 			super
 
-			@setCurrentPage 1
 
-			@options.step10 ?= false
-			@options.triggerPagenumber ?= false
+			@options.step10 ?= true
+			@options.triggerPagenumber ?= true
+
+			@setCurrentPage 1, true
 
 		# ### Render
 		render: ->
-			@options.pageCount = Math.ceil @options.resultCount / @options.rowCount 
+			@options.pageCount = Math.ceil @options.resultCount / @options.rowCount
 			@el.innerHTML = tpls['hilib/views/pagination/main'] @options
 
 			@
@@ -48,7 +49,7 @@ define (require) ->
 
 		# ### Methods
 
-		setCurrentPage: (pageNumber) ->
+		setCurrentPage: (pageNumber, silent=false) ->
 			if not @triggerPagenumber
 				direction = if pageNumber < @options.currentPage then 'prev' else 'next'
 
@@ -57,4 +58,5 @@ define (require) ->
 			@options.currentPage = pageNumber
 			@render()
 
-			Fn.timeoutWithReset 500, => @trigger 'change:pagenumber', pageNumber
+			unless silent
+				Fn.timeoutWithReset 500, => @trigger 'change:pagenumber', pageNumber

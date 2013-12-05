@@ -7,13 +7,23 @@ define (require) ->
 		q: (query) ->
 			DOM el.querySelector(query)
 
+		find: (query) ->
+			DOM el.querySelector(query)
+
+		findAll: (query) ->
+			DOM el.querySelectorAll(query)
+
 		html: (html) ->
+			return el.innerHTML unless html?
+
 			# Check if html is an HTMLelement
-			if html? and (html.nodeType is 1 or html.nodeType is 11)
+			if (html.nodeType is 1 or html.nodeType is 11)
+				el.innerHTML = ''
 				el.appendChild html
 			# Assume html is a String
 			else
 				el.innerHTML = html
+
 
 		hide: -> 
 			el.style.display = 'none'
@@ -30,6 +40,9 @@ define (require) ->
 
 			while (el)
 				if (matchesSelector.bind(el)(selector)) then return el else	el = el.parentNode
+
+		append: (childEl) ->
+			el.appendChild childEl
 
 		prepend: (childEl) ->
 			el.insertBefore childEl, el.firstChild

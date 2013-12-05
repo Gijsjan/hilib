@@ -22,11 +22,13 @@
       Pagination.prototype.initialize = function() {
         var _base, _base1;
         Pagination.__super__.initialize.apply(this, arguments);
-        this.setCurrentPage(1);
         if ((_base = this.options).step10 == null) {
-          _base.step10 = false;
+          _base.step10 = true;
         }
-        return (_base1 = this.options).triggerPagenumber != null ? (_base1 = this.options).triggerPagenumber : _base1.triggerPagenumber = false;
+        if ((_base1 = this.options).triggerPagenumber == null) {
+          _base1.triggerPagenumber = true;
+        }
+        return this.setCurrentPage(1, true);
       };
 
       Pagination.prototype.render = function() {
@@ -60,18 +62,23 @@
         return this.setCurrentPage(this.options.currentPage + 10);
       };
 
-      Pagination.prototype.setCurrentPage = function(pageNumber) {
+      Pagination.prototype.setCurrentPage = function(pageNumber, silent) {
         var direction,
           _this = this;
+        if (silent == null) {
+          silent = false;
+        }
         if (!this.triggerPagenumber) {
           direction = pageNumber < this.options.currentPage ? 'prev' : 'next';
           this.trigger(direction);
         }
         this.options.currentPage = pageNumber;
         this.render();
-        return Fn.timeoutWithReset(500, function() {
-          return _this.trigger('change:pagenumber', pageNumber);
-        });
+        if (!silent) {
+          return Fn.timeoutWithReset(500, function() {
+            return _this.trigger('change:pagenumber', pageNumber);
+          });
+        }
       };
 
       return Pagination;

@@ -10,8 +10,18 @@
         q: function(query) {
           return DOM(el.querySelector(query));
         },
+        find: function(query) {
+          return DOM(el.querySelector(query));
+        },
+        findAll: function(query) {
+          return DOM(el.querySelectorAll(query));
+        },
         html: function(html) {
-          if ((html != null) && (html.nodeType === 1 || html.nodeType === 11)) {
+          if (html == null) {
+            return el.innerHTML;
+          }
+          if (html.nodeType === 1 || html.nodeType === 11) {
+            el.innerHTML = '';
             return el.appendChild(html);
           } else {
             return el.innerHTML = html;
@@ -38,6 +48,9 @@
               el = el.parentNode;
             }
           }
+        },
+        append: function(childEl) {
+          return el.appendChild(childEl);
         },
         prepend: function(childEl) {
           return el.insertBefore(childEl, el.firstChild);
