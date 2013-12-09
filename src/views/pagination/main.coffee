@@ -26,7 +26,8 @@ define (require) ->
 			@options.step10 ?= true
 			@options.triggerPagenumber ?= true
 
-			@setCurrentPage 1, true
+			currentPage = if @options.start? and @options.start > 0 then @options.start/@options.rowCount else 1
+			@setCurrentPage currentPage, true
 
 		# ### Render
 		render: ->

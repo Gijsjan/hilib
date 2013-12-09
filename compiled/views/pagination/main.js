@@ -20,7 +20,7 @@
       Pagination.prototype.className = '';
 
       Pagination.prototype.initialize = function() {
-        var _base, _base1;
+        var currentPage, _base, _base1;
         Pagination.__super__.initialize.apply(this, arguments);
         if ((_base = this.options).step10 == null) {
           _base.step10 = true;
@@ -28,7 +28,8 @@
         if ((_base1 = this.options).triggerPagenumber == null) {
           _base1.triggerPagenumber = true;
         }
-        return this.setCurrentPage(1, true);
+        currentPage = (this.options.start != null) && this.options.start > 0 ? this.options.start / this.options.rowCount : 1;
+        return this.setCurrentPage(currentPage, true);
       };
 
       Pagination.prototype.render = function() {
