@@ -111,6 +111,7 @@
           if (_this.options.wrap) {
             _this.iframeBody.style.whiteSpace = 'normal';
           }
+          _this.setFocus();
           _this.longpress = new Longpress({
             parent: _this.el.querySelector('.ste-body')
           });
@@ -211,7 +212,10 @@
       };
 
       SuperTinyEditor.prototype.setFocus = function() {
-        return Fn.setCursorToEnd(this.iframeBody, this.el.querySelector('iframe').contentWindow);
+        var win;
+        if ((this.iframeBody != null) && (win = this.el.querySelector('iframe').contentWindow)) {
+          return Fn.setCursorToEnd(this.iframeBody, win);
+        }
       };
 
       SuperTinyEditor.prototype.setScrollPercentage = function(percentages) {

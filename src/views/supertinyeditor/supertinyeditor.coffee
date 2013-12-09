@@ -121,6 +121,8 @@ define (require) ->
 				@iframeBody = @iframeDocument.querySelector 'body'
 				@iframeBody.style.whiteSpace = 'normal' if @options.wrap
 
+				@setFocus()
+
 				@longpress = new Longpress
 					parent: @el.querySelector '.ste-body'
 
@@ -228,7 +230,9 @@ define (require) ->
 		# setIframeWidth: (width) -> iframe.style.width = width
 
 		# Set focus to the end of the body text
-		setFocus: -> Fn.setCursorToEnd @iframeBody, @el.querySelector('iframe').contentWindow
+		setFocus: ->
+			if @iframeBody? and win = @el.querySelector('iframe').contentWindow
+				Fn.setCursorToEnd @iframeBody, win
 
 		setScrollPercentage: (percentages) ->
 			contentWindow = @el.querySelector('iframe').contentWindow
