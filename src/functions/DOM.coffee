@@ -93,7 +93,7 @@ define (require) ->
 
 			box
 
-		insertAfter: (newElement, referenceElement) -> referenceElement.parentNode.insertBefore newElement, referenceElement.nextSibling
+		insertAfter: (referenceElement) -> referenceElement.parentNode.insertBefore el, referenceElement.nextSibling
 
 
 		# Example usage:

@@ -108,8 +108,8 @@
           box.bottom = box.top + box.height;
           return box;
         },
-        insertAfter: function(newElement, referenceElement) {
-          return referenceElement.parentNode.insertBefore(newElement, referenceElement.nextSibling);
+        insertAfter: function(referenceElement) {
+          return referenceElement.parentNode.insertBefore(el, referenceElement.nextSibling);
         },
         highlightUntil: function(endNode, highlightClass) {
           if (highlightClass == null) {
