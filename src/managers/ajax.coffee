@@ -7,6 +7,7 @@ define (require) ->
 		# but we want to make a request which shouldn't send the Authorization header. For example
 		# when doing a file upload.
 		token: true
+		tokenType: 'SimpleAuth'
 
 	token: null
 
@@ -44,6 +45,6 @@ define (require) ->
 			crossDomain: true
 
 		if @token? and options.token
-			ajaxArgs.beforeSend = (xhr) => xhr.setRequestHeader 'Authorization', "SimpleAuth #{@token}"
+			ajaxArgs.beforeSend = (xhr) => xhr.setRequestHeader 'Authorization', "#{options.tokenType} #{@token}"
 
 		$.ajax $.extend ajaxArgs, args

@@ -12,16 +12,12 @@ define (require) ->
 			_.extend @, Backbone.Events
 			_.extend @, Pubsub
 
-		set: (token) ->
-			@token = token
-			sessionStorage.setItem 'huygens_token', token
+		set: (@token) -> sessionStorage.setItem 'huygens_token', @token
 
 		get: ->	
 			@token = sessionStorage.getItem 'huygens_token' if not @token?
 
-			if not @token?
-				# @publish 'unauthorized'
-				return false
+			return false if not @token?
 
 			@token
 

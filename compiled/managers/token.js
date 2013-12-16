@@ -14,7 +14,7 @@
 
       Token.prototype.set = function(token) {
         this.token = token;
-        return sessionStorage.setItem('huygens_token', token);
+        return sessionStorage.setItem('huygens_token', this.token);
       };
 
       Token.prototype.get = function() {

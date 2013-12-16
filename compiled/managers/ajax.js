@@ -4,7 +4,8 @@
     $ = require('jquery');
     $.support.cors = true;
     defaultOptions = {
-      token: true
+      token: true,
+      tokenType: 'SimpleAuth'
     };
     return {
       token: null,
@@ -58,7 +59,7 @@
         };
         if ((this.token != null) && options.token) {
           ajaxArgs.beforeSend = function(xhr) {
-            return xhr.setRequestHeader('Authorization', "SimpleAuth " + _this.token);
+            return xhr.setRequestHeader('Authorization', "" + options.tokenType + " " + _this.token);
           };
         }
         return $.ajax($.extend(ajaxArgs, args));
