@@ -69,7 +69,7 @@
           left = 0;
           top = 0;
           loopEl = el;
-          while (loopEl !== parent) {
+          while ((loopEl != null) && loopEl !== parent) {
             if (this.hasDescendant(parent)) {
               break;
             }
