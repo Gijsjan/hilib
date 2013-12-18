@@ -28,7 +28,7 @@
         if ((_base1 = this.options).triggerPagenumber == null) {
           _base1.triggerPagenumber = true;
         }
-        currentPage = (this.options.start != null) && this.options.start > 0 ? this.options.start / this.options.rowCount : 1;
+        currentPage = (this.options.start != null) && this.options.start > 0 ? (this.options.start / this.options.rowCount) + 1 : 1;
         return this.setCurrentPage(currentPage, true);
       };
 
