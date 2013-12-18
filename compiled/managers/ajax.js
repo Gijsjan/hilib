@@ -1,14 +1,13 @@
 (function() {
   define(function(require) {
-    var $, defaultOptions;
+    var $, defaultOptions, token;
     $ = require('jquery');
     $.support.cors = true;
+    token = require('hilib/managers/token');
     defaultOptions = {
-      token: true,
-      tokenType: 'SimpleAuth'
+      token: true
     };
     return {
-      token: null,
       get: function(args, options) {
         if (options == null) {
           options = {};
@@ -57,9 +56,9 @@
           processData: false,
           crossDomain: true
         };
-        if ((this.token != null) && options.token) {
+        if (options.token) {
           ajaxArgs.beforeSend = function(xhr) {
-            return xhr.setRequestHeader('Authorization', "" + options.tokenType + " " + _this.token);
+            return xhr.setRequestHeader('Authorization', "" + (token.getType()) + " " + (token.get()));
           };
         }
         return $.ajax($.extend(ajaxArgs, args));

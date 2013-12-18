@@ -2,14 +2,13 @@ define (require) ->
 	$ = require 'jquery'
 	$.support.cors = true
 
+	token = require 'hilib/managers/token'
+
 	defaultOptions =
 		# A use case for the token option is when we have a project which uses tokens to authorize,
 		# but we want to make a request which shouldn't send the Authorization header. For example
 		# when doing a file upload.
 		token: true
-		tokenType: 'SimpleAuth'
-
-	token: null
 
 	get: (args, options={}) ->
 		@fire 'get', args, options
@@ -44,7 +43,7 @@ define (require) ->
 			processData: false
 			crossDomain: true
 
-		if @token? and options.token
-			ajaxArgs.beforeSend = (xhr) => xhr.setRequestHeader 'Authorization', "#{options.tokenType} #{@token}"
+		if options.token
+			ajaxArgs.beforeSend = (xhr) => xhr.setRequestHeader 'Authorization', "#{token.getType()} #{token.get()}"
 
 		$.ajax $.extend ajaxArgs, args
