@@ -12,9 +12,17 @@
         _.extend(this, Pubsub);
       }
 
-      Token.prototype.set = function(token) {
+      Token.prototype.set = function(token, type) {
         this.token = token;
+        if (type == null) {
+          type = 'SimpleAuth';
+        }
+        sessionStorage.setItem('huygens_token_type', type);
         return sessionStorage.setItem('huygens_token', this.token);
+      };
+
+      Token.prototype.getType = function() {
+        return sessionStorage.getItem('huygens_token_type');
       };
 
       Token.prototype.get = function() {
@@ -28,7 +36,8 @@
       };
 
       Token.prototype.clear = function() {
-        return sessionStorage.removeItem('huygens_token');
+        sessionStorage.removeItem('huygens_token');
+        return sessionStorage.removeItem('huygens_token_type');
       };
 
       return Token;
