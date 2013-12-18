@@ -3,6 +3,9 @@
 	padding 0 0 10px 0
 	font 12px Verdana, Arial, Helvetica, sans-serif
 	white-space nowrap
+	
+	&.wrap
+		white-space normal
 
 .supertinyeditor
 	// html, body, iframe
@@ -11,6 +14,7 @@
 	iframe
 		min-height 46px
 		border none
+
 		// overflow-x hidden
 
 		// body
@@ -36,7 +40,7 @@
 			height 30px
 			background #ccc
 
-		.ste-control, .ste-control-diacritics 
+		.ste-control, .ste-control-diacritics, .ste-control-wordwrap
 			float left
 			width 24px
 			height 30px
@@ -71,6 +75,9 @@
 				background-position 0px -540px
 			&.redo
 				background-position 0px -570px
+		
+		.ste-control-wordwrap
+			background-position 0px -810px
 
 		.ste-control-diacritics
 			&.diacritics
@@ -87,13 +94,27 @@
 			border-radius 6px
 			box-shadow 1px 1px 1px #CCC
 
-
 			&:hover 
 				color #444
 				background-color #DDD
 
-			&[data-action="save"]:hover
-				color green
+			&[data-action="save"]
+				color #CCC
+				box-shadow none
+
+				&:hover
+					color #CCC
+					background-color inherit
+					cursor default
+				
+				&.active
+					color #666
+					box-shadow 1px 1px 1px #CCC
+
+					&:hover
+						background-color #DDD
+						cursor pointer
+						color green
 
 			&[data-action="cancel"]:hover
 				color orange

@@ -40,6 +40,8 @@ define (require) ->
 			@options.height ?= '200'
 			@options.wrap ?= false
 
+			@on 'button:save', => # TODO Deactive save button
+
 			@render()
 
 		# ### Render
@@ -85,6 +87,12 @@ define (require) ->
 					div.appendChild diacriticsUL
 
 					@$currentHeader.append div
+				else if controlName is 'wordwrap'
+					div.className = 'ste-control-wordwrap'
+					div.setAttribute 'title', 'Word wrap'
+					div.setAttribute 'data-action', controlName
+
+					@$currentHeader.append div
 				# Create a button
 				else if controlName.substr(0, 2) is 'b_'
 					controlName = controlName.substr(2)
@@ -102,7 +110,6 @@ define (require) ->
 
 		# The iframe is already present (in the template), but has to be filled with a document.
 		renderIframe: ->
-			
 			iframe = document.createElement 'iframe'
 			iframe.style.width = @options.width + 'px'
 			iframe.style.height = @options.height + 'px'
@@ -149,16 +156,25 @@ define (require) ->
 		events: ->
 			'click .ste-control': 'controlClicked'
 			'click .ste-control-diacritics ul.diacritics li': 'diacriticClicked'
+			'click .ste-control-wordwrap': 'wordwrapClicked'
 			'click .ste-button': 'buttonClicked'
+
+		buttonClicked: (ev) ->
+			action = ev.currentTarget.getAttribute 'data-action'
+			
+			if action isnt 'save' or (action is 'save' and $(ev.currentTarget).hasClass('active'))
+				@trigger 'button:' + action
 
 		controlClicked: (ev) ->
 			action = ev.currentTarget.getAttribute 'data-action'
 			@iframeDocument.execCommand action, false, null
 			@saveHTMLToModel()
+			@trigger 'control:' + action
 
-		buttonClicked: (ev) ->
-			action = ev.currentTarget.getAttribute 'data-action'
-			@trigger action
+		wordwrapClicked: (ev) ->
+			iframeBody = $ @iframeBody
+			iframeBody.toggleClass 'wrap'
+			@trigger 'control:wordwrap', iframeBody.hasClass 'wrap'
 
 		diacriticClicked: (ev) ->
 			# Get the selection from the contentWindow
@@ -178,13 +194,18 @@ define (require) ->
 
 			@saveHTMLToModel()
 
+			@trigger 'control:diacritic', textNode
+
 		# ### Methods
 
 		destroy: ->
 			@longpress.destroy()
 			@remove()
 
-		saveHTMLToModel: -> @model.set @options.htmlAttribute, @iframeBody.innerHTML
+		saveHTMLToModel: -> 
+			# TODO Active save button
+			@$('[data-action="save"]').addClass 'active'
+			@model.set @options.htmlAttribute, @iframeBody.innerHTML
 
 		triggerScroll: ->
 			iframe = @el.querySelector 'iframe'

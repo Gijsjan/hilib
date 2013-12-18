@@ -23,7 +23,8 @@
       SuperTinyEditor.prototype.className = 'supertinyeditor';
 
       SuperTinyEditor.prototype.initialize = function() {
-        var _base, _base1, _base2, _base3, _base4;
+        var _base, _base1, _base2, _base3, _base4,
+          _this = this;
         SuperTinyEditor.__super__.initialize.apply(this, arguments);
         if ((_base = this.options).cssFile == null) {
           _base.cssFile = '';
@@ -40,6 +41,7 @@
         if ((_base4 = this.options).wrap == null) {
           _base4.wrap = false;
         }
+        this.on('button:save', function() {});
         return this.render();
       };
 
@@ -76,6 +78,11 @@
               diacritics: diacritics
             });
             div.appendChild(diacriticsUL);
+            _results.push(this.$currentHeader.append(div));
+          } else if (controlName === 'wordwrap') {
+            div.className = 'ste-control-wordwrap';
+            div.setAttribute('title', 'Word wrap');
+            div.setAttribute('data-action', controlName);
             _results.push(this.$currentHeader.append(div));
           } else if (controlName.substr(0, 2) === 'b_') {
             controlName = controlName.substr(2);
@@ -135,21 +142,32 @@
         return {
           'click .ste-control': 'controlClicked',
           'click .ste-control-diacritics ul.diacritics li': 'diacriticClicked',
+          'click .ste-control-wordwrap': 'wordwrapClicked',
           'click .ste-button': 'buttonClicked'
         };
+      };
+
+      SuperTinyEditor.prototype.buttonClicked = function(ev) {
+        var action;
+        action = ev.currentTarget.getAttribute('data-action');
+        if (action !== 'save' || (action === 'save' && $(ev.currentTarget).hasClass('active'))) {
+          return this.trigger('button:' + action);
+        }
       };
 
       SuperTinyEditor.prototype.controlClicked = function(ev) {
         var action;
         action = ev.currentTarget.getAttribute('data-action');
         this.iframeDocument.execCommand(action, false, null);
-        return this.saveHTMLToModel();
+        this.saveHTMLToModel();
+        return this.trigger('control:' + action);
       };
 
-      SuperTinyEditor.prototype.buttonClicked = function(ev) {
-        var action;
-        action = ev.currentTarget.getAttribute('data-action');
-        return this.trigger(action);
+      SuperTinyEditor.prototype.wordwrapClicked = function(ev) {
+        var iframeBody;
+        iframeBody = $(this.iframeBody);
+        iframeBody.toggleClass('wrap');
+        return this.trigger('control:wordwrap', iframeBody.hasClass('wrap'));
       };
 
       SuperTinyEditor.prototype.diacriticClicked = function(ev) {
@@ -163,7 +181,8 @@
         range.setEndAfter(textNode);
         sel.removeAllRanges();
         sel.addRange(range);
-        return this.saveHTMLToModel();
+        this.saveHTMLToModel();
+        return this.trigger('control:diacritic', textNode);
       };
 
       SuperTinyEditor.prototype.destroy = function() {
@@ -172,6 +191,7 @@
       };
 
       SuperTinyEditor.prototype.saveHTMLToModel = function() {
+        this.$('[data-action="save"]').addClass('active');
         return this.model.set(this.options.htmlAttribute, this.iframeBody.innerHTML);
       };
 
