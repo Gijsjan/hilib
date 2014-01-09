@@ -108,6 +108,10 @@
         return modalManager.remove(this);
       };
 
+      Modal.prototype.destroy = function() {
+        return this.close();
+      };
+
       Modal.prototype.fadeOut = function(delay) {
         var speed,
           _this = this;

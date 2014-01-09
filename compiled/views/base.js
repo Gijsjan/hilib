@@ -15,10 +15,17 @@
       }
 
       BaseView.prototype.initialize = function() {
-        return _.extend(this, Pubsub);
+        _.extend(this, Pubsub);
+        return this.subviews = {};
       };
 
       BaseView.prototype.destroy = function() {
+        var name, subview, _ref1;
+        _ref1 = this.subviews;
+        for (name in _ref1) {
+          subview = _ref1[name];
+          subview.destroy();
+        }
         return this.remove();
       };
 

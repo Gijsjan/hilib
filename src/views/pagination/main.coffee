@@ -10,7 +10,7 @@ define (require) ->
 	Fn = require 'hilib/functions/general'
 
 	Views = 
-		Base: require 'views/base'
+		Base: require 'hilib/views/base'
 
 	tpls = require 'hilib/templates'
 

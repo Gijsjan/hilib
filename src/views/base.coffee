@@ -9,4 +9,8 @@ define (require) ->
 		initialize: ->
 			_.extend @, Pubsub # extend the view with pubsub terminology (just aliases for listenTo and trigger)
 
-		destroy: -> @remove()
+			@subviews = {}
+
+		destroy: ->
+			subview.destroy() for name, subview of @subviews
+			@remove()
