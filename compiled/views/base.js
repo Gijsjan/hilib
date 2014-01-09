@@ -15,10 +15,41 @@
       }
 
       BaseView.prototype.initialize = function() {
-        return _.extend(this, Pubsub);
+        var _this = this;
+        _.extend(this, Pubsub);
+        this.subviews = {};
+        console.log(this);
+        this.on('to-cache', function() {
+          var name, subview, _ref1, _results;
+          _this.undelegateEvents();
+          _ref1 = _this.subviews;
+          _results = [];
+          for (name in _ref1) {
+            subview = _ref1[name];
+            _results.push(subview.trigger('to-cache'));
+          }
+          return _results;
+        });
+        return this.on('from-cache', function() {
+          var name, subview, _ref1, _results;
+          _this.delegateEvents();
+          _ref1 = _this.subviews;
+          _results = [];
+          for (name in _ref1) {
+            subview = _ref1[name];
+            _results.push(subview.trigger('from-cache'));
+          }
+          return _results;
+        });
       };
 
       BaseView.prototype.destroy = function() {
+        var name, subview, _ref1;
+        _ref1 = this.subviews;
+        for (name in _ref1) {
+          subview = _ref1[name];
+          subview.destroy();
+        }
         return this.remove();
       };
 

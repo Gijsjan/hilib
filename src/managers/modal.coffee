@@ -35,6 +35,7 @@ define (require) ->
 			modal.trigger 'removed'
 
 			modal.off()
+
 			# Call Backbone.View's remove function.
 			modal.remove()
 

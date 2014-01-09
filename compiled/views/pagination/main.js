@@ -6,7 +6,7 @@
     var Fn, Pagination, Views, tpls, _ref;
     Fn = require('hilib/functions/general');
     Views = {
-      Base: require('views/base')
+      Base: require('hilib/views/base')
     };
     tpls = require('hilib/templates');
     return Pagination = (function(_super) {

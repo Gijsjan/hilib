@@ -100,10 +100,14 @@ define (require) ->
 
 		# ### Methods
 
+
 		close: ->
 			# Trigger close before removing the modal, otherwise there won't be a trigger!
 			@trigger 'close'
 			modalManager.remove @
+
+		# Alias for close.
+		destroy: -> @close()
 
 		fadeOut: (delay = 1000) ->
 			# Speed is used for $.fadeOut and to calculate the time at which to @remove the modal.
