@@ -3,10 +3,9 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, BaseView, Pubsub, viewManager, _ref;
+    var Backbone, BaseView, Pubsub, _ref;
     Backbone = require('backbone');
     Pubsub = require('hilib/mixins/pubsub');
-    viewManager = require('hilib/managers/view');
     return BaseView = (function(_super) {
       __extends(BaseView, _super);
 
@@ -16,7 +15,6 @@
       }
 
       BaseView.prototype.initialize = function() {
-        viewManager.register(this);
         return _.extend(this, Pubsub);
       };
 
