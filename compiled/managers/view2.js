@@ -23,8 +23,11 @@
         if (options.prepend == null) {
           options.prepend = false;
         }
+        if (options.cache == null) {
+          options.cache = true;
+        }
         viewHashCode = StringFn.hashCode(View.toString() + JSON.stringify(options));
-        if (!cachedViews.hasOwnProperty(viewHashCode)) {
+        if (!(cachedViews.hasOwnProperty(viewHashCode) && options.cache)) {
           cachedViews[viewHashCode] = new View(options);
         }
         currentView = cachedViews[viewHashCode];
