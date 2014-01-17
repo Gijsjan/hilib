@@ -59,23 +59,31 @@ define (require) ->
 				@$('.modalbody').css 'height', @options.height
 
 				# unless @options.height is 'auto'
-				# 	marginTop = (-1 * parseInt(@options.height, 10)/2)
-				# 	marginTop += '%' if @options.height.slice(-1) is '%'
-				# 	marginTop += 'vh' if @options.height.slice(-2) is 'vh'
-				# 	console.log marginTop
-				# 	@$('.modalbody').css 'margin-top', marginTop
+				# 	offsetTop = (-1 * parseInt(@options.height, 10)/2)
+				# 	offsetTop += '%' if @options.height.slice(-1) is '%'
+				# 	offsetTop += 'vh' if @options.height.slice(-2) is 'vh'
+				# 	console.log offsetTop
+				# 	@$('.modalbody').css 'margin-top', offsetTop
 
 			# Add scrollTop of <body> to the position of the modal if body is scrolled (otherwise modal might be outside viewport)
-			scrollTop = document.querySelector('body').scrollTop
-			viewportHeight = document.documentElement.clientHeight
-			top = (viewportHeight - @$('.modalbody').height())/2
+			# scrollTop = document.querySelector('body').scrollTop
+			# top = (viewportHeight - @$('.modalbody').height())/2
 			# @$('.modalbody').css 'top', top + scrollTop if scrollTop > 0
 
-			# marginTop is calculated based on the .modalbody height, but the height is maxed to the viewportHeight
-			marginTop = Math.max @$('.modalbody').height()/-2, (viewportHeight - 400)*-0.5
+			# offsetTop is calculated based on the .modalbody height, but the height is maxed to the viewportHeight
+			# offsetTop = Math.min (@$('.modalbody').height() + 40)/2, (viewportHeight - 400)*0.5
 
-			@$('.modalbody').css 'margin-top', marginTop
-			@$('.modalbody .body').css 'max-height', viewportHeight - 400
+			viewportHeight = document.documentElement.clientHeight
+
+			offsetTop = @$('.modalbody').outerHeight()/2
+
+			# The offsetTop cannot exceed the bodyTop, because it would be
+			# outside (on the top) the viewport.
+			bodyTop = @$('.modalbody').offset().top
+			offsetTop = bodyTop - 20 if offsetTop > bodyTop
+
+			@$('.modalbody').css 'margin-top', -1 * offsetTop
+			@$('.modalbody .body').css 'max-height', viewportHeight - 100
 
 		# ### Events
 		events:

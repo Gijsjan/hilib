@@ -36,7 +36,7 @@
       };
 
       Modal.prototype.render = function() {
-        var body, data, marginLeft, marginTop, rtpl, scrollTop, top, viewportHeight;
+        var body, bodyTop, data, marginLeft, offsetTop, rtpl, viewportHeight;
         data = _.extend(this.defaultOptions(), this.options);
         rtpl = tpls['hilib/views/modal/main'](data);
         this.$el.html(rtpl);
@@ -64,12 +64,14 @@
         if (this.options.height != null) {
           this.$('.modalbody').css('height', this.options.height);
         }
-        scrollTop = document.querySelector('body').scrollTop;
         viewportHeight = document.documentElement.clientHeight;
-        top = (viewportHeight - this.$('.modalbody').height()) / 2;
-        marginTop = Math.max(this.$('.modalbody').height() / -2, (viewportHeight - 400) * -0.5);
-        this.$('.modalbody').css('margin-top', marginTop);
-        return this.$('.modalbody .body').css('max-height', viewportHeight - 400);
+        offsetTop = this.$('.modalbody').outerHeight() / 2;
+        bodyTop = this.$('.modalbody').offset().top;
+        if (offsetTop > bodyTop) {
+          offsetTop = bodyTop - 20;
+        }
+        this.$('.modalbody').css('margin-top', -1 * offsetTop);
+        return this.$('.modalbody .body').css('max-height', viewportHeight - 100);
       };
 
       Modal.prototype.events = {
