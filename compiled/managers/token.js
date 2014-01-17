@@ -29,9 +29,6 @@
         if (this.token == null) {
           this.token = sessionStorage.getItem('huygens_token');
         }
-        if (this.token == null) {
-          return false;
-        }
         return this.token;
       };
 

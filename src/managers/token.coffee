@@ -21,8 +21,6 @@ define (require) ->
 		get: ->	
 			@token = sessionStorage.getItem 'huygens_token' if not @token?
 
-			return false unless @token?
-
 			@token
 
 		clear: ->
