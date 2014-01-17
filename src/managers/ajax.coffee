@@ -43,7 +43,7 @@ define (require) ->
 			processData: false
 			crossDomain: true
 
-		if options.token
+		if options.token and token.get()?
 			ajaxArgs.beforeSend = (xhr) => xhr.setRequestHeader 'Authorization', "#{token.getType()} #{token.get()}"
 
 		$.ajax $.extend ajaxArgs, args

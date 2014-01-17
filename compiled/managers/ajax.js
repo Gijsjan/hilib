@@ -56,7 +56,7 @@
           processData: false,
           crossDomain: true
         };
-        if (options.token) {
+        if (options.token && (token.get() != null)) {
           ajaxArgs.beforeSend = function(xhr) {
             return xhr.setRequestHeader('Authorization', "" + (token.getType()) + " " + (token.get()));
           };
