@@ -7,7 +7,7 @@ define (require) ->
 		Base: require 'hilib/collections/base'
 
 	Views = 
-		Base: require 'views/base'
+		Base: require 'hilib/views/base'
 
 	# Tpl = require 'hilib/views/form/editablelist/main.jade'
 	tpls = require 'hilib/templates'

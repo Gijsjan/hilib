@@ -10,7 +10,7 @@
 define (require) ->
 
 	Views = 
-		Base: require 'views/base'
+		Base: require 'hilib/views/base'
 
 	# Tpl = require 'hilib/views/form/autosuggest/main.jade'
 	tpls = require 'hilib/templates'

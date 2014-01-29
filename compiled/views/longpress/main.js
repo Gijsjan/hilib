@@ -6,7 +6,7 @@
     var Fn, Longpress, Views, codes, diacritics, shiftcodes, _ref;
     Fn = require('hilib/functions/general');
     Views = {
-      Base: require('views/base')
+      Base: require('hilib/views/base')
     };
     codes = {
       65: 'a',

@@ -8,7 +8,7 @@
     Fn = require('hilib/functions/general');
     dom = require('hilib/functions/DOM');
     Views = {
-      Base: require('views/base')
+      Base: require('hilib/views/base')
     };
     validation = require('hilib/mixins/validation');
     return Form = (function(_super) {

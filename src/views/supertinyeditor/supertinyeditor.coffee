@@ -17,7 +17,7 @@ define (require) ->
 	Longpress = require 'hilib/views/longpress/main'
 
 	Views = 
-		Base: require 'views/base'
+		Base: require 'hilib/views/base'
 
 	tpls = require 'hilib/templates'
 	# console.log tpls

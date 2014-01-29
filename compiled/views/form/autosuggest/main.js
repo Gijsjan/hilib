@@ -5,7 +5,7 @@
   define(function(require) {
     var AutoSuggest, Views, dropdown, tpls, _ref;
     Views = {
-      Base: require('views/base')
+      Base: require('hilib/views/base')
     };
     tpls = require('hilib/templates');
     dropdown = require('hilib/mixins/dropdown/main');

@@ -9,7 +9,7 @@
       Base: require('hilib/collections/base')
     };
     Views = {
-      Base: require('views/base')
+      Base: require('hilib/views/base')
     };
     tpls = require('hilib/templates');
     dropdown = require('hilib/mixins/dropdown/main');
