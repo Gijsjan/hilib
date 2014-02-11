@@ -1,16 +1,17 @@
-define (require) ->
-	Backbone = require 'backbone'
+Backbone = require 'backbone'
 
-	Pubsub = require 'hilib/managers/pubsub'
+Pubsub = require '../mixins/pubsub'
 
-	class Base extends Backbone.Collection
+class Base extends Backbone.Collection
 
-		initialize: ->
-			_.extend @, Pubsub
+	initialize: ->
+		_.extend @, Pubsub
 
-		removeById: (id) ->
-			model = @get id
-			@remove model
+	removeById: (id) ->
+		model = @get id
+		@remove model
 
-		has: (model) -> 
-			if this.get(model.cid)? then true else false
+	has: (model) -> 
+		if this.get(model.cid)? then true else false
+
+module.exports = Base

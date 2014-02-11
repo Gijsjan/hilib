@@ -1,7 +1,6 @@
 # //** COOKIE MANAGER **// Credits: http://www.quirksmode.org/js/cookies.html
 
-define (require) ->
-
+module.exports =
 	get: (name) ->
 		nameEQ = name + "="
 

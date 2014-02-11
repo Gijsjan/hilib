@@ -1,15 +1,15 @@
-define (require) ->
-	$ = require 'jquery'
-	$.support.cors = true
+$ = require 'jquery'
+$.support.cors = true
 
-	token = require 'hilib/managers/token'
+token = require './token'
 
-	defaultOptions =
-		# A use case for the token option is when we have a project which uses tokens to authorize,
-		# but we want to make a request which shouldn't send the Authorization header. For example
-		# when doing a file upload.
-		token: true
+defaultOptions =
+	# A use case for the token option is when we have a project which uses tokens to authorize,
+	# but we want to make a request which shouldn't send the Authorization header. For example
+	# when doing a file upload.
+	token: true
 
+module.exports =
 	get: (args, options={}) ->
 		@fire 'get', args, options
 

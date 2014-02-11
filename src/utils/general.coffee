@@ -1,6 +1,6 @@
-define (require) ->
-	$ = require 'jquery'
+$ = require 'jquery'
 
+module.exports =
 	# Native alternative to $.closest
 	# See http://stackoverflow.com/questions/15329167/closest-ancestor-matching-selector-using-native-dom
 	closest: (el, selector) ->
