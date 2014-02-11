@@ -1,30 +1,20 @@
-define (require) ->
-	Backbone = require 'backbone'
-	_ = require 'underscore'
+class Token
 
-	Pubsub = require 'hilib/managers/pubsub'
+	token: null
 
-	class Token
+	set: (@token, type='SimpleAuth') -> 
+		sessionStorage.setItem 'huygens_token_type', type
+		sessionStorage.setItem 'huygens_token', @token
 
-		token: null
+	getType: -> sessionStorage.getItem 'huygens_token_type'
 
-		constructor: ->
-			_.extend @, Backbone.Events
-			_.extend @, Pubsub
+	get: ->	
+		@token = sessionStorage.getItem 'huygens_token' if not @token?
 
-		set: (@token, type='SimpleAuth') -> 
-			sessionStorage.setItem 'huygens_token_type', type
-			sessionStorage.setItem 'huygens_token', @token
+		@token
 
-		getType: -> sessionStorage.getItem 'huygens_token_type'
+	clear: ->
+		sessionStorage.removeItem 'huygens_token'
+		sessionStorage.removeItem 'huygens_token_type'
 
-		get: ->	
-			@token = sessionStorage.getItem 'huygens_token' if not @token?
-
-			@token
-
-		clear: ->
-			sessionStorage.removeItem 'huygens_token'
-			sessionStorage.removeItem 'huygens_token_type'
-
-	new Token()
+module.exports = new Token()

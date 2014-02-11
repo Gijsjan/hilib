@@ -1,17 +1,15 @@
-define (require) ->
+class History
 
-	class History
+	history: []
 
-		history: []
+	update: ->
+		@history.push window.location.pathname if window.location.pathname isnt '/login'
+		sessionStorage.setItem 'history', JSON.stringify(@history)
 
-		update: ->
-			@history.push window.location.pathname if window.location.pathname isnt '/login'
-			sessionStorage.setItem 'history', JSON.stringify(@history)
+	clear: ->
+		sessionStorage.removeItem 'history'
 
-		clear: ->
-			sessionStorage.removeItem 'history'
+	last: ->
+		@history[@history.length-1]
 
-		last: ->
-			@history[@history.length-1]
-
-	new History()
+module.exports = new History()
