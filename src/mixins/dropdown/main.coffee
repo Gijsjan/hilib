@@ -26,18 +26,18 @@
 #			inputClass
 #			getModel
 #			placeholder
-define (require) ->
 
-	Backbone = require 'backbone'
+Backbone = require 'backbone'
 
-	Fn = require 'hilib/functions/general'
+Fn = require '../../utils/general'
 
-	# Collections =
-		# Options: require 'hilib/mixins/dropdown/options'
-	optionMixin = require 'hilib/mixins/dropdown/options'
+# Collections =
+	# Options: require 'hilib/mixins/dropdown/options'
+optionMixin = require './options'
 
-	tpls = require 'hilib/templates'
+mainTpl = require './main.jade'
 
+module.exports =
 	# ### Initialize
 
 	dropdownInitialize: ->
@@ -112,7 +112,7 @@ define (require) ->
 
 	# (Re)Renders the dropdown list with filtered options.
 	renderOptions: ->
-		rtpl = tpls['hilib/mixins/dropdown/main']
+		rtpl = mainTpl
 			collection: @filtered_options
 			selected: @selected
 		@$optionlist.html rtpl
