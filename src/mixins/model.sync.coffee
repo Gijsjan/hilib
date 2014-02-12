@@ -1,7 +1,7 @@
-define (require) ->
-	ajax = require 'hilib/managers/ajax'
-	token = require 'hilib/managers/token'
-	
+ajax = require '../managers/ajax'
+token = require '../managers/token'
+
+module.exports =
 	syncOverride: (method, model, options) ->
 		if options.attributes?
 			obj = {}

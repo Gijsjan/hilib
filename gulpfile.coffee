@@ -14,7 +14,7 @@ bsify = (path) ->
 		.pipe(browserify(
 			transform: ['coffeeify', 'jadeify']
 			extensions: ['.coffee', '.jade']
-			external: ['jquery', 'backbone', 'underscore']
+			ignore: ['jquery', 'backbone', 'underscore', 'jade/runtime']
 			standalone: 'lib'
 		))
 		.pipe(rename(extname: '.js'))

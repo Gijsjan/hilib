@@ -1,6 +1,6 @@
-define (require) ->
-	Fn = require 'hilib/functions/general'
+Fn = require '../utils/general'
 
+module.exports = 
 	# A validate function we're adding to every model instance we're listening to
 	validate: (attrs, options) ->
 		invalids = []

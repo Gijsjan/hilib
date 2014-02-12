@@ -6,8 +6,7 @@
 # _.extend @, changedSinceLastSave(['title', 'body', 'date'])
 # @initChangedSinceLastSave()
 
-define (require) ->
-
+module.exports =
 	(attrs) ->
 
 		changedSinceLastSave: null
