@@ -35,6 +35,9 @@
     "type": "git",
     "url": "https://github.com/Gijsjan/helpers.git"
   },
+  "browserify": {
+    "transform": ["jadeify", "coffeeify"]
+  },
   "author": "Gijsjan Brouwer",
   "license": "MIT"
 }
