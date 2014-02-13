@@ -1,5 +1,40 @@
+_ = require 'underscore'
+
 module.exports =
 	(el) ->
+		el = document.querySelector(el) if _.isString(el)
+		
+		el: el
+
+		q: (query) ->
+			DOM el.querySelector(query)
+
+		find: (query) ->
+			DOM el.querySelector(query)
+
+		findAll: (query) ->
+			DOM el.querySelectorAll(query)
+
+		html: (html) ->
+			return el.innerHTML unless html?
+
+			# Check if html is an HTMLelement
+			if (html.nodeType is 1 or html.nodeType is 11)
+				el.innerHTML = ''
+				el.appendChild html
+			# Assume html is a String
+			else
+				el.innerHTML = html
+
+
+		hide: -> 
+			el.style.display = 'none'
+			@
+
+		show: (displayType='block') -> 
+			el.style.display = displayType
+			@
+
 		# Native alternative to $.closest
 		# See http://stackoverflow.com/questions/15329167/closest-ancestor-matching-selector-using-native-dom
 		closest: (selector) ->
@@ -7,6 +42,9 @@ module.exports =
 
 			while (el)
 				if (matchesSelector.bind(el)(selector)) then return el else	el = el.parentNode
+
+		append: (childEl) ->
+			el.appendChild childEl
 
 		prepend: (childEl) ->
 			el.insertBefore childEl, el.firstChild
@@ -21,7 +59,7 @@ module.exports =
 			top = 0
 			loopEl = el
 
-			while loopEl isnt parent
+			while loopEl? and loopEl isnt parent
 				# Not every parent is an offsetParent. So in the case the user has passed a non offsetParent as the parent, 
 				# we check if we have passed the parent (by checking if the offsetParent has a descendant which is the parent).
 				break if @hasDescendant parent
@@ -57,7 +95,7 @@ module.exports =
 
 			box
 
-		insertAfter: (newElement, referenceElement) -> referenceElement.parentNode.insertBefore newElement, referenceElement.nextSibling
+		insertAfter: (referenceElement) -> referenceElement.parentNode.insertBefore el, referenceElement.nextSibling
 
 
 		# Example usage:
@@ -100,3 +138,23 @@ module.exports =
 					classNames = ' ' + el.className + ' '
 					classNames = classNames.replace ' ' + highlightClass + ' ', ''
 					el.className = classNames.replace /^\s+|\s+$/g, ''
+
+		hasClass: (name) -> (' ' + el.className + ' ').indexOf(' ' + name + ' ') > -1
+
+		addClass: (name) -> el.className += ' ' + name unless @hasClass name
+
+		removeClass: (name) ->
+			names = ' ' + el.className + ' '
+			names = names.replace ' ' + name + ' ', ''
+			el.className = names.replace /^\s+|\s+$/g, ''
+
+		toggleClass: (name) -> if @hasClass name then @addClass name else @removeClass name
+
+		# http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
+		inViewport: ->
+			rect = el.getBoundingClientRect()
+
+			rect.top >= 0 &&
+			rect.left >= 0 &&
+			rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+			rect.right <= (window.innerWidth || document.documentElement.clientWidth)
