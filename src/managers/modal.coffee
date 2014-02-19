@@ -1,3 +1,5 @@
+$ = require 'jquery'
+
 class ModalManager
 
 	constructor: ->

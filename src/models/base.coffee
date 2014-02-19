@@ -1,9 +1,10 @@
-define (require) ->
-	Backbone = require 'backbone'
+Backbone = require 'backbone'
 
-	Pubsub = require 'hilib/managers/pubsub'
+Pubsub = require '../managers/pubsub'
 
-	class Base extends Backbone.Model
+class BaseModel extends Backbone.Model
 
-		initialize: ->
-			_.extend @, Pubsub
+	initialize: ->
+		_.extend @, Pubsub
+
+module.exports = BaseModel

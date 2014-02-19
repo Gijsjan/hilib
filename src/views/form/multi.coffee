@@ -1,55 +1,57 @@
 # MultiForm is a view for multiple forms, held together in a collection.
 # The view Form is a set of inputs, selects and/or textareas, MultiForm is a collection
 # of sets of inputs, selects and/or textareas. A view can be turned into a MultiForm by extending it.
-define (require) ->
-	Fn = require 'hilib/functions/general'
-	validation = require 'hilib/managers/validation'
-	Form = require 'hilib/views/form/main'
 
-	# ## MultiForm
-	class MultiForm extends Form
+Fn = require '../../utils/general'
+validation = require '../..//managers/validation'
+Form = require './main'
 
-		# ### Events
+# ## MultiForm
+class MultiForm extends Form
 
-		# Extend the events from Form
-		events: -> _.extend super, 
-			'click button.addform': 'addForm'
-			'click button.remove': 'removeForm'
+	# ### Events
 
-		addForm: (ev) -> @collection.add new @Model()
+	# Extend the events from Form
+	events: -> _.extend super, 
+		'click button.addform': 'addForm'
+		'click button.remove': 'removeForm'
 
-		removeForm: (ev) -> @collection.remove @getModel(ev)
+	addForm: (ev) -> @collection.add new @Model()
 
-		# ### Public Methods
-		
-		# Create collection of forms (or more accurate a collection of sets of inputs, selects and textareas).
-		# MultiForm overrides Form.createObject (which creates a model instead of a collection). Is called from Form.
-		createModels: ->
-			@options.value ?= []
+	removeForm: (ev) -> @collection.remove @getModel(ev)
 
-			@collection = new Backbone.Collection @options.value,
-				model: @Model
+	# ### Public Methods
+	
+	# Create collection of forms (or more accurate a collection of sets of inputs, selects and textareas).
+	# MultiForm overrides Form.createObject (which creates a model instead of a collection). Is called from Form.
+	createModels: ->
+		@options.value ?= []
 
-			@trigger 'createModels:finished'
+		@collection = new Backbone.Collection @options.value,
+			model: @Model
 
-		# AddListeners is called from From
-		addListeners: ->
-			# One of the models attributes has changed:
-			@listenTo @collection, 'change', => @triggerChange()
+		@trigger 'createModels:finished'
 
-			# The user has clicked button.addform:
-			@listenTo @collection, 'add', => @render()
+	# AddListeners is called from From
+	addListeners: ->
+		# One of the models attributes has changed:
+		@listenTo @collection, 'change', => @triggerChange()
 
-			# The user has clicked button.remove
-			@listenTo @collection, 'remove', =>
-				@triggerChange()
-				@render()
+		# The user has clicked button.addform:
+		@listenTo @collection, 'add', => @render()
+
+		# The user has clicked button.remove
+		@listenTo @collection, 'remove', =>
+			@triggerChange()
+			@render()
 
 
-		# Helper function to get specific model from collection, depending on the event
-		getModel: (ev) ->
-			cid = $(ev.currentTarget).parents('[data-cid]').attr 'data-cid'
-			@collection.get cid
+	# Helper function to get specific model from collection, depending on the event
+	getModel: (ev) ->
+		cid = $(ev.currentTarget).parents('[data-cid]').attr 'data-cid'
+		@collection.get cid
 
-		# Add and render subform for each form in the collection.
-		addSubform: (attr, View) => @collection.each (model) => @renderSubform attr, View, model
+	# Add and render subform for each form in the collection.
+	addSubform: (attr, View) => @collection.each (model) => @renderSubform attr, View, model
+
+module.exports = MultiForm

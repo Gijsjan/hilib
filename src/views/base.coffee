@@ -1,16 +1,17 @@
-define (require) ->
-	Backbone = require 'backbone'
+Backbone = require 'backbone'
+_ = require 'underscore'
 
-	Pubsub = require 'hilib/mixins/pubsub'
-	# viewManager = require 'hilib/managers/view'
+Pubsub = require '../mixins/pubsub'
 
-	class BaseView extends Backbone.View
+class BaseView extends Backbone.View
 
-		initialize: ->
-			_.extend @, Pubsub # extend the view with pubsub terminology (just aliases for listenTo and trigger)
+	initialize: ->
+		_.extend @, Pubsub # extend the view with pubsub terminology (just aliases for listenTo and trigger)
 
-			@subviews = {}
+		@subviews = {}
 
-		destroy: ->
-			subview.destroy() for name, subview of @subviews
-			@remove()
+	destroy: ->
+		subview.destroy() for name, subview of @subviews
+		@remove()
+
+module.exports = BaseView

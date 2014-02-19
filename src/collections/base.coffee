@@ -1,4 +1,5 @@
 Backbone = require 'backbone'
+_ = require 'underscore'
 
 Pubsub = require '../mixins/pubsub'
 

@@ -1,5 +1,5 @@
 # * TODO: remove underscore and trigger deps, create callback
-
+Backbone = require 'backbone'
 _ = require 'underscore'
 
 class Async

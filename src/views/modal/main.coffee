@@ -7,134 +7,135 @@
 # 	modal.on 'cancel', => cancelAction()
 # 	modal.on 'submit', => modal.messageAndFade 'success', 'Modal submitted!'
 
-define (require) ->
-	Backbone = require 'backbone'
-	# Tpl = require 'text!hilib/views/modal/main.html'
+Backbone = require 'backbone'
+_ = require 'underscore'
+# Tpl = require 'text!hilib/views/modal/main.html'
 
-	# tpl = require 'hilib/views/modal/main.jade'
-	tpls = require 'hilib/templates'
+tpl = require './main.jade'
 
-	dom = require 'hilib/functions/DOM'
-	modalManager = require 'hilib/managers/modal'
-	
-	# ## Modal
-	class Modal extends Backbone.View
-		className: "modal"
+dom = require '../../utils/dom'
+modalManager = require '../../managers/modal'
 
-		defaultOptions: ->
-			title: ''
-			titleClass: ''
-			cancelAndSubmit: true
-			cancelValue: 'Cancel'
-			submitValue: 'Submit'
-			loader: true
+# ## Modal
+class Modal extends Backbone.View
+	className: "modal"
 
-		# ### Initialize
-		initialize: (@options) ->
-			super
-			@render()
+	defaultOptions: ->
+		title: ''
+		titleClass: ''
+		cancelAndSubmit: true
+		cancelValue: 'Cancel'
+		submitValue: 'Submit'
+		loader: true
 
-		# ### Render
-		render: ->
-			data = _.extend @defaultOptions(), @options
+	# ### Initialize
+	initialize: (@options) ->
+		super
+		@render()
 
-			# rtpl = _.template Tpl, data
-			rtpl = tpls['hilib/views/modal/main'] data
-			@$el.html rtpl
+	# ### Render
+	render: ->
+		data = _.extend @defaultOptions(), @options
 
-			body = dom(@el).q('.body')
-			if @options.html then body.html @options.html else body.hide()
+		# rtpl = _.template Tpl, data
+		rtpl = tpl data
+		@$el.html rtpl
 
-			modalManager.add @
+		body = dom(@el).q('.body')
+		if @options.html then body.html @options.html else body.hide()
 
-			if @options.width?
-				@$('.modalbody').css 'width', @options.width
-				marginLeft = (-1 * parseInt(@options.width, 10)/2)
-				marginLeft += '%' if @options.width.slice(-1) is '%'
-				marginLeft += 'vw' if @options.width.slice(-2) is 'vw'
-				marginLeft = @$('.modalbody').width()/-2 if @options.width is 'auto'
-				@$('.modalbody').css 'margin-left', marginLeft
+		modalManager.add @
 
-			if @options.height?
-				@$('.modalbody').css 'height', @options.height
+		if @options.width?
+			@$('.modalbody').css 'width', @options.width
+			marginLeft = (-1 * parseInt(@options.width, 10)/2)
+			marginLeft += '%' if @options.width.slice(-1) is '%'
+			marginLeft += 'vw' if @options.width.slice(-2) is 'vw'
+			marginLeft = @$('.modalbody').width()/-2 if @options.width is 'auto'
+			@$('.modalbody').css 'margin-left', marginLeft
 
-				# unless @options.height is 'auto'
-				# 	offsetTop = (-1 * parseInt(@options.height, 10)/2)
-				# 	offsetTop += '%' if @options.height.slice(-1) is '%'
-				# 	offsetTop += 'vh' if @options.height.slice(-2) is 'vh'
-				# 	console.log offsetTop
-				# 	@$('.modalbody').css 'margin-top', offsetTop
+		if @options.height?
+			@$('.modalbody').css 'height', @options.height
 
-			# Add scrollTop of <body> to the position of the modal if body is scrolled (otherwise modal might be outside viewport)
-			# scrollTop = document.querySelector('body').scrollTop
-			# top = (viewportHeight - @$('.modalbody').height())/2
-			# @$('.modalbody').css 'top', top + scrollTop if scrollTop > 0
+			# unless @options.height is 'auto'
+			# 	offsetTop = (-1 * parseInt(@options.height, 10)/2)
+			# 	offsetTop += '%' if @options.height.slice(-1) is '%'
+			# 	offsetTop += 'vh' if @options.height.slice(-2) is 'vh'
+			# 	console.log offsetTop
+			# 	@$('.modalbody').css 'margin-top', offsetTop
 
-			# offsetTop is calculated based on the .modalbody height, but the height is maxed to the viewportHeight
-			# offsetTop = Math.min (@$('.modalbody').height() + 40)/2, (viewportHeight - 400)*0.5
+		# Add scrollTop of <body> to the position of the modal if body is scrolled (otherwise modal might be outside viewport)
+		# scrollTop = document.querySelector('body').scrollTop
+		# top = (viewportHeight - @$('.modalbody').height())/2
+		# @$('.modalbody').css 'top', top + scrollTop if scrollTop > 0
 
-			viewportHeight = document.documentElement.clientHeight
+		# offsetTop is calculated based on the .modalbody height, but the height is maxed to the viewportHeight
+		# offsetTop = Math.min (@$('.modalbody').height() + 40)/2, (viewportHeight - 400)*0.5
 
-			offsetTop = @$('.modalbody').outerHeight()/2
+		viewportHeight = document.documentElement.clientHeight
 
-			# The offsetTop cannot exceed the bodyTop, because it would be
-			# outside (on the top) the viewport.
-			bodyTop = @$('.modalbody').offset().top
-			offsetTop = bodyTop - 20 if offsetTop > bodyTop
+		offsetTop = @$('.modalbody').outerHeight()/2
 
-			@$('.modalbody').css 'margin-top', -1 * offsetTop
-			@$('.modalbody .body').css 'max-height', viewportHeight - 100
+		# The offsetTop cannot exceed the bodyTop, because it would be
+		# outside (on the top) the viewport.
+		bodyTop = @$('.modalbody').offset().top
+		offsetTop = bodyTop - 20 if offsetTop > bodyTop
 
-		# ### Events
-		events:
-			"click button.submit": 'submit'
-			"click button.cancel": -> @cancel()
-			"click .overlay": -> @cancel()
-			"keydown input": (ev) ->
-				if ev.keyCode is 13
-					ev.preventDefault()
-					@submit ev
+		@$('.modalbody').css 'margin-top', -1 * offsetTop
+		@$('.modalbody .body').css 'max-height', viewportHeight - 100
 
-		submit: (ev) ->
-			el = dom(ev.currentTarget)
-			unless el.hasClass 'loader'
-				@el.querySelector('button.cancel').style.display = 'none'
-				el.addClass 'loader'
-				@trigger 'submit'
+	# ### Events
+	events:
+		"click button.submit": 'submit'
+		"click button.cancel": -> @cancel()
+		"click .overlay": -> @cancel()
+		"keydown input": (ev) ->
+			if ev.keyCode is 13
+				ev.preventDefault()
+				@submit ev
 
-		cancel: ->
-			@trigger 'cancel'
-			@close()
+	submit: (ev) ->
+		el = dom(ev.currentTarget)
+		unless el.hasClass 'loader'
+			@el.querySelector('button.cancel').style.display = 'none'
+			el.addClass 'loader'
+			@trigger 'submit'
 
-		# ### Methods
+	cancel: ->
+		@trigger 'cancel'
+		@close()
+
+	# ### Methods
 
 
-		close: ->
-			# Trigger close before removing the modal, otherwise there won't be a trigger!
-			@trigger 'close'
-			modalManager.remove @
+	close: ->
+		# Trigger close before removing the modal, otherwise there won't be a trigger!
+		@trigger 'close'
+		modalManager.remove @
 
-		# Alias for close.
-		destroy: -> @close()
+	# Alias for close.
+	destroy: -> @close()
 
-		fadeOut: (delay = 1000) ->
-			# Speed is used for $.fadeOut and to calculate the time at which to @remove the modal.
-			# Set speed to 0 if delay is 0.
-			speed = if delay is 0 then 0 else 500
+	fadeOut: (delay = 1000) ->
+		# Speed is used for $.fadeOut and to calculate the time at which to @remove the modal.
+		# Set speed to 0 if delay is 0.
+		speed = if delay is 0 then 0 else 500
 
-			# Fade out the modal body (not the overlay!) at given speed.
-			@$(".modalbody").delay(delay).fadeOut speed
-			
-			# Use setTimeout to @remove before $.fadeOut is completely finished, otherwise is interferes with the overlay
-			setTimeout (=> @close()), delay + speed - 100
+		# Fade out the modal body (not the overlay!) at given speed.
+		@$(".modalbody").delay(delay).fadeOut speed
+		
+		# Use setTimeout to @remove before $.fadeOut is completely finished, otherwise is interferes with the overlay
+		setTimeout (=> @close()), delay + speed - 100
 
-		message: (type, message) ->
-			return console.error("Unknown message type!")  if ["success", "warning", "error"].indexOf(type) is -1
-			@$("p.message").show()
-			@$("p.message").html(message).addClass type
+	message: (type, message) ->
+		return console.error("Unknown message type!")  if ["success", "warning", "error"].indexOf(type) is -1
+		@$("p.message").show()
+		@$("p.message").html(message).addClass type
 
-		messageAndFade: (type, message, delay) ->
-			@$(".modalbody .body").hide()
-			@$("footer").hide()
-			@message type, message
-			@fadeOut delay
+	messageAndFade: (type, message, delay) ->
+		@$(".modalbody .body").hide()
+		@$("footer").hide()
+		@message type, message
+		@fadeOut delay
+
+module.exports = Modal
