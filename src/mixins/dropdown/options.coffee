@@ -1,8 +1,7 @@
 # Mixin for Backbone.Collections that are used in a dropdown view.
 #
 # ## DropdownOptions mixin
-define (require) ->
-
+module.exports =
 	dropdownOptionsInitialize: -> @resetCurrentOption()
 
 	resetCurrentOption: -> @currentOption = null

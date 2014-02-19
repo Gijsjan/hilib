@@ -28,6 +28,8 @@
 #			placeholder
 
 Backbone = require 'backbone'
+_ = require 'underscore'
+$ = require 'jquery'
 
 Fn = require '../../utils/general'
 
