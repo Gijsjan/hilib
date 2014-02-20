@@ -40,8 +40,7 @@
   "browserify": {
     "transform": [
       "jadeify",
-      "coffeeify",
-      "brfs"
+      "coffeeify"
     ]
   },
   "author": "Gijsjan Brouwer",
