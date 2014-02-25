@@ -1,4 +1,5 @@
 $ = require 'jquery'
+_ = require 'underscore'
 
 module.exports =
 	# Native alternative to $.closest

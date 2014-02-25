@@ -7,10 +7,10 @@ module.exports = DOM =
 		el: el
 
 		q: (query) ->
-			DOM el.querySelector(query)
+			DOM query
 
 		find: (query) ->
-			DOM el.querySelector(query)
+			DOM query
 
 		findAll: (query) ->
 			DOM el.querySelectorAll(query)
@@ -27,11 +27,12 @@ module.exports = DOM =
 				el.innerHTML = html
 
 
-		hide: -> 
+		hide: ->
 			el.style.display = 'none'
 			@
 
-		show: (displayType='block') -> 
+		show: (displayType='block') ->
+			console.log 'show'
 			el.style.display = displayType
 			@
 

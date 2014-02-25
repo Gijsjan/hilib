@@ -70,11 +70,14 @@ class ComboList extends Views.Base
 	events: -> _.extend @dropdownEvents(), 
 		'click li.selected span': 'removeSelected'
 		'click button.add': 'createModel'
-		'keyup input': 'toggleButton'
+		'keyup input': 'toggleAddButton'
 
-	toggleButton: (ev) ->
+	toggleAddButton: (ev) ->
+		return unless @settings.mutable
+
 		button = dom(@el).q('button')
-		if button? and ev.currentTarget.value.length > 1 and ev.keyCode isnt 13
+
+		if ev.currentTarget.value.length > 1 and ev.keyCode isnt 13
 			button.show('inline-block')
 		else
 			button.hide()
