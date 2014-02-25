@@ -9,15 +9,16 @@
 
 Backbone = require 'backbone'
 _ = require 'underscore'
+$ = require 'jquery'
 # Tpl = require 'text!hilib/views/modal/main.html'
 
 tpl = require './main.jade'
 
-dom = require '../../utils/dom'
 modalManager = require '../../managers/modal'
 
 # ## Modal
 class Modal extends Backbone.View
+
 	className: "modal"
 
 	defaultOptions: ->
@@ -41,8 +42,8 @@ class Modal extends Backbone.View
 		rtpl = tpl data
 		@$el.html rtpl
 
-		body = dom(@el).q('.body')
-		if @options.html then body.html @options.html else body.hide()
+		body = @$('.body')
+		if @options.html? then body.html @options.html else body.hide()
 
 		modalManager.add @
 
@@ -82,7 +83,9 @@ class Modal extends Backbone.View
 		offsetTop = bodyTop - 20 if offsetTop > bodyTop
 
 		@$('.modalbody').css 'margin-top', -1 * offsetTop
-		@$('.modalbody .body').css 'max-height', viewportHeight - 100
+		@$('.modalbody .body').css 'max-height', viewportHeight - 175
+
+		@
 
 	# ### Events
 	events:
@@ -95,10 +98,10 @@ class Modal extends Backbone.View
 				@submit ev
 
 	submit: (ev) ->
-		el = dom(ev.currentTarget)
-		unless el.hasClass 'loader'
-			@el.querySelector('button.cancel').style.display = 'none'
-			el.addClass 'loader'
+		target = $(ev.currentTarget)
+		unless target.hasClass 'loader'
+			target.addClass 'loader'
+			@$('button.cancel').hide()
 			@trigger 'submit'
 
 	cancel: ->

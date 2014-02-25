@@ -1,7 +1,7 @@
 _ = require 'underscore'
 
-module.exports = DOM =
-	(el) ->
+module.exports =
+	DOM = (el) ->
 		el = document.querySelector(el) if _.isString(el)
 		
 		el: el
