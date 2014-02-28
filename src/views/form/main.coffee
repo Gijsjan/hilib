@@ -9,9 +9,9 @@
 
 Backbone = require 'backbone'
 _ = require 'underscore'
+$ = require 'jquery'
 
 Fn = require '../../utils/general'
-dom = require '../../utils/dom'
 Views = 
 	Base: require '../base'
 
@@ -97,7 +97,7 @@ class Form extends Views.Base
 	submit: (ev) ->
 		ev.preventDefault()
 
-		el = dom(ev.currentTarget)
+		el = $(ev.currentTarget)
 
 		unless el.hasClass 'loader'
 			el.addClass 'loader'
@@ -105,11 +105,11 @@ class Form extends Views.Base
 			# After save we trigger the save:success so the instantiated Form view can capture it and take action.
 			@model.save [],
 				success: (model, response, options) =>
-					dom(ev.currentTarget).removeClass 'loader'
+					$(ev.currentTarget).removeClass 'loader'
 					@trigger 'save:success', model, response, options
 					@reset()
 				error: (model, xhr, options) => 
-					dom(ev.currentTarget).removeClass 'loader'
+					$(ev.currentTarget).removeClass 'loader'
 					@trigger 'save:error', model, xhr, options
 
 	# ### Render
@@ -184,8 +184,8 @@ class Form extends Views.Base
 		_.extend @, validation
 
 		@validator
-			invalid: (model, attr, msg) => 
-				dom(@el).q('button[name="submit"]').removeClass 'loader'
+			invalid: (model, attr, msg) =>
+				@$('button[name="submit"]').removeClass 'loader'
 				@$("[data-model-id='#{model.cid}'] [name='#{attr}']").addClass('invalid').attr 'title', msg
 			
 		### @on 'validator:validated', => $('button.save').prop('disabled', false).removeAttr('title') ###
