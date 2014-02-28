@@ -33,6 +33,8 @@ class Pagination extends Views.Base
 		@options.pageCount = Math.ceil @options.resultCount / @options.rowCount
 		@el.innerHTML = tpl @options
 
+		@$el.hide() if @options.pageCount <= 1
+
 		@
 
 	# ### Events
