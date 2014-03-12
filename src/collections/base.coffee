@@ -13,6 +13,6 @@ class Base extends Backbone.Collection
 		@remove model
 
 	has: (model) -> 
-		if this.get(model.cid)? then true else false
+		if @get(model.cid)? then true else false
 
 module.exports = Base
