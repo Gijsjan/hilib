@@ -28,6 +28,7 @@ class Modal extends Backbone.View
 		cancelValue: 'Cancel'
 		submitValue: 'Submit'
 		loader: true
+		focusOnFirstInput: true
 
 	# ### Initialize
 	initialize: (@options) ->
@@ -36,10 +37,9 @@ class Modal extends Backbone.View
 
 	# ### Render
 	render: ->
-		data = _.extend @defaultOptions(), @options
+		@options = _.extend @defaultOptions(), @options
 
-		# rtpl = _.template Tpl, data
-		rtpl = tpl data
+		rtpl = tpl @options
 		@$el.html rtpl
 
 		body = @$('.body')
@@ -84,6 +84,10 @@ class Modal extends Backbone.View
 
 		@$('.modalbody').css 'margin-top', -1 * offsetTop
 		@$('.modalbody .body').css 'max-height', viewportHeight - 175
+
+		if @options.focusOnFirstInput
+			firstInput = @$('input[type="text"]').first()
+			firstInput.focus() if firstInput.length > 0
 
 		@
 
