@@ -167,12 +167,15 @@ DOM = (el) ->
 	toggleClass: (name) -> if @hasClass name then @addClass name else @removeClass name
 
 	# http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
-	inViewport: ->
+	inViewport: (parent) ->
+		win = parent ? window
+		doc = parent ? document.documentElement
+
 		rect = el.getBoundingClientRect()
 
 		rect.top >= 0 &&
 		rect.left >= 0 &&
-		rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-		rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+		rect.bottom <= (win.innerHeight || doc.clientHeight) &&
+		rect.right <= (win.innerWidth || doc.clientWidth)
 
 module.exports = DOM
