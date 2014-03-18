@@ -51,6 +51,7 @@ class Pagination extends Views.Base
 
 	# ### Methods
 
+	# TODO Change to setPage
 	setCurrentPage: (pageNumber, silent=false) ->
 		if not @triggerPagenumber
 			direction = if pageNumber < @options.currentPage then 'prev' else 'next'
