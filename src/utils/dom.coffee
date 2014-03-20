@@ -35,9 +35,12 @@ DOM = (el) ->
 		@
 
 	toggle: (displayType='block', show) ->
-		displayType = 'none' if el.style.display is displayType or !show
+		dt = if el.style.display is displayType then 'none' else displayType
 
-		el.style.display = displayType
+		if show?
+			dt = if show then displayType else 'none'
+
+		el.style.display = dt
 
 		@
 
