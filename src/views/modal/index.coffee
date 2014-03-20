@@ -33,6 +33,11 @@ class Modal extends Backbone.View
 	# ### Initialize
 	initialize: (@options) ->
 		super
+
+		# We have to call this option customClassName because @options.className
+		# will replace 'modal' as className.
+		@$el.addClass @options.customClassName if @options.customClassName
+
 		@render()
 
 	# ### Render
