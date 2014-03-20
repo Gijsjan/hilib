@@ -37,7 +37,7 @@ class SuperTinyEditor extends Views.Base
 
 		@options.cssFile ?= ''
 		@options.html ?= ''
-		@options.width ?= '300'
+		@options.width ?= '320'
 		@options.height ?= '200'
 		@options.wrap ?= false
 
@@ -229,15 +229,7 @@ class SuperTinyEditor extends Views.Base
 	setInnerHTML: (html) ->
 		@iframeBody.innerHTML = html
 
-		# Set iframe height to scrollHeight
-		# iframe = @el.querySelector 'iframe'
-		# scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
-		# iframe.style.height = scrollHeight + 15 + 'px'
-
-	# setHTML: (html) -> 
-	# 	@setFocus()
-	# 	@iframeBody.innerHTML = html
-
+	# TODO rename to setHeight, setWidth
 	setIframeHeight: (height) ->
 		iframe = @el.querySelector 'iframe'
 		iframe.style.height = height + 'px'
@@ -245,11 +237,6 @@ class SuperTinyEditor extends Views.Base
 	setIframeWidth: (width) ->
 		iframe = @el.querySelector 'iframe'
 		iframe.style.width = width + 'px'
-		# iframe = @el.querySelector 'iframe'
-		# scrollHeight = iframe.contentWindow.document.documentElement.scrollHeight
-		# iframe.style.height = scrollHeight + 15 + 'px'
-
-	# setIframeWidth: (width) -> iframe.style.width = width
 
 	# Set focus to the end of the body text
 	setFocus: ->
