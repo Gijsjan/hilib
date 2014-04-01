@@ -16,6 +16,18 @@ tpl = require './main.jade'
 
 modalManager = require '../../managers/modal'
 
+# OPTIONS
+# customClassName
+# html
+# width
+# height
+# title
+# titleClass
+# cancelAndSubmit
+# cancelValue
+# submitValue
+# focusOnFirstInput
+
 # ## Modal
 class Modal extends Backbone.View
 
@@ -23,27 +35,39 @@ class Modal extends Backbone.View
 
 	defaultOptions: ->
 		title: ''
+
+		# Deprecated by customClassName?
 		titleClass: ''
+
+		# Show cancel and submit button.
 		cancelAndSubmit: true
+
 		cancelValue: 'Cancel'
 		submitValue: 'Submit'
-		loader: true
+
+		# Add a className to top level to support styling and DOM manipulation. 
+		customClassName: ''
+
+		# Set the focus to the first <input> when the modal is shown.
 		focusOnFirstInput: true
 
+		# If the overlay is clicked, cancel is triggered. Defaults to true.
+		clickOverlay: true
+
 	# ### Initialize
-	initialize: (@options) ->
+	initialize: (@options={}) ->
 		super
+
+		@options = _.extend @defaultOptions(), @options
 
 		# We have to call this option customClassName because @options.className
 		# will replace 'modal' as className.
-		@$el.addClass @options.customClassName if @options.customClassName
+		@$el.addClass @options.customClassName if @options.customClassName.length > 0
 
 		@render()
 
 	# ### Render
 	render: ->
-		@options = _.extend @defaultOptions(), @options
-
 		rtpl = tpl @options
 		@$el.html rtpl
 
@@ -99,8 +123,8 @@ class Modal extends Backbone.View
 	# ### Events
 	events:
 		"click button.submit": 'submit'
-		"click button.cancel": -> @cancel()
-		"click .overlay": -> @cancel()
+		"click button.cancel": "cancel"
+		"click .overlay": -> @cancel() if @options.clickOverlay
 		"keydown input": (ev) ->
 			if ev.keyCode is 13
 				ev.preventDefault()
@@ -113,7 +137,9 @@ class Modal extends Backbone.View
 			@$('button.cancel').hide()
 			@trigger 'submit'
 
-	cancel: ->
+	cancel: (ev) ->
+		ev.preventDefault() if ev?
+
 		@trigger 'cancel'
 		@close()
 
