@@ -2,6 +2,8 @@
 #
 # form = new Views.Form
 # 	tpl: Templates.FormTpl
+#	tplData:
+#		key: value
 # 	model: @model (or Models.User)
 # form.on 'change', => doThis()
 # form.on 'save:success', => doThat()
@@ -17,20 +19,30 @@ Views =
 
 validation = require '../../mixins/validation'
 
+# OPTIONS
+# subformConfig
+# Model
+# model
+# tpl
+# tplData
+# value
+# saveOnSubmit When form is submitted, save the model. Defaults to true.
+
 # ## Form
 class Form extends Views.Base
 
-	# noop
-	customAdd: -> console.error 'Form.customAdd is not implemented!'
-
 	# Overwritten by subclass
-	className: 'form'
+	tagName: 'form'
+
+	className: 'hilib'
 
 	# ### Initialize
 
 	# @Model is used by Form to instanciate @model and by MultiForm as the model for @collection. If no @Model is given, use Backbone.Model.
-	initialize: ->
+	initialize: (@options={}) ->
 		super
+
+		@options.saveOnSubmit ?= true
 
 		@subformConfig ?= @options.subformConfig
 		@subformConfig ?= {}
@@ -53,65 +65,6 @@ class Form extends Views.Base
 		@addListeners()
 
 
-	# ### Events
-
-	# MultiForm extends the events.
-	events: ->
-		evs = {}
-
-		# * TODO: Change selector to "change [data-cid] textarea" and remove data-view-id and replace with model-id
-		# * TODO: Fix these selectors! I changed the selector, but this should work for all forms, now elaborate is broken and marginal scholarship works.
-
-
-		# evs['change [data-model-id="'+@model.cid+'"] textarea'] = 'inputChanged'
-		# evs['change [data-model-id="'+@model.cid+'"] input'] = 'inputChanged'
-		# evs['change [data-model-id="'+@model.cid+'"] select'] = 'inputChanged'
-		# evs['keydown [data-model-id="'+@model.cid+'"] textarea'] = 'textareaKeyup'
-		# evs['click [data-model-id="'+@model.cid+'"] input[type="submit"]'] = 'submit'
-		evs['change textarea'] = 'inputChanged'
-		evs['change input'] = 'inputChanged'
-		evs['change select'] = 'inputChanged'
-		evs['keydown textarea'] = 'textareaKeyup'
-		evs['click input[type="submit"]'] = 'submit'
-		evs['click button[name="submit"]'] = 'submit'
-
-		evs
-
-	# When the input changes, the new value is set to the model. 
-	# A listener on the models change event (collection change in case of MultiForm) calls @triggerChange.
-	inputChanged: (ev) ->
-		ev.stopPropagation()
-
-		@$(ev.currentTarget).removeClass('invalid').attr 'title', ''
-
-		model = if @model? then @model else @getModel(ev)
-
-		value = if ev.currentTarget.type is 'checkbox' then ev.currentTarget.checked else ev.currentTarget.value
-
-		model.set ev.currentTarget.name, value if ev.currentTarget.name isnt ''
-
-	textareaKeyup: (ev) ->
-		ev.currentTarget.style.height = '32px'
-		ev.currentTarget.style.height = ev.currentTarget.scrollHeight + 6 + 'px'
-
-	submit: (ev) ->
-		ev.preventDefault()
-
-		el = $(ev.currentTarget)
-
-		unless el.hasClass 'loader'
-			el.addClass 'loader'
-
-			# After save we trigger the save:success so the instantiated Form view can capture it and take action.
-			@model.save [],
-				success: (model, response, options) =>
-					$(ev.currentTarget).removeClass 'loader'
-					@trigger 'save:success', model, response, options
-					@reset()
-				error: (model, xhr, options) => 
-					$(ev.currentTarget).removeClass 'loader'
-					@trigger 'save:error', model, xhr, options
-
 	# ### Render
 
 	# PreRender is a NOOP that can be called by a child view 
@@ -129,7 +82,7 @@ class Form extends Views.Base
 		rtpl = if _.isString(@tpl) then _.template @tpl, @tplData else @tpl @tplData
 		@$el.html rtpl
 
-		@el.setAttribute 'data-view-cid', @cid
+		# @el.setAttribute 'data-view-cid', @cid
 
 		@subforms ?= {}
 		@addSubform attr, View for own attr, View of @subforms
@@ -145,7 +98,75 @@ class Form extends Views.Base
 	# PostRender is a NOOP that can be called by a child view 
 	postRender: ->
 
+
+	# ### Events
+
+	# MultiForm extends the events.
+	events: ->
+		evs = {}
+
+		evs["keyup [data-model-id='#{@model.cid}'] textarea"] = "inputChanged"
+		evs["keyup [data-model-id='#{@model.cid}'] input"] = "inputChanged"
+		evs["change [data-model-id='#{@model.cid}'] select"] = "inputChanged"
+		evs["keydown [data-model-id='#{@model.cid}'] textarea"] = "textareaKeyup"
+		# evs["keyup [data-model-id='#{@model.cid}'] textarea"] = "keyUp"
+		# evs["keyup [data-model-id='#{@model.cid}'] input"] = "keyUp"
+		evs["click input[type=\"submit\"]"] = "submit"
+		evs["click button[name=\"submit\"]"] = "submit"
+		evs["click button[name=\"cancel\"]"] = "cancel"
+
+		evs
+
+	# When the input changes, the new value is set to the model. 
+	# A listener on the models change event (collection change in case of MultiForm) calls @triggerChange.
+	inputChanged: (ev) ->
+		# Removed stopPropagation because the events would not get to parent view
+		# ev.stopPropagation()
+
+		model = if @model? then @model else @getModel(ev)
+
+		value = if ev.currentTarget.type is 'checkbox' then ev.currentTarget.checked else ev.currentTarget.value
+
+		model.set ev.currentTarget.name, value if ev.currentTarget.name isnt ''
+
+	textareaKeyup: (ev) ->
+		ev.currentTarget.style.height = '32px'
+		ev.currentTarget.style.height = ev.currentTarget.scrollHeight + 6 + 'px'
+
+	submit: (ev) ->
+		ev.preventDefault()
+
+		target = @$(ev.currentTarget)
+
+		unless target.hasClass('loader') or target.hasClass('disabled')
+			target.addClass 'loader'
+			
+			if @options.saveOnSubmit
+				@model.save [],
+					success: (model, response, options) => 
+						# After save we trigger the save:success so the instantiated Form view can capture it and take action.
+						@trigger 'save:success', model, response, options
+						@$(ev.currentTarget).removeClass 'loader'
+						@$(ev.currentTarget).addClass 'disabled'
+					error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
+			else
+				# Manually check for invalids
+				invalids = @model.validate @model.attributes
+				if invalids?
+					@model.trigger 'invalid', @model, invalids
+				else
+					@trigger 'submit', @model
+
+
+	cancel: (ev) ->
+		ev.preventDefault()
+		@trigger 'cancel'
+
+
 	# ### METHODS
+
+	# noop
+	customAdd: -> console.error 'Form.customAdd is not implemented!'
 
 	# Reset the form to original state
 	# * TODO: this only works on new models, not on editting a model
@@ -183,10 +204,8 @@ class Form extends Views.Base
 	addValidation: ->	
 		_.extend @, validation
 
-		@validator
-			invalid: (model, attr, msg) =>
-				@$('button[name="submit"]').removeClass 'loader'
-				@$("[data-model-id='#{model.cid}'] [name='#{attr}']").addClass('invalid').attr 'title', msg
+		# Run the validator
+		@validatorInit()
 			
 		### @on 'validator:validated', => $('button.save').prop('disabled', false).removeAttr('title') ###
 		### @on 'validator:invalidated', => $('button.save').prop('disabled', true).attr 'title', 'The form cannot be saved due to invalid values.' ###
@@ -210,9 +229,12 @@ class Form extends Views.Base
 		value = if attr.indexOf('.') > -1 then Fn.flattenObject(model.attributes)[attr] else model.get attr
 		console.error 'Subform value is undefined!', @model unless value?
 
+		# TODO Remove as subviews
 		view = new View
 			value: value
 			config: @subformConfig[attr]
+
+		@subviews.push view
 
 		# A className cannot contain dots, so replace dots with underscores
 		htmlSafeAttr = attr.split('.').join('_')
@@ -241,5 +263,9 @@ class Form extends Views.Base
 		# Therefor we need a central reference to the collection: @subformConfig[attr].data. If one of the elements changes the data,
 		# @subformConfig[attr].data will be updated, so all the elements get the same data on rerender.
 		@listenTo view, 'change:data', (models) => @subformConfig[attr].data = @subformConfig[attr].data.reset models
+
+	destroy: ->
+		view.destroy() for view in @subviews
+		@remove()
 
 module.exports = Form

@@ -1,81 +1,134 @@
 _ = require 'underscore'
+$ = require 'jquery'
 Fn = require '../utils/general'
 
+# A validate function for validating the whole model. The function is added to every model instance we're listening to.
+validate = (attrs, options) ->
+	invalids = []
+
+	# Flatten attributes, because nested attributes must also be targeted by a string (<input name="namespace.level.level2"> for namespace: {level: {level2: 'some value'}})
+	flatAttrs = Fn.flattenObject(attrs)
+
+	# Loop the validation settings and validate each attribute
+	for own attr, settings of @validation
+		invalidsPart = @validateAttr attr, flatAttrs[attr], attrs
+
+		# If invalidsPart is filled (ie it is not undefined), union it with invalids.
+		# The union function is a little overhead to keep it DRY.
+		invalids = _.union invalids, invalidsPart if invalidsPart?
+
+	# Return invalids array if populated, otherwise return nothing (and Backbone can continue with setting the model)
+	invalids if invalids.length > 0
+
+# A validate function for validating one attribute. The function is added to every model instance we're listening to.
+validateAttr = (attr, value, attrs) ->
+	return unless @validation?
+
+	invalids = []
+
+	# Loop the attributes validation settings: min-length, required, pattern, etc
+	for own setting, settingValue of @validation[attr]
+		msg = validators[setting] settingValue, value, attr, attrs
+
+		# If a message is returned, add the required object to the invalids array
+		if msg?
+			invalids.push
+				attr: attr
+				msg: msg
+
+	# Return invalids array if populated, otherwise return nothing (and Backbone can continue with setting the model)
+	invalids if invalids.length > 0
+
+validators =
+	pattern: (settingValue, attrValue) ->
+		switch settingValue
+			when 'number'
+				if attrValue.length > 0 and not /^\d+$/.test attrValue
+					'Please enter a valid number.'
+
+			when 'slug'
+				if attrValue.length > 0 and not /^[a-z][a-z0-9-]+$/.test attrValue
+					"A slug has to start with a letter and can only contain lower case letters, digits and dashes."
+
+			when 'email'
+				if attrValue.length > 0 and not /^(.+)@(.+)(\.((.){2,6}))+$/.test attrValue
+					'Please enter a valid email address.'
+
+	equal: (settingValue, attrValue, attr, attrs) ->
+		if attrs? and attrValue isnt attrs[settingValue]
+			"#{settingValue} and #{attr} should be equal."
+
+	required: (settingValue, attrValue) ->
+		if settingValue and attrValue.length is 0
+			"Required field, please enter a value."
+
+	'min-length': (settingValue, attrValue) ->
+		if 0 < attrValue.length < settingValue
+			"Length should be #{settingValue} at least."
+
+	'max-length': (settingValue, attrValue) ->
+		if attrValue.length > settingValue
+			"Length should be #{settingValue} at most."
+
 module.exports = 
-	# A validate function we're adding to every model instance we're listening to
-	validate: (attrs, options) ->
-		invalids = []
-
-		# Flatten attributes, because nested attributes must also be targeted by a string (<input name="namespace.level.level2"> for namespace: {level: {level2: 'some value'}})
-		flatAttrs = Fn.flattenObject(attrs)
-
-		# Loop the validation settings
-		for own attr, settings of @validation
-			# Don't validate empty strings which are not required
-			if not settings.required and flatAttrs[attr].length isnt 0
-				# Turn into switch or hash with functions?
-				if settings.pattern? and settings.pattern is 'number'
-					unless /^\d+$/.test flatAttrs[attr]
-						invalids.push
-							attr: attr
-							msg: 'Please enter a valid number.'
-			else if settings.required and flatAttrs[attr].length is 0
-				invalids.push
-					attr: attr
-					msg: 'Please enter a value.'
-
-		# Return invalids array if populated, otherwise return nothing (and Backbone can continue with setting the model)
-		if invalids.length then return invalids else return
-
-	validator: (args) ->
-		{valid, invalid} = args
-
+	validatorInit: ->
 
 		# Are we listening to a model or a collection?
 		# Add the validate function to (all) the model(s)
 		if @model?
 			listenToObject = @model
-			@model.validate = @validate
+			@model.validate = validate
+			@model.validateAttr = validateAttr
 		else if @collection?
 			listenToObject = @collection
-			@collection.each (model) =>
-				model.validate = @validate
+			@collection.each (model) => 
+				model.validate = validate
+				model.validateAttr = validateAttr
 
 			# Add validate function to models which are added dynamically
-			@listenTo @collection, 'add', (model, collection, options) => model.validate = @validate
+			@listenTo @collection, 'add', (model, collection, options) => model.validate = validate
 		else
 			console.error "Validator mixin: no model or collection attached to view!"
 			return
 
-		# Create a hash that keeps track of all the attributes that triggered the 'invalid' event.
-		# When an attribute changes (succesful validation and model.set) and the changed attribute is present in @invalidAttrs (the attr was previously invalid), we have to call the valid callback
-		@invalidAttrs = {}
-
-		# Listen to 'invalid' event, populate @invalidAttrs and call the invalid callback
+		# TODO if the listenToObject is a collection, does this work correct?
 		@listenTo listenToObject, 'invalid', (model, errors, options) =>
-			_.each errors, (error) =>
-				# Trigger isInvalid on the first occurance of an invalid attribute
-				@trigger 'validator:invalidated' unless _.size(@invalidAttrs)
-				
-				@invalidAttrs[error.attr] = error
-				invalid model, error.attr, error.msg
+			@validatorAddError model, error for error in errors
+
+		@listenTo listenToObject, 'change', @validatorCheckErrors
+
+		@listenTo listenToObject, 'invalid', (model, errors, options) ->
+			@$('button[name="submit"]').removeClass('loader').addClass 'disabled'
+			@$('div.error').remove()
+			for error in errors
+				div = $('<div class="error" />').html error.msg
+				@$("[name=\"#{error.attr}\"]").after div
+
+	validatorCheckErrors: (model, options) ->
+		model = if @model? then @model else @getModel(ev)
+
+		@$('button[name="submit"]').removeClass('disabled')
 		
-		# Using the valid function would be very nice, but does not work in practice
-		# When default value for an attribute is "" (an empty string) and the user changes it from something invalid
-		# back to an empty string (which could be valid), the model's change event is not triggered, because the value did
-		# not change "" => "". Same goes for valid => invalid => valid (12 => /?#not12@llowed => 12), the value changes
-		# from 12 to 12 and thus no change event is triggered.
-		#
-		# Best setup is to use the invalid callback to set invalid class and remove invalid class in the view on change
-		if valid?
-			# Listen to change event to call the valid callback on previously invalid attributes
-			@listenTo listenToObject, 'change', (model, options) =>
-				flatChangedAttrs = Fn.flattenObject model.changedAttributes()
+		for attr, value of model.changedAttributes()
+			if errors = model.validateAttr(attr, value)
+				@validatorAddError model.cid, error for error in errors
+			else
+				@validatorRemoveError model.cid, attr
+	
+	validatorAddError: (cid, error) ->
+		form = @$ "[data-model-id=\"#{cid}\"]"
+		form.find("[name=\"#{error.attr}\"]").addClass('invalid').attr 'title', error.msg
+		form.find("label[for=\"#{error.attr}\"]").addClass('invalid').attr 'title', error.msg
 
-				for own attr of flatChangedAttrs
-					if @invalidAttrs.hasOwnProperty attr
-						valid model, attr
-						delete @invalidAttrs[attr]
+	validatorRemoveError: (cid, attr) ->
+		form = @$ "[data-model-id=\"#{cid}\"]"
 
-						# Trigger isValid when there are no more invalid attributes
-						@trigger 'validator:validated' unless _.size(@invalidAttrs)
+		# Label
+		form.find("label[for=\"#{attr}\"]").removeClass('invalid').attr 'title', ''
+		
+		# Input
+		input = form.find("[name=\"#{attr}\"]")
+		input.removeClass('invalid').attr 'title', ''
+
+		# Div.error
+		input.siblings('.error').remove()
