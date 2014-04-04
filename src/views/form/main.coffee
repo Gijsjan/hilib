@@ -27,6 +27,7 @@ validation = require '../../mixins/validation'
 # tplData
 # value
 # saveOnSubmit When form is submitted, save the model. Defaults to true.
+# validationAttributes Array of attributes to validate, other attributes are ignored. Defaults to null.
 
 # ## Form
 class Form extends Views.Base
@@ -133,22 +134,28 @@ class Form extends Views.Base
 		ev.currentTarget.style.height = '32px'
 		ev.currentTarget.style.height = ev.currentTarget.scrollHeight + 6 + 'px'
 
+	saveModel: (validate=true) ->
+		@model.save [],
+			validate: validate
+			success: (model, response, options) => 
+				# After save we trigger the save:success so the instantiated Form view can capture it and take action.
+				@trigger 'save:success', model, response, options
+				target = if ev? then @$(ev.currentTarget) else @$ 'button[name="submit"]'
+				target.removeClass 'loader'
+				target.addClass 'disabled'
+			error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
+
 	submit: (ev) ->
 		ev.preventDefault()
 
 		target = @$(ev.currentTarget)
 
+		# If submit button has a loader or is disabled we don't do anything
 		unless target.hasClass('loader') or target.hasClass('disabled')
 			target.addClass 'loader'
 			
 			if @options.saveOnSubmit
-				@model.save [],
-					success: (model, response, options) => 
-						# After save we trigger the save:success so the instantiated Form view can capture it and take action.
-						@trigger 'save:success', model, response, options
-						@$(ev.currentTarget).removeClass 'loader'
-						@$(ev.currentTarget).addClass 'disabled'
-					error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
+				@saveModel()
 			else
 				# Manually check for invalids
 				invalids = @model.validate @model.attributes
@@ -213,6 +220,15 @@ class Form extends Views.Base
 	# Listen to changes on the model. MultiForm overrides this method.
 	addListeners: ->
 		@listenTo @model, 'change', => @triggerChange()
+		@listenTo @model, 'invalid', (model, errors, options) =>
+			if @options.validationAttributes?
+				found = false
+				for error in errors
+					found = true if @options.validationAttributes.indexOf(error.name) > -1
+				unless found
+					@$('button[name="submit"]').addClass 'loader'
+					@saveModel false
+			
 	
 	# Fires change event. Data passed depends on an available @model (Form)	or @collection (MultiForm)
 	triggerChange: ->
