@@ -1,12 +1,14 @@
 StringFn = require '../utils/string'
 
+currentView = null
+
+cachedViews = {}
+
 class ViewManager
-
-	currentView = null
-
-	cachedViews = {}
+	clear: -> cachedViews = {}
 
 	show: ($el, View, options={}) ->
+
 		options.append ?= false
 		options.prepend ?= false
 

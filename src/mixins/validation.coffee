@@ -91,6 +91,9 @@ module.exports =
 			console.error "Validator mixin: no model or collection attached to view!"
 			return
 
+		@validatorAddListeners listenToObject
+
+	validatorAddListeners: (listenToObject) ->
 		# TODO if the listenToObject is a collection, does this work correct?
 		@listenTo listenToObject, 'invalid', (model, errors, options) =>
 			@validatorAddError model, error for error in errors
