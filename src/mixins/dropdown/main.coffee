@@ -56,7 +56,11 @@ module.exports =
 
 		# First get the models, than create a collection holding all the options
 		if @data instanceof Backbone.Collection # If data is a Backbone.Collection
-			@collection = @data.clone()
+			# The collection used to be cloned here (@data.clone()), but the collection would not update
+			# if it was altered outside the dropdown, so clone was removed. It could however introduce
+			# a bug for other projects. As far as I remember clone was added for Marginal Scholarship.
+			# Clone was removed for eLaborate frontend (werkomgeving).
+			@collection = @data
 		else if _.isArray(@data) and _.isString(@data[0]) # Else if data is an array of strings
 			models = @strArray2optionArray @data
 			@collection = new Backbone.Collection models

@@ -43,6 +43,8 @@ class Form extends Views.Base
 	initialize: (@options={}) ->
 		super
 
+		_.extend @, validation
+
 		@options.saveOnSubmit ?= true
 
 		@subformConfig ?= @options.subformConfig
@@ -61,7 +63,7 @@ class Form extends Views.Base
 		@on 'createModels:finished', @render, @
 		@createModels()
 
-		@addValidation()
+		@validatorInit()
 		
 		@addListeners()
 
@@ -108,6 +110,7 @@ class Form extends Views.Base
 
 		evs["keyup [data-model-id='#{@model.cid}'] textarea"] = "inputChanged"
 		evs["keyup [data-model-id='#{@model.cid}'] input"] = "inputChanged"
+		evs["change [data-model-id='#{@model.cid}'] input[type=\"checkbox\"]"] = "inputChanged"
 		evs["change [data-model-id='#{@model.cid}'] select"] = "inputChanged"
 		evs["keydown [data-model-id='#{@model.cid}'] textarea"] = "textareaKeyup"
 		# evs["keyup [data-model-id='#{@model.cid}'] textarea"] = "keyUp"
@@ -127,7 +130,6 @@ class Form extends Views.Base
 		model = if @model? then @model else @getModel(ev)
 
 		value = if ev.currentTarget.type is 'checkbox' then ev.currentTarget.checked else ev.currentTarget.value
-
 		model.set ev.currentTarget.name, value if ev.currentTarget.name isnt ''
 
 	textareaKeyup: (ev) ->
@@ -137,10 +139,11 @@ class Form extends Views.Base
 	saveModel: (validate=true) ->
 		@model.save [],
 			validate: validate
-			success: (model, response, options) => 
+			success: (model, response, options) =>
 				# After save we trigger the save:success so the instantiated Form view can capture it and take action.
 				@trigger 'save:success', model, response, options
 				target = if ev? then @$(ev.currentTarget) else @$ 'button[name="submit"]'
+				# console.log target
 				target.removeClass 'loader'
 				target.addClass 'disabled'
 			error: (model, xhr, options) => @trigger 'save:error', model, xhr, options
@@ -178,19 +181,23 @@ class Form extends Views.Base
 	# Reset the form to original state
 	# * TODO: this only works on new models, not on editting a model
 	reset: ->
+		@stopListening @model
+
 		# Clone the model to remove any references
 		@model = @model.clone()
-
 		# Clear the model and restore the attributes to default values
 		@model.clear silent: true
 		@model.set @model.defaults()
 
+		@validatorInit()
+		@addListeners()
+
+		@delegateEvents()
+
 		@el.querySelector('[data-model-id]').setAttribute 'data-model-id', @model.cid
-		
-		@addValidation()
 
 		# Empty the form elements
-		@el.querySelector('form').reset()
+		@el.reset()
 
 	# Create the form model. If model isnt new (has an id), fetch data from server.
 	# MultiForm overrides this method and creates a collection.
@@ -206,13 +213,7 @@ class Form extends Views.Base
 					success: => @trigger 'createModels:finished'
 		else
 			@trigger 'createModels:finished'
-	
-	# Add validation mixin. The invalid class added to the input by the 'invalid' callback, is removed in/when @inputChanged.
-	addValidation: ->	
-		_.extend @, validation
-
-		# Run the validator
-		@validatorInit()
+		
 			
 		### @on 'validator:validated', => $('button.save').prop('disabled', false).removeAttr('title') ###
 		### @on 'validator:invalidated', => $('button.save').prop('disabled', true).attr 'title', 'The form cannot be saved due to invalid values.' ###
