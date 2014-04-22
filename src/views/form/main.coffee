@@ -181,6 +181,10 @@ class Form extends Views.Base
 	# Reset the form to original state
 	# * TODO: this only works on new models, not on editting a model
 	reset: ->
+		target = @$ 'button[name="submit"]'
+		target.removeClass 'loader'
+		target.addClass 'disabled'
+		
 		@stopListening @model
 
 		# Clone the model to remove any references
