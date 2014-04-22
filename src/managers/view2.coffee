@@ -5,7 +5,9 @@ currentView = null
 cachedViews = {}
 
 class ViewManager
-	clear: -> cachedViews = {}
+	clear: -> 
+		view.destroy() for own hashCode, view of cachedViews
+		cachedViews = {}
 
 	show: ($el, View, options={}) ->
 
