@@ -45,5 +45,8 @@ module.exports =
 
 		if options.token and token.get()?
 			ajaxArgs.beforeSend = (xhr) => xhr.setRequestHeader 'Authorization', "#{token.getType()} #{token.get()}"
+		else
+			ajaxArgs.beforeSend = (xhr) =>
+
 
 		$.ajax $.extend ajaxArgs, args
