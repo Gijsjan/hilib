@@ -64,6 +64,7 @@ class Modal extends Backbone.View
 		# will replace 'modal' as className.
 		@$el.addClass @options.customClassName if @options.customClassName.length > 0
 
+
 		@render()
 
 	# ### Render
@@ -73,6 +74,8 @@ class Modal extends Backbone.View
 
 		body = @$('.body')
 		if @options.html? then body.html @options.html else body.hide()
+
+		@$('.body').scroll (ev) => ev.stopPropagation()
 
 		modalManager.add @
 
