@@ -1,4 +1,6 @@
 Backbone = require 'backbone'
+$ = require 'jquery'
+Backbone.$ = $
 _ = require 'underscore'
 
 Pubsub = require '../mixins/pubsub'

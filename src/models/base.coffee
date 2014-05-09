@@ -1,6 +1,7 @@
 Backbone = require 'backbone'
+_ = require 'underscore'
 
-Pubsub = require '../managers/pubsub'
+Pubsub = require '../mixins/pubsub'
 
 class BaseModel extends Backbone.Model
 
