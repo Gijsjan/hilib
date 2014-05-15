@@ -107,6 +107,9 @@ DOM = (el) ->
 	insertAfter: (referenceElement) -> referenceElement.parentNode.insertBefore el, referenceElement.nextSibling
 
 
+	# Highlight every text node from el, to endNode (argument).
+	# Every text node will be surrounded by a span.highlight.
+	#
 	# Example usage:
 	# highlighter = null # Create a reference highlighter
 	# @$("div.hover")
@@ -180,5 +183,28 @@ DOM = (el) ->
 		rect.left >= 0 &&
 		rect.bottom <= (win.innerHeight || doc.clientHeight) &&
 		rect.right <= (win.innerWidth || doc.clientWidth)
+
+	# Create a TreeWalker object between two given nodes. By default
+	# the TreeWalker traverses elements, but this can be overridden
+	# by passing a nodeFilterConstant see: https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker
+	createTreeWalker: (endNode, nodeFilterConstant) ->
+		nodeFilterConstant ?= NodeFilter.SHOW_ELEMENT
+
+		range = document.createRange()
+		range.setStartAfter el
+		range.setEndBefore endNode
+
+		filter = (node) => 
+			r = document.createRange()
+			r.selectNode(node)
+
+			start = r.compareBoundaryPoints(Range.START_TO_START, range)
+			end = r.compareBoundaryPoints(Range.END_TO_START, range)
+
+			if start is -1 or end is 1 then NodeFilter.FILTER_SKIP else	NodeFilter.FILTER_ACCEPT
+
+		filter.acceptNode = filter
+		
+		document.createTreeWalker range.commonAncestorContainer, nodeFilterConstant, filter, false
 
 module.exports = DOM
