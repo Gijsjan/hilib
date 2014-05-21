@@ -18,7 +18,7 @@ class Pagination extends Views.Base
 	className: ''
 
 	# ### Initialize
-	initialize: ->
+	initialize: (@options) ->
 		super
 
 		@options.step10 ?= true
