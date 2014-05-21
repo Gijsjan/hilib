@@ -1,41 +1,15 @@
 {
   "name": "hilib",
   "version": "0.0.4",
-  "description": "",
+  "description": "Huygens ING frontend library",
   "main": "",
-  "directories": {
-    "test": "test"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "gulp-connect": "~0.3.1",
-    "gulp-util": "~2.2.14",
-    "gulp": "~3.5.2",
-    "gulp-concat": "~2.1.7",
-    "gulp-clean": "~0.2.4",
-    "gulp-stylus": "0.0.12",
-    "gulp-rename": "~1.0.0",
-    "gulp-browserify": "~0.4.4",
-    "browserify": "~3.28.0",
-    "coffeeify": "~0.6.0",
-    "jadeify": "~2.1.1",
-    "backbone": "~1.0.0",
-    "hilib": "HuygensING/hilib",
-    "jquery": "~2.1.0",
-    "underscore": "~1.6.0",
-    "coffee-script": "~1.7.1",
-    "gulp-watch": "~0.5.0",
-    "gulp-changed": "~0.1.0",
-    "insert-css": "~0.1.1",
-    "stylus": "~0.42.2"
-  },
   "scripts": {
     "start": "node ./.test/bin/server.js",
     "test": "grunt test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Gijsjan/helpers.git"
+    "url": "https://github.com/HuygensING/hilib.git"
   },
   "browserify": {
     "transform": [
