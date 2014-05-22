@@ -1,4 +1,6 @@
 $ = require 'jquery'
+
+# FIX Should not be used: http://api.jquery.com/jquery.support/
 $.support.cors = true
 
 token = require './token'
