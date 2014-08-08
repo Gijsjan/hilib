@@ -70,7 +70,7 @@ DOM = (el) ->
 
 		while loopEl? and loopEl isnt parent
 			# Not every parent is an offsetParent. So in the case the user has passed a non offsetParent as the parent, 
-			# we check if we have passed the parent (by checking if the offsetParent has a descendant which is the parent).
+			# we check if the loop has passed the parent (by checking if the offsetParent has a descendant which is the parent).
 			break if @hasDescendant parent
 
 			left += loopEl.offsetLeft

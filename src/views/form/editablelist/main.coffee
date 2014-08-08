@@ -15,7 +15,8 @@ class EditableList extends Views.Base
 	className: 'editablelist'
 
 	# ### Initialize
-	initialize: ->
+	initialize: (@options) ->
+
 		super
 
 		@options.config ?= {}

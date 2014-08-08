@@ -12,7 +12,8 @@ class Longpress extends Views.Base
 
 
 	# ### Initialize
-	initialize: ->
+	initialize: (@options) ->
+
 		super
 
 		@timer = null

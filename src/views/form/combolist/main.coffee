@@ -25,7 +25,8 @@ class ComboList extends Views.Base
 
 	# ### Initialize
 
-	initialize: ->
+	initialize: (@options) ->
+
 		super
 
 		@options.config ?= {}

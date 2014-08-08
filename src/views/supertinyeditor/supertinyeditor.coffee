@@ -32,7 +32,8 @@ class SuperTinyEditor extends Views.Base
 	className: 'supertinyeditor'
 
 	# ### Initialize
-	initialize: ->
+	initialize: (@options) ->
+
 		super
 
 		@options.cssFile ?= ''

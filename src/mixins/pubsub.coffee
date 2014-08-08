@@ -1,5 +1,6 @@
 Backbone = require 'backbone'
 
+
 module.exports =
 	subscribe: (ev, done) ->
 		@listenTo Backbone, ev, done
