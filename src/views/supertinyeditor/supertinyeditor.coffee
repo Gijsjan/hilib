@@ -16,7 +16,7 @@ require '../../utils/jquery.mixin'
 
 Longpress = require '../longpress/main'
 
-Views = 
+Views =
 	Base: require '../base'
 
 tpl = require './main.jade'
@@ -57,7 +57,7 @@ class SuperTinyEditor extends Views.Base
 		@renderIframe()
 
 		# @setFocus()
-		
+
 		@
 
 	renderControls: ->
@@ -83,9 +83,8 @@ class SuperTinyEditor extends Views.Base
 
 				diacriticsUL = document.createElement 'div'
 				diacriticsUL.className = 'diacritics-placeholder'
-				diacritics = 'ĀĂÀÁÂÃÄÅĄⱭ∀ÆāăàáâãäåąɑæαªƁßβɓÇĆĈĊČƆçςćĉċč¢ɔÐĎĐḎƊðďđɖḏɖɗÈÉÊËĒĖĘẸĚƏÆƎƐ€èéêëēėęẹěəæεɛ€ƑƩƒʃƭĜĞĠĢƢĝğġģɠƣĤĦĥħɦẖÌÍÎÏĪĮỊİIƗĲìíîïīįịiiɨĳιĴĲĵɟĳĶƘķƙĹĻĽŁΛĺļľłλÑŃŅŇŊƝ₦ñńņňŋɲÒÓÔÕÖŌØŐŒƠƟòóôõöōøőœơɵ°Ƥ¶ƥ¶ŔŘɌⱤŕřɍɽßſŚŜŞṢŠÞ§ßſśŝşṣšþ§ŢŤṮƬƮţťṯƭʈÙÚÛÜŪŬŮŰŲɄƯƱùúûüūŭůűųưμυʉʊƲʋŴẄΩŵẅωÝŶŸƔƳýŷÿɣyƴŹŻŽƵƷẔźżžƶẕʒƹ£¥€₩₨₳Ƀ¤¡‼‽¿‽‰…••±‐–—±†‡′″‴‘’‚‛“”„‟≤‹≥›≈≠≡'
-				diacriticsUL.innerHTML = diacriticsTpl diacritics: diacritics
-				
+				diacriticsUL.innerHTML = diacriticsTpl()
+
 				div.appendChild diacriticsUL
 
 				@$currentHeader.append div
@@ -140,20 +139,20 @@ class SuperTinyEditor extends Views.Base
 			# scrollWidth or clientWidth are given. ScrollWidth and clientWidth are found by document.documentElement, but
 			# for scrollLeft we need jQuery. Normally Fn.scrollPercentage receives ev.currentTarget or ev.target, but we have
 			# to construct the object ourselves in this case.
-			# 
-			# Scroll is also triggered when using the contentWindow.scrollTo function in @setScrollPercentage, 
+			#
+			# Scroll is also triggered when using the contentWindow.scrollTo function in @setScrollPercentage,
 			# but should not update the other scroll(s).@autoScroll is used to prevent both scrollers of updating eachother
 			# and thus forming a loop.
 			@iframeDocument.addEventListener 'scroll', => @triggerScroll() unless @autoScroll
 
 			@iframeDocument.addEventListener 'keyup', (ev) =>
-				Fn.timeoutWithReset 500, => 
+				Fn.timeoutWithReset 500, =>
 					@triggerScroll()
 					@saveHTMLToModel()
 
 		steBody = @el.querySelector '.ste-body'
 		steBody.appendChild iframe
-	
+
 	# ### Events
 	events: ->
 		'click .ste-control': 'controlClicked'
@@ -163,7 +162,7 @@ class SuperTinyEditor extends Views.Base
 
 	buttonClicked: (ev) ->
 		action = ev.currentTarget.getAttribute 'data-action'
-		
+
 		if action isnt 'save' or (action is 'save' and $(ev.currentTarget).hasClass('active'))
 			@trigger 'button:' + action
 
@@ -190,7 +189,7 @@ class SuperTinyEditor extends Views.Base
 
 		# Move cursor after textNode
 		range.setStartAfter textNode
-		range.setEndAfter textNode 
+		range.setEndAfter textNode
 		sel.removeAllRanges()
 		sel.addRange range
 
@@ -204,7 +203,7 @@ class SuperTinyEditor extends Views.Base
 		@longpress.destroy()
 		@remove()
 
-	saveHTMLToModel: -> 
+	saveHTMLToModel: ->
 		# TODO Active save button
 		@$('[data-action="save"]').addClass 'active'
 		@model.set @options.htmlAttribute, @iframeBody.innerHTML
