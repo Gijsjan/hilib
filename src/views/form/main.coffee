@@ -14,7 +14,7 @@ _ = require 'underscore'
 $ = require 'jquery'
 
 Fn = require '../../utils/general'
-Views = 
+Views =
 	Base: require '../base'
 
 validation = require '../../mixins/validation'
@@ -64,13 +64,13 @@ class Form extends Views.Base
 		@createModels()
 
 		@validatorInit()
-		
+
 		@addListeners()
 
 
 	# ### Render
 
-	# PreRender is a NOOP that can be called by a child view 
+	# PreRender is a NOOP that can be called by a child view
 	preRender: ->
 
 	render: ->
@@ -91,14 +91,14 @@ class Form extends Views.Base
 		@addSubform attr, View for own attr, View of @subforms
 
 		# If form is hidden by display: none when rendered, this does not work! Hiding the form using opacity 0 does work.
-		@$('textarea').each (index, textarea) => 
+		@$('textarea').each (index, textarea) =>
 			textarea.style.height = if textarea.scrollHeight+6 > 32 then textarea.scrollHeight+6+'px' else '32px'
 
 		@postRender()
 
 		@
 
-	# PostRender is a NOOP that can be called by a child view 
+	# PostRender is a NOOP that can be called by a child view
 	postRender: ->
 
 
@@ -121,7 +121,7 @@ class Form extends Views.Base
 
 		evs
 
-	# When the input changes, the new value is set to the model. 
+	# When the input changes, the new value is set to the model.
 	# A listener on the models change event (collection change in case of MultiForm) calls @triggerChange.
 	inputChanged: (ev) ->
 		# Removed stopPropagation because the events would not get to parent view
@@ -156,7 +156,7 @@ class Form extends Views.Base
 		# If submit button has a loader or is disabled we don't do anything
 		unless target.hasClass('loader') or target.hasClass('disabled')
 			target.addClass 'loader'
-			
+
 			if @options.saveOnSubmit
 				@saveModel()
 			else
@@ -184,7 +184,7 @@ class Form extends Views.Base
 		target = @$ 'button[name="submit"]'
 		target.removeClass 'loader'
 		target.addClass 'disabled'
-		
+
 		@stopListening @model
 
 		# Clone the model to remove any references
@@ -217,8 +217,8 @@ class Form extends Views.Base
 					success: => @trigger 'createModels:finished'
 		else
 			@trigger 'createModels:finished'
-		
-			
+
+
 		### @on 'validator:validated', => $('button.save').prop('disabled', false).removeAttr('title') ###
 		### @on 'validator:invalidated', => $('button.save').prop('disabled', true).attr 'title', 'The form cannot be saved due to invalid values.' ###
 
@@ -233,8 +233,8 @@ class Form extends Views.Base
 				unless found
 					@$('button[name="submit"]').addClass 'loader'
 					@saveModel false
-			
-	
+
+
 	# Fires change event. Data passed depends on an available @model (Form)	or @collection (MultiForm)
 	triggerChange: ->
 		object = if @model? then @model else @collection
@@ -259,9 +259,9 @@ class Form extends Views.Base
 
 		# A className cannot contain dots, so replace dots with underscores
 		htmlSafeAttr = attr.split('.').join('_')
-		
+
 		placeholders = @el.querySelectorAll "[data-cid='#{model.cid}'] .#{htmlSafeAttr}-placeholder"
-	
+
 		# If the querySelectorAll finds placeholders with the same className, then we have to find the one that is
 		# nested directly under the el (<ul>) with the current model.cid. We need to do this because forms can be nested
 		# and the selector '[data-cid] .placeholder' will also yield nested placeholders.

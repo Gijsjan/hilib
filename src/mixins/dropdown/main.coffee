@@ -46,7 +46,7 @@ module.exports =
 		@options.config ?= {}
 
 		@data = @options.config.data ? {}
-		
+
 		@settings = @options.config.settings ? {}
 		@settings.mutable ?= false
 		@settings.editable ?= false
@@ -90,6 +90,8 @@ module.exports =
 
 		@on 'change', => @resetOptions()
 
+		@delegateEvents()
+
 	# ### Render
 
 	dropdownRender: (tpl) ->
@@ -122,16 +124,16 @@ module.exports =
 			collection: @filtered_options
 			selected: @selected
 		@$optionlist.html rtpl
-	
+
 	# ### Events
 
-	dropdownEvents: ->
+	dropdownEvents: (cid) ->
 		evs =
 			'click .caret': 'toggleList'
 			'click li.list': 'addSelected'
 
-		evs['keyup input[data-view-id="'+@cid+'"]']	= 'onKeyup'
-		evs['keydown input[data-view-id="'+@cid+'"]']	= 'onKeydown'
+		evs['keyup input[data-view-id="'+cid+'"]']	= 'onKeyup'
+		evs['keydown input[data-view-id="'+cid+'"]']	= 'onKeydown'
 
 		evs
 
@@ -145,7 +147,7 @@ module.exports =
 
 	onKeyup: (ev) ->
 		@$('.active').removeClass 'active'
-		
+
 		if ev.keyCode is 38 # Arrow up
 			@$optionlist.show()
 			@filtered_options.prev()
@@ -175,7 +177,7 @@ module.exports =
 
 	filter: (value) ->
 		@$('button.edit').removeClass 'visible' if @settings.editable
-		
+
 		@resetOptions()
 
 		if value.length > 1

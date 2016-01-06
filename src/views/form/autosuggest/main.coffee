@@ -47,7 +47,7 @@ class AutoSuggest extends Backbone.View
 
 	# ### Events
 
-	events: -> _.extend @dropdownEvents(),
+	events: -> _.extend dropdown.dropdownEvents(@cid),
 		'click button.add': 'addOption'
 		'click button.edit': -> @trigger 'edit', @selected.toJSON()
 
@@ -74,7 +74,7 @@ class AutoSuggest extends Backbone.View
 		if ev.keyCode? and ev.keyCode is 13
 			# Did the user go through the option list and select one?
 			if @filtered_options.currentOption?
-				@selected = @filtered_options.currentOption 
+				@selected = @filtered_options.currentOption
 			else
 				@selected = @filtered_options.find (option) => option.get('title').toLowerCase() is ev.currentTarget.value.toLowerCase()
 
@@ -84,7 +84,7 @@ class AutoSuggest extends Backbone.View
 		# No, it must have been a click event
 		else
 			@selected = @collection.get ev.currentTarget.getAttribute 'data-id'
-		
+
 		if @selected?
 			@$('input').val @selected.get 'title'
 			@$('button.edit').addClass 'visible'

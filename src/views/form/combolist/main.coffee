@@ -1,4 +1,4 @@
-# ComboList is both an autosuggest and an editablelist. With an autosuggest, the selected value is set to the input. 
+# ComboList is both an autosuggest and an editablelist. With an autosuggest, the selected value is set to the input.
 # With a ComboList, there can be multiple selected values, rendered in a ul beneath the input.
 # The ComboList uses the dropdown mixin.
 Backbone = require 'backbone'
@@ -9,7 +9,7 @@ dom = require '../../../utils/dom'
 Collections =
 	Base: require '../../../collections/base'
 
-Views = 
+Views =
 	Base: require '../../base'
 
 tpl = require './main.jade'
@@ -26,7 +26,6 @@ class ComboList extends Views.Base
 	# ### Initialize
 
 	initialize: (@options) ->
-
 		super
 
 		@options.config ?= {}
@@ -66,12 +65,13 @@ class ComboList extends Views.Base
 		@filtered_options.reset @collection.reject (model) => @selected.get(model.id)?
 		# console.log 'after'
 		# 'myval'
-	# ### Events
 
-	events: -> _.extend @dropdownEvents(), 
-		'click li.selected span': 'removeSelected'
-		'click button.add': 'createModel'
-		'keyup input': 'toggleAddButton'
+	# ### Events
+	events: ->
+		_.extend dropdown.dropdownEvents(@cid),
+			'click li.selected span': 'removeSelected'
+			'click button.add': 'createModel'
+			'keyup input': 'toggleAddButton'
 
 	toggleAddButton: (ev) ->
 		return unless @settings.mutable
@@ -87,8 +87,8 @@ class ComboList extends Views.Base
 		value = @el.querySelector('input').value
 
 		@selected.add id: value, title: value if @settings.mutable and value.length > 1
-	
-	removeSelected: (ev) -> 
+
+	removeSelected: (ev) ->
 		listitemID = ev.currentTarget.parentNode.getAttribute('data-id')
 
 		remove = => @selected.removeById listitemID
@@ -103,24 +103,24 @@ class ComboList extends Views.Base
 		# Check if ev is coming from keyup and double check if keyCode is 13
 		# The model is a filtered option if it is current/active otherwise it is the value of input
 		if ev.keyCode? and ev.keyCode is 13
-			
+
 			model = @filtered_options.currentOption if @filtered_options.currentOption?
 
 			unless model?
 				@createModel()
 				return
-				
+
 		# Else it was a click event on li.list. Model is retrieved from @collection with <li data-id="13">
 		else
 			model = @collection.get ev.currentTarget.getAttribute 'data-id'
-		
+
 		@selected.add model
 
-	triggerChange: (options) -> 
+	triggerChange: (options) ->
 		options.added ?= null
 		options.removed ?= null
 
-		@trigger 'change', 
+		@trigger 'change',
 			selected: @selected.toJSON()
 			added: options.added
 			removed: options.removed
