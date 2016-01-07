@@ -30,7 +30,7 @@ module.exports =
 			xhr.done (data, textStatus, jqXHR) =>
 				if testFn(data)
 					done data, textStatus, jqXHR
-				else 
+				else
 					setTimeout dopoll, 5000
 
 		dopoll()
